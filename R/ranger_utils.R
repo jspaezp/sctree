@@ -1,0 +1,98 @@
+
+
+#' ranger_importances
+#' @title ranger_importances
+#'
+#' Calculates ranger-based variable importances for data frames and
+#' seurat objects
+#'
+#' @param object a seurat or data frame object
+#' @param cluster a cluster name for which the markers will be found
+#' @param pval_cutoff p value cutoff for the markers
+#' @param imp_method importance method, either of "janitza" or "altmann"
+#' @param num.trees number of trees to be build using ranger
+#' @param ... additional arguments to be passed to ranger
+#'
+#' @return  list with 3 elements ranger_fit, importances_ranger, signif_importances_ranger
+#' @export
+#'
+#' @examples
+#' > summary(ranger_importances.seurat(Seurat::pbmc_small))
+#' ranger.seurat being called
+#' Length Class      Mode
+#' ranger_fit                15     ranger     list
+#' importances_ranger        62     -none-     numeric
+#' signif_importances_ranger  3     data.frame list
+#' @importFrom ranger ranger
+ranger_importances.df <- function(object, cluster = NULL,
+                                  pval_cutoff = 0.05,
+                                  imp_method = c("janitza", "altmann"),
+                                  num.trees = 500,
+                                  ...) {
+
+    message("ranger.seurat being called")
+    base_ranger <- function(data, importance) {
+        ranger_fit <- ranger::ranger(
+            ident ~ .,
+            data = data,
+            num.trees = num.trees,
+            mtry = floor(ncol(data)/5),
+            importance = importance,
+            ...)
+    }
+
+    tmp <- object
+
+    if (!is.null(cluster)) {
+        stopifnot(cluster %in% unique(tmp$ident))
+        tmp$ident <- factor(make.names(tmp$ident == cluster))
+    }
+
+    stopifnot(imp_method[1] %in% c("janitza", "altmann"))
+
+    if (imp_method == "altmann") {
+        ranger_fit <- base_ranger(data = tmp, importance = "permutation", ...)
+        importances_ranger <- ranger::importance_pvalues(
+            ranger_fit, "altman",
+            formula = ident ~ ., data = tmp)
+
+    } else if (imp_method == "janitza") {
+        ranger_fit <- base_ranger(
+            data = tmp,
+            importance = "impurity_corrected", ...)
+        importances_ranger <- ranger::importance_pvalues(ranger_fit)
+
+    }
+
+    signif_importances_ranger <- importances_ranger[
+        importances_ranger[,'pvalue'] < pval_cutoff,]
+
+    signif_importances_ranger <- signif_importances_ranger[
+        order(signif_importances_ranger[,"importance"], decreasing = TRUE), ]
+
+    signif_importances_ranger <- as.data.frame(signif_importances_ranger)
+    signif_importances_ranger[["gene"]] <- rownames(signif_importances_ranger)
+
+    return(list(ranger_fit = ranger_fit,
+                importances_ranger = importances_ranger,
+                signif_importances_ranger = signif_importances_ranger))
+}
+
+
+
+#' @describeIn ranger_importances
+#' @export
+ranger_importances.seurat <- function(object, cluster = NULL,
+                                      pval_cutoff = 0.05,
+                                      imp_method = c("janitza", "altmann"),
+                                      num.trees = 500,
+                                      ...) {
+
+    tmp <- as.data.frame.Seurat(object, object@var.genes)
+    return(ranger_importances.df(tmp,
+                                 cluster = cluster,
+                                 pval_cutoff = pval_cutoff,
+                                 imp_method = imp_method,
+                                 num.trees = num.trees,
+                                 ...))
+}

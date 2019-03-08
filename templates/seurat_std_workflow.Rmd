@@ -1,0 +1,103 @@
+---
+title: ""
+date: "`r Sys.Date()`"
+output:
+  rmdformats::material:
+    highlight: kate
+    keep_md: yes
+params:
+    directory_10x: "./filtered_feature_bc_matrix/"
+    out_filename: "foo"
+---
+
+
+```{r knitr_init, echo=FALSE, cache=FALSE}
+library(knitr)
+library(rmdformats)
+
+## Global options
+options(max.print="75")
+opts_chunk$set(echo=TRUE,
+	             cache=FALSE,
+               prompt=FALSE,
+               tidy=TRUE,
+               comment=NA,
+               message=FALSE,
+               warning=TRUE)
+opts_knit$set(width=75)
+```
+
+
+```{r}
+library(Seurat)
+library(tidyverse)
+library(progress)
+```
+
+
+```{r}
+seurat_obj.counts <- Read10X(params$directory_10x)
+seurat_obj <- CreateSeuratObject(seurat_obj.counts)
+
+output_filename_seurat  <- paste0("seurat_", params$out_filename, ".RDS")
+output_filename_df  <- paste0("markers_", params$out_filename, ".RDS")
+
+if (file.exists(output_filename_seurat)) {
+  tmp_seurat  <- readRDS(output_filename_seurat)
+
+  if (all(FetchData(tmp_seurat, use.raw = TRUE) == 
+          FetchData(seurat_obj, use.raw = TRUE))) {
+    stopifnot(length(levels(tmp_seurat@ident)) != 0)
+    warning("Using Cached version of the data")
+
+    seurat_obj  <- tmp_seurat
+  } else {
+    stop("Data does not match the cached version, stopping just to be safe")
+  }
+} else {
+  seurat_obj <- NormalizeData(object = seurat_obj)
+  seurat_obj <- FindVariableGenes(object = seurat_obj)
+  seurat_obj <- ScaleData(object = seurat_obj)
+  seurat_obj <- RunPCA(object = seurat_obj)
+
+  seurat_obj <- JackStraw(object = seurat_obj, num.replicate = 100, display.progress = FALSE)
+  seurat_obj <- JackStrawPlot(object = seurat_obj, PCs = 1:20)
+
+  signif_pcs <- sum(seurat_obj@dr$pca@jackstraw@overall.p.values[,'Score'] < 0.01)
+
+  seurat_obj <- FindClusters(
+      object = seurat_obj, reduction.type = "pca",
+      dims.use = 1:signif_pcs, resolution = 0.2,
+      print.output = 0, save.SNN = TRUE)
+
+  seurat_obj <- RunTSNE(object = seurat_obj)
+  seurat_obj <- RunTSNE(object = seurat_obj, add.iter = 500)
+	saveRDS(seurat_obj, paste0("seurat_", params$out_filename, ".RDS"))
+}
+
+GenePlot(object = seurat_obj, gene1 = "nUMI", gene2 = "nGene")
+JackStrawPlot(object = seurat_obj, PCs = 1:20)
+PCElbowPlot(object = seurat_obj)
+```
+
+```{r fig.height=4, fig.width=4}
+DimPlot(object = seurat_obj, reduction = "tsne")
+```
+
+```{r}
+if (file.exists(output_filename_df)) {
+  tmp_df  <- readRDS(output_filename_df)
+
+  if (setequal(levels(seurat_obj@ident), tmp_df$cluster)) {
+    warning("Using Cached version of the data frame")
+
+    diffgenes <- tmp_df
+  } else {
+    stop("Data does not match the cached version, stopping just to be safe - Data Frame")
+  }
+} else {
+  diffgenes <- FindAllMarkers(seurat_obj, genes.use = seurat_obj@var.genes)
+	saveRDS(diffgenes, paste0("markers_", params$out_filename, ".RDS"))
+}
+
+```

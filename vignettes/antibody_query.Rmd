@@ -1,0 +1,43 @@
+---
+title: "Query Antibody vendors from inside R"
+author: "J. Sebastian Paez"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Query antibody vendors
+
+## Functions work on known markers
+
+```{r}
+require(sctree)
+
+query_cc_antibodies("CD11c")
+query_cc_antibodies("CD3")
+
+query_sc_antibodies("CD11C")
+query_sc_antibodies("CD3")
+
+query_biolegend_antibodies("CD11C")
+query_biolegend_antibodies("CD3")
+```
+
+## Functions return null or empty vectors on imposible markers
+
+```{r}
+query_cc_antibodies("SUPERFAKEMARKER")
+query_sc_antibodies("SUPERFAKEMARKER")
+query_biolegend_antibodies("SUPERFAKEMARKER")
+```
+
