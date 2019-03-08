@@ -3,10 +3,9 @@
 
 # sctree
 
-The goal of sctree is to …
+The goal of sctree is to … (check vignetttes ... documentation in progress)
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+
 
 # Reproducing the runs in the purdue cluster
 
