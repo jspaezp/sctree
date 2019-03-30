@@ -19,12 +19,12 @@
 #' @export
 #'
 #' @examples
-#' > summary(ranger_importances.seurat(Seurat::pbmc_small))
-#' ranger.seurat being called
-#' Length Class      Mode
-#' ranger_fit                15     ranger     list
-#' importances_ranger        62     -none-     numeric
-#' signif_importances_ranger  3     data.frame list
+#' summary(ranger_importances.seurat(Seurat::pbmc_small))
+#' # ranger.seurat being called
+#' # Length Class      Mode
+#' # ranger_fit                15     ranger     list
+#' # importances_ranger        62     -none-     numeric
+#' # signif_importances_ranger  3     data.frame list
 #' @importFrom ranger ranger
 ranger_importances.df <- function(object, cluster = NULL,
                                   pval_cutoff = 0.05,
@@ -90,7 +90,7 @@ ranger_importances.seurat <- function(object, cluster = NULL,
                                       num.trees = 500,
                                       ...) {
 
-    tmp <- as.data.frame.Seurat(object, object@var.genes)
+    tmp <- as.data.frame.seurat(object, object@var.genes)
     return(ranger_importances.df(tmp,
                                  cluster = cluster,
                                  pval_cutoff = pval_cutoff,

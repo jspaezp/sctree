@@ -21,9 +21,13 @@ Note that it is just a wrapper arround the web search of the site, so please
 be nice on them and dont get your IP banned ...
 }
 \examples{
-> query_biolegend_antibodies("CD11bfakename")
-NULL
-> head(query_biolegend_antibodies("CD11C"))
-[1] "MojoSortÃ¢\\u0084Â¢ Mouse CD11c Nanobeads" "APC anti-human CD11c Antibody"          "Biotin anti-human CD11c Antibody"
-[4] "FITC anti-human CD11c Antibody"         "PE anti-human CD11c Antibody"           "PE/Cy5 anti-human CD11c Antibody"
+query_biolegend_antibodies("CD11bfakename")
+# NULL
+head(query_biolegend_antibodies("CD11C"))
+# [1] "MojoSortÃ¢\\u0084Â¢ Mouse CD11c Nanobeads"
+# [2] "APC anti-human CD11c Antibody"
+# [3] "Biotin anti-human CD11c Antibody"
+# [4] "FITC anti-human CD11c Antibody"
+# [5] "PE anti-human CD11c Antibody"
+# [6] "PE/Cy5 anti-human CD11c Antibody"
 }

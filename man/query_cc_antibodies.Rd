@@ -21,16 +21,25 @@ Note that it is jsut a wrapper arround the web search of the site, so please
 be nice on them and dont get your IP banned ...
 }
 \examples{
-> query_cc_antibodies("CD11bfakename")
-NULL
-> query_cc_antibodies("CD11c")
-Cat_num                                       Product Name Reactivity        Product_Type
-1   97585                           CD11c (D1V9Y) Rabbit mAb          M  Primary Antibodies
-2   97473 CD11c (3.9) Mouse mAb (violetFluor™ 450 Conjugate)          H Antibody Conjugates
-3   42847    CD11c (3.9) Mouse mAb (redFluor™ 710 Conjugate)          H Antibody Conjugates
-4   80342          CD11c (3.9) Mouse mAb (PE-Cy7® Conjugate)          H Antibody Conjugates
-5   56025               CD11c (3.9) Mouse mAb (PE Conjugate)          H Antibody Conjugates
-6   69627             CD11c (3.9) Mouse mAb (FITC Conjugate)          H Antibody Conjugates
-7   51562         CD11c (3.9) Mouse mAb (APC-Cy7® Conjugate)          H Antibody Conjugates
-8   36268              CD11c (3.9) Mouse mAb (APC Conjugate)          H Antibody Conjugates
+query_cc_antibodies("CD11bfakename")
+# NULL
+query_cc_antibodies("CD11c")
+#   Cat_num                                       Product Name Reactivity
+# 1   97585                           CD11c (D1V9Y) Rabbit mAb          M
+# 2   97473 CD11c (3.9) Mouse mAb (violetFluor™ 450 Conjugate)          H
+# 3   42847    CD11c (3.9) Mouse mAb (redFluor™ 710 Conjugate)          H
+# 4   80342          CD11c (3.9) Mouse mAb (PE-Cy7® Conjugate)          H
+# 5   56025               CD11c (3.9) Mouse mAb (PE Conjugate)          H
+# 6   69627             CD11c (3.9) Mouse mAb (FITC Conjugate)          H
+# 7   51562         CD11c (3.9) Mouse mAb (APC-Cy7® Conjugate)          H
+# 8   36268              CD11c (3.9) Mouse mAb (APC Conjugate)          H
+# Product_Type
+# 1  Primary Antibodies
+# 2 Antibody Conjugates
+# 3 Antibody Conjugates
+# 4 Antibody Conjugates
+# 5 Antibody Conjugates
+# 6 Antibody Conjugates
+# 7 Antibody Conjugates
+# 8 Antibody Conjugates
 }

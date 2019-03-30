@@ -65,5 +65,6 @@ for i in seurat*.RDS ; do bash ./bash/build_jobs_acc_benchmark.bash $i ; done
 1. Make figure list.
 2. Start actually writting the verbose part of the paper.
 3. Address some of the TODO's in this repository
+4. Reduce dependecies by replacing functions to base equivalents.
 
 

@@ -10,13 +10,15 @@
 #'
 #' @param object data, either a Seurat of a data frame object
 #' @param markernames names of the markers to be used for the plot
+#' @param classif_col name of the classification column to be used for
+#'     the grouping, defaults to "ident"
 #'
 #' @return a ggplot grid with the plots
 #' @export
 #'
 #' @examples
 #' plot_flowstyle(Seurat::pbmc_small, c("ACRBP", "TSC22D1", "VDAC3"))
-plot_flowstyle <- function(object, markernames) {
+plot_flowstyle <- function(object, markernames, classif_col = "ident") {
     # TODO add argument to change to natural scale ...
     UseMethod("plot_flowstyle", object)
 }
@@ -24,21 +26,22 @@ plot_flowstyle <- function(object, markernames) {
 
 #' @importFrom GGally ggpairs wrap
 #' @importFrom ggplot2 aes_string theme_bw
+#' @importFrom stats rnorm
 #' @describeIn plot_flowstyle Draw a flowstyle plot from a data.frame
 #' @export
-plot_flowstyle.data.frame <- function(df, markernames, classif_col = "ident") {
+plot_flowstyle.data.frame <- function(object, markernames, classif_col = "ident") {
 
-    tmp_ident <- df[[classif_col]]
-    df <- df[,markernames]
+    tmp_ident <- object[[classif_col]]
+    object <- object[,markernames]
 
     # TODO add argument decide when to add noise to the dataset ...
-    df[df == 0] <- abs(rnorm(sum(df == 0),mean = 0, sd = 0.2))
-    df$ident <- tmp_ident
+    object[object == 0] <- abs(stats::rnorm(sum(object == 0),mean = 0, sd = 0.2))
+    object$ident <- tmp_ident
 
 
     g <- GGally::ggpairs(
-        as.data.frame(df),
-        columns = 1:(ncol(df) - 1),
+        as.data.frame(object),
+        columns = 1:(ncol(object) - 1),
         ggplot2::aes_string(colour = "ident"),
         progress = FALSE,
         lower = list(
@@ -60,8 +63,8 @@ plot_flowstyle.data.frame <- function(df, markernames, classif_col = "ident") {
 
 #' @describeIn plot_flowstyle Draw a flowstyle plot from a seurat object
 #' @export
-plot_flowstyle.seurat <- function(Seurat, markernames, classif_col = "ident") {
-    tmp <- as.data.frame.Seurat(Seurat, markernames)
+plot_flowstyle.seurat <- function(object, markernames, classif_col = "ident") {
+    tmp <- as.data.frame.seurat(object, markernames)
     plot_flowstyle.data.frame(
         tmp, markernames = markernames,
         classif_col = classif_col)

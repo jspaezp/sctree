@@ -6,18 +6,21 @@
 \alias{plot_flowstyle.seurat}
 \title{plot_flowstyle}
 \usage{
-plot_flowstyle(object, markernames)
+plot_flowstyle(object, markernames, classif_col = "ident")
 
-\method{plot_flowstyle}{data.frame}(df, markernames,
+\method{plot_flowstyle}{data.frame}(object, markernames,
   classif_col = "ident")
 
-\method{plot_flowstyle}{seurat}(Seurat, markernames,
+\method{plot_flowstyle}{seurat}(object, markernames,
   classif_col = "ident")
 }
 \arguments{
 \item{object}{data, either a Seurat of a data frame object}
 
 \item{markernames}{names of the markers to be used for the plot}
+
+\item{classif_col}{name of the classification column to be used for
+the grouping, defaults to "ident"}
 }
 \value{
 a ggplot grid with the plots

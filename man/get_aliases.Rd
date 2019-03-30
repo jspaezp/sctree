@@ -20,12 +20,12 @@ a named list whose names are the provided symbols and the elements are
 gets the aliases for a series of gene names
 }
 \examples{
-> get_aliases(c("MAPK1", "CD4"))
-$MAPK1
-[1] "ERK"      "ERK-2"    "ERK2"     "ERT1"     "MAPK2"    "P42MAPK"
-[7] "PRKM1"    "PRKM2"    "p38"      "p40"      "p41"      "p41mapk"
-[13] "p42-MAPK" "MAPK1"
-
-$CD4
-[1] "CD4mut" "CD4"
+get_aliases(c("MAPK1", "CD4"))
+# $MAPK1
+# [1] "ERK"      "ERK-2"    "ERK2"     "ERT1"     "MAPK2"    "P42MAPK"
+# [7] "PRKM1"    "PRKM2"    "p38"      "p40"      "p41"      "p41mapk"
+# [13] "p42-MAPK" "MAPK1"
+#
+# $CD4
+# [1] "CD4mut" "CD4"
 }

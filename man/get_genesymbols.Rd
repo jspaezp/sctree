@@ -7,10 +7,10 @@
 get_genesymbols(gene_aliases, db = org.Hs.eg.db::org.Hs.eg.db)
 }
 \arguments{
+\item{gene_aliases}{a character vector of gene aliases zb: ERK}
+
 \item{db}{a database that inherits the select property.
 defaults to org.Hs.eg.db}
-
-\item{gene_symbols}{a character vector of gene aliases zb: ERK}
 }
 \value{
 a named list whose names are the provided aliases and the elements
@@ -20,13 +20,13 @@ a named list whose names are the provided aliases and the elements
 gets the aliases for a series of common gene names
 }
 \examples{
-> get_genesymbols("ERK")
-$ERK
-[1] "EPHB2" "MAPK1"
-> get_genesymbols(c("SUPERFAKEGENE", "ERK"))
-$SUPERFAKEGENE
-[1] NA
-
-$ERK
-[1] "EPHB2" "MAPK1"
+get_genesymbols("ERK")
+# $ERK
+# [1] "EPHB2" "MAPK1"
+get_genesymbols(c("SUPERFAKEGENE", "ERK"))
+# $SUPERFAKEGENE
+# [1] NA
+#
+# $ERK
+# [1] "EPHB2" "MAPK1"
 }

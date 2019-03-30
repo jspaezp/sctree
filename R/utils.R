@@ -7,12 +7,13 @@
 #'
 #' @param object A seurat object
 #' @param fraction fraction of the data to be used for plotting, defaults to 0.1
+#' @param ... Additional arguments to be passed to Seurat::TSNEPlot
 #'
 #' @return a ggplot object with the tsne plot
 #' @export
 #'
 #' @examples
-#' > tsne_plot(Seurat::pbmc_small)
+#' tsne_plot(Seurat::pbmc_small)
 #' @importFrom Seurat TSNEPlot
 tsne_plot <- function(object, fraction = 0.1, ...) {
     g <- Seurat::TSNEPlot(
@@ -34,25 +35,28 @@ tsne_plot <- function(object, fraction = 0.1, ...) {
 #'
 #' It returns only the genes annotated as variable and the identity column.
 #'
-#' @param seurat A seurat object
+#' @param x A seurat object
+#' @param genes genes to extract to the data.frame
+#' @param fix_names logical value indicating wether the gene names should be
+#'     converted to R-compatible names. defaults to FALSE
 #'
 #' @return a data frame.
 #' @export
 #'
 #' @examples
-#' > as.data.frame.Seurat(pbmc_small, seurat@var.genes)[1:3,1:3]
-#'                    LTB EAF2 CD19
-#' ATGCCAGAACGACT 6.062788    0    0
-#' CATGGCCTGTGCAT 6.714813    0    0
-#' GAACCTGATGAACC 7.143118    0    0
+#' as.data.frame(Seurat::pbmc_small, Seurat::pbmc_small@@var.genes)[1:3,1:3]
+#' #                     LTB EAF2 CD19
+#' # ATGCCAGAACGACT 6.062788    0    0
+#' # CATGGCCTGTGCAT 6.714813    0    0
+#' # GAACCTGATGAACC 7.143118    0    0
 #' @importFrom Seurat FetchData GetIdent
-as.data.frame.Seurat <- function(seurat, genes, fix_names = FALSE) {
+as.data.frame.seurat <- function(x, genes, fix_names = FALSE) {
     # TODO possibly also a warning if it is not a variable gene and an error if it does not exist
     # also an argument to force though the error ...
-    tmp <- Seurat::FetchData(seurat, vars.all = genes)
+    tmp <- Seurat::FetchData(x, vars.all = genes)
     tmp <-  as.data.frame(tmp, stringsAsFactors = FALSE)
 
-    tmp$ident <- Seurat::GetIdent(seurat, uniq = FALSE, cells.use = rownames(tmp))
+    tmp$ident <- Seurat::GetIdent(x, uniq = FALSE, cells.use = rownames(tmp))
 
     if (fix_names) {
         colnames(tmp) <- make.names(colnames(tmp))
@@ -86,8 +90,9 @@ as.data.frame.Seurat <- function(seurat, genes, fix_names = FALSE) {
 #' @export
 #'
 #' @examples
-#' > is_gene_membrane(c("CD4", "GAPDH"))
-#' [1]  TRUE FALSE
+#' is_gene_membrane(c("CD4", "GAPDH"))
+#' # [1]  TRUE FALSE
+#' @importFrom AnnotationDbi select
 is_gene_membrane <- function(gene_symbols,
                              db = org.Hs.eg.db::org.Hs.eg.db,
                              evidence_codes = c("EXP", "IDA", "IPI",
@@ -119,7 +124,10 @@ is_gene_membrane <- function(gene_symbols,
 }
 
 
-
+# TODO: refactor this function to use standard evaluation to prevent the
+# following error:
+# Undefined global functions or variables:
+# ALIAS SYMBOL plot.flowstyle
 
 #' get_aliases
 #'
@@ -134,14 +142,14 @@ is_gene_membrane <- function(gene_symbols,
 #' @export
 #'
 #' @examples
-#' > get_aliases(c("MAPK1", "CD4"))
-#' $MAPK1
-#' [1] "ERK"      "ERK-2"    "ERK2"     "ERT1"     "MAPK2"    "P42MAPK"
-#' [7] "PRKM1"    "PRKM2"    "p38"      "p40"      "p41"      "p41mapk"
-#' [13] "p42-MAPK" "MAPK1"
-#'
-#' $CD4
-#' [1] "CD4mut" "CD4"
+#' get_aliases(c("MAPK1", "CD4"))
+#' # $MAPK1
+#' # [1] "ERK"      "ERK-2"    "ERK2"     "ERT1"     "MAPK2"    "P42MAPK"
+#' # [7] "PRKM1"    "PRKM2"    "p38"      "p40"      "p41"      "p41mapk"
+#' # [13] "p42-MAPK" "MAPK1"
+#' #
+#' # $CD4
+#' # [1] "CD4mut" "CD4"
 #' @importFrom tidyr nest
 #' @importFrom wrapr named_map_builder
 #' @importFrom AnnotationDbi select
@@ -155,7 +163,7 @@ get_aliases <- function(gene_symbols,
             columns = c("ALIAS", "SYMBOL"),
             keytype = "SYMBOL")
 
-        alias_df <- tidyr::nest(alias_df, ALIAS)
+        alias_df <- tidyr::nest(alias_df, "ALIAS")
         alias_vector <- wrapr::named_map_builder(
             names = alias_df[["SYMBOL"]],
             values = lapply(alias_df[["data"]], function(x) x[["ALIAS"]]))
@@ -169,7 +177,7 @@ get_aliases <- function(gene_symbols,
 #'
 #' gets the aliases for a series of common gene names
 #'
-#' @param gene_symbols a character vector of gene aliases zb: ERK
+#' @param gene_aliases a character vector of gene aliases zb: ERK
 #' @param db a database that inherits the select property.
 #'     defaults to org.Hs.eg.db
 #'
@@ -178,15 +186,15 @@ get_aliases <- function(gene_symbols,
 #' @export
 #'
 #' @examples
-#' > get_genesymbols("ERK")
-#' $ERK
-#' [1] "EPHB2" "MAPK1"
-#' > get_genesymbols(c("SUPERFAKEGENE", "ERK"))
-#' $SUPERFAKEGENE
-#' [1] NA
-#'
-#' $ERK
-#' [1] "EPHB2" "MAPK1"
+#' get_genesymbols("ERK")
+#' # $ERK
+#' # [1] "EPHB2" "MAPK1"
+#' get_genesymbols(c("SUPERFAKEGENE", "ERK"))
+#' # $SUPERFAKEGENE
+#' # [1] NA
+#' #
+#' # $ERK
+#' # [1] "EPHB2" "MAPK1"
 #' @importFrom tidyr nest
 #' @importFrom wrapr named_map_builder
 #' @importFrom AnnotationDbi select
@@ -200,7 +208,7 @@ get_genesymbols <- function(gene_aliases,
             columns = c("ALIAS", "SYMBOL"),
             keytype = "ALIAS")
 
-        alias_df <- tidyr::nest(alias_df, SYMBOL)
+        alias_df <- tidyr::nest(alias_df, "SYMBOL")
         alias_vector <- wrapr::named_map_builder(
             names = alias_df[["ALIAS"]],
             values = lapply(alias_df[["data"]], function(x) x[["SYMBOL"]]))
@@ -209,3 +217,40 @@ get_genesymbols <- function(gene_aliases,
     return(alias_vector)
 }
 
+
+
+#' top_n
+#'
+#' same as a less robust dplyr::top_n but with standard eval ....
+#' rank gives value of 1 to the minimum
+#' Whenever there is a tie, returns all elements that tied ...
+#'
+#' @param df a data frame
+#' @param n the number of falues to be returned
+#' @param wt the column to be used for the ranking
+#'
+#' @return a data frame of length (number of rows) n
+#' @export
+#' @examples
+#' top_n(iris, 2, "Sepal.Width")
+#' # Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#' # 16          5.7         4.4          1.5         0.4  setosa
+#' # 34          5.5         4.2          1.4         0.2  setosa
+#' top_n(iris, -2, "Sepal.Width")
+#' # Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+#' # 61           5.0         2.0          3.5         1.0 versicolor
+#' # 63           6.0         2.2          4.0         1.0 versicolor
+#' # 69           6.2         2.2          4.5         1.5 versicolor
+#' # 120          6.0         2.2          5.0         1.5  virginica
+top_n <- function(df, n, wt) {
+    if (n > 0) {
+        thresh <- df[[wt]][which(rank(-df[[wt]], ties.method = "random") == n)]
+        df[df[[wt]] >= unique(thresh),]
+
+
+    } else {
+        thresh <- df[[wt]][which(rank(df[[wt]], ties.method = "random") == -n)]
+        df[df[[wt]] <= unique(thresh),]
+    }
+
+}

@@ -15,13 +15,18 @@
 #' @importFrom viridis viridis
 #' @importFrom memoise cache_filesystem memoise
 #' @importFrom DT renderDataTable
+#' @importFrom shiny actionButton checkboxGroupInput checkboxInput div
+#' @importFrom shiny eventReactive fluidPage h2 mainPanel plotOutput
+#' @importFrom shiny renderUI selectInput shinyApp sidebarLayout sidebarPanel
+#' @importFrom shiny sliderInput tabPanel tabsetPanel titlePanel uiOutput
+#' @importFrom shiny renderPlot renderCachedPlot
 #' @examples
-#' #'\dontrun{
-#' > featureplot_gadget(seurat_object = dataset_5050,
-#' +                    genes.use = dataset_5050@var.genes[
-#' +                        is_gene_membrane(dataset_5050@var.genes)],
-#' +                    cache = "./.cache")
-#'}
+#' \donttest{
+#' featureplot_gadget(seurat_object = seurat::pbmc_small,
+#'                     genes.use = Seurat::pbmc_small@@var.genes[
+#'                         is_gene_membrane(Seurat::pbmc_small@@var.genes)],
+#'                     cache = "./.cache")
+#' }
 featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
                                starting_genes = NULL,
                                genes.use = NULL,
@@ -91,7 +96,7 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
             genes.use <- seurat_object@var.genes
         }
 
-        object_df <- as.data.frame.Seurat(
+        object_df <- as.data.frame.seurat(
             seurat_object, genes.use, fix_names = TRUE)
 
         # TODO: fix issue where memoisation flushes the cache with each run.
@@ -157,7 +162,7 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
                 importance_df[["importance"]])
 
             g <- ggplot2::ggplot(
-                dplyr::top_n(importance_df, 20, importance),
+                top_n(importance_df, 20, "importance"),
                 ggplot2::aes_string(x = "importance", xend = 0,
                            y = "gene", yend = "gene")) +
                 ggplot2::geom_point() +
@@ -229,7 +234,7 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
        output$pairsPlot <- shiny::renderCachedPlot({
            capt_input <- captured_input()
 
-           plot.flowstyle(
+           plot_flowstyle(
                object = seurat_object,
                markernames = make.names(capt_input$genenames))
        }, cacheKeyExpr = {

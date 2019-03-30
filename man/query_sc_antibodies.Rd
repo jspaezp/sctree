@@ -21,14 +21,21 @@ Note that it is jsut a wrapper arround the web search of the site, so please
 be nice on them and dont get your IP banned ...
 }
 \examples{
-> query_sc_antibodies("CD11bfakename")
+query_sc_antibodies("CD11bfakename")
 NULL
-> head(query_sc_antibodies("CD11C"))
-Product_Name  Cat_num     Epitope    Species                       Method
-1 Integrin alpha X Antibody (2Q862) sc-71454 Integrin aX  and human                   IF and FCM
-2 Integrin alpha X Antibody (2Q865) sc-71455 Integrin aX      human                   IP and FCM
-3   Integrin alpha X Antibody (3.9)  sc-1185 Integrin aX      human               IP, IF and FCM
-4 Integrin alpha X Antibody (3H986) sc-71456 Integrin aX      mouse                   IF and FCM
-5   Integrin alpha X Antibody (B-6) sc-46676 Integrin aX      human WB, IP, IF, IHC(P) and ELISA
-6 Integrin alpha X Antibody (B-Iy6) sc-19989 Integrin aX      human                   IF and FCM
+head(query_sc_antibodies("CD11C"))
+# Product_Name  Cat_num     Epitope    Species
+# 1 Integrin alpha X Antibody (2Q862) sc-71454 Integrin aX  and human
+# 2 Integrin alpha X Antibody (2Q865) sc-71455 Integrin aX      human
+# 3   Integrin alpha X Antibody (3.9)  sc-1185 Integrin aX      human
+# 4 Integrin alpha X Antibody (3H986) sc-71456 Integrin aX      mouse
+# 5   Integrin alpha X Antibody (B-6) sc-46676 Integrin aX      human
+# 6 Integrin alpha X Antibody (B-Iy6) sc-19989 Integrin aX      human
+# Method
+# 1                   IF and FCM
+# 2                   IP and FCM
+# 3               IP, IF and FCM
+# 4                   IF and FCM
+# 5 WB, IP, IF, IHC(P) and ELISA
+# 6                   IF and FCM
 }

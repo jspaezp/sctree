@@ -1,37 +1,38 @@
 Package: sctree
 Title: Tree based analysis of single rna-seq clusters
-Version: 0.0.0.9000
+Version: 0.0.1.9000
 Authors@R: 
     person(given = "J. Sebastian",
            family = "Paez",
            role = c("aut", "cre"),
            email = "jpaezpae@purdue.edu")
-Description: 
-    Attempts to streamline the translation of single-cell rna-seq data to
-    flow cytometry applications.
+Description: Attempts to streamline the translation of single-cell 
+    rna-seq data to flow cytometry applications.
 License: Apache 2.0
 Encoding: UTF-8
 LazyData: true
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    org.Hs.eg.db
 VignetteBuilder: knitr
 Imports: 
-    Seurat,
-    ranger,
-    GGally,
-    memoise,
-    shiny,
-    forcats,
-    partykit,
+    AnnotationDbi,
     DT,
     ggplot2,
+    GGally,
+    memoise,
+    forcats,
+    partykit,
     purrr,
+    ranger,
     rvest,
+    Seurat,
+    shiny,
     tidyr,
-    viridis,
     wrapr,
+    viridis,
     xml2
 RoxygenNote: 6.1.1
 biocViews:

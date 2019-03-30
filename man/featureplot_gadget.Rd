@@ -23,10 +23,10 @@ TODO return something ... its a gadget after all ...
 Shiny gadget to explore clusters and features for a seurat object.
 }
 \examples{
-#'\dontrun{
-> featureplot_gadget(seurat_object = dataset_5050,
-+                    genes.use = dataset_5050@var.genes[
-+                        is_gene_membrane(dataset_5050@var.genes)],
-+                    cache = "./.cache")
+\donttest{
+featureplot_gadget(seurat_object = seurat::pbmc_small,
+                    genes.use = Seurat::pbmc_small@var.genes[
+                        is_gene_membrane(Seurat::pbmc_small@var.genes)],
+                    cache = "./.cache")
 }
 }

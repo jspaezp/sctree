@@ -52,3 +52,4 @@ files containing a list with a lot of stuff in
 1.  Make figure list.
 2.  Start actually writting the verbose part of the paper.
 3.  Address some of the TODO’s in this repository
+4.  Reduce dependecies by replacing functions to base equivalents.

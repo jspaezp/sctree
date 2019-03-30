@@ -10,6 +10,8 @@ tsne_plot(object, fraction = 0.1, ...)
 \item{object}{A seurat object}
 
 \item{fraction}{fraction of the data to be used for plotting, defaults to 0.1}
+
+\item{...}{Additional arguments to be passed to Seurat::TSNEPlot}
 }
 \value{
 a ggplot object with the tsne plot
@@ -19,5 +21,5 @@ slim wrapper arround Seurat::TSNEPlot that overwrites the return option and
 by default uses a tenth of the data.
 }
 \examples{
-> tsne_plot(Seurat::pbmc_small)
+tsne_plot(Seurat::pbmc_small)
 }
