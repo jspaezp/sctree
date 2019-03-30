@@ -1,10 +1,11 @@
 
-# REQUIRES #######################
-# rvest
-# xml2
-#
 # TODO: Fix biolegend function to return a data frame consistently with the rest
 # of the other funtions
+# TODO: implement caching the queries so they can quickly be recovered from the
+# commonly searched antibodies
+# TODO: write a "generic" function that unifies all companies.
+# TODO: implement an automated way to search as well for the aliases of the gene
+# names provided
 
 #' Query cell signaling for Single cell antibodies
 #'
@@ -109,7 +110,7 @@ query_sc_antibodies <- function(search_term) {
 
 
     antibody_df <- antibody_df[[1]]
-    antibody_df <- antibody_df[,2:(ncol(antibody_df)-1)]
+    antibody_df <- antibody_df[,2:(ncol(antibody_df) - 1)]
     antibody_df <- antibody_df[grepl("detection", antibody_df$Description),]
     colnames(antibody_df)[2] <- "Cat_num"
     colnames(antibody_df)[1] <- "Product_Name"

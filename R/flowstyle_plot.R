@@ -24,12 +24,12 @@ plot_flowstyle <- function(object, markernames) {
 
 #' @importFrom GGally ggpairs wrap
 #' @importFrom ggplot2 aes_string theme_bw
-#' @describeIn plot.flowstyle
+#' @describeIn plot_flowstyle Draw a flowstyle plot from a data.frame
 #' @export
 plot_flowstyle.data.frame <- function(df, markernames, classif_col = "ident") {
 
-    df <- df[,c(markernames, classif_col)]
-    tmp_ident <- df$ident
+    tmp_ident <- df[[classif_col]]
+    df <- df[,markernames]
 
     # TODO add argument decide when to add noise to the dataset ...
     df[df == 0] <- abs(rnorm(sum(df == 0),mean = 0, sd = 0.2))
@@ -58,7 +58,7 @@ plot_flowstyle.data.frame <- function(df, markernames, classif_col = "ident") {
 }
 
 
-#' @describeIn plot_flowstyle
+#' @describeIn plot_flowstyle Draw a flowstyle plot from a seurat object
 #' @export
 plot_flowstyle.seurat <- function(Seurat, markernames, classif_col = "ident") {
     tmp <- as.data.frame.Seurat(Seurat, markernames)

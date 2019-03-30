@@ -2,12 +2,16 @@
 % Please edit documentation in R/ranger_utils.R
 \name{ranger_importances.df}
 \alias{ranger_importances.df}
+\alias{ranger_importances.seurat}
 \title{ranger_importances
 
 Calculates ranger-based variable importances for data frames and
 seurat objects}
 \usage{
 ranger_importances.df(object, cluster = NULL, pval_cutoff = 0.05,
+  imp_method = c("janitza", "altmann"), num.trees = 500, ...)
+
+ranger_importances.seurat(object, cluster = NULL, pval_cutoff = 0.05,
   imp_method = c("janitza", "altmann"), num.trees = 500, ...)
 }
 \arguments{
@@ -29,6 +33,11 @@ list with 3 elements ranger_fit, importances_ranger, signif_importances_ranger
 \description{
 ranger_importances
 }
+\section{Functions}{
+\itemize{
+\item \code{ranger_importances.seurat}: Calculate variable importances to calssify a seurat object
+}}
+
 \examples{
 > summary(ranger_importances.seurat(Seurat::pbmc_small))
 ranger.seurat being called

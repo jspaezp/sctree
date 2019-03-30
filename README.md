@@ -3,10 +3,20 @@
 
 # sctree
 
-The goal of sctree is to …
+The goal of sctree is to create a tool to accelerate the transition from
+single cell rna-sequencing to calidation and new sub-population
+discovery.
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+Features suggesting pseudo-gating strategies to purify found populations
+via flow-cytometry, antibody querying and cross validations between
+datasets.
+
+# Installation
+
+    git clone https://github.rcac.purdue.edu/jpaezpae/sctree sctree
+    cd sctree
+    
+    R -e "devtools::install('.')"
 
 # Reproducing the runs in the purdue cluster
 
@@ -36,8 +46,6 @@ files containing a list with a lot of stuff in
     it.
 
     for i in seurat*.RDS ; do bash ./bash/build_jobs_acc_benchmark.bash $i ; done
-
-# 
 
 # Steps down the road
 

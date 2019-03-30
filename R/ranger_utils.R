@@ -1,4 +1,6 @@
 
+# TODO: rename functions to make clear that they are fitting the forest
+# TODO: restructure the function to get method dispatchment (optional)
 
 #' ranger_importances
 #' @title ranger_importances
@@ -80,7 +82,7 @@ ranger_importances.df <- function(object, cluster = NULL,
 
 
 
-#' @describeIn ranger_importances
+#' @describeIn ranger_importances.df Calculate variable importances to calssify a seurat object
 #' @export
 ranger_importances.seurat <- function(object, cluster = NULL,
                                       pval_cutoff = 0.05,

@@ -1,13 +1,15 @@
 Package: sctree
-Title: What the Package Does (One Line, Title Case)
+Title: Tree based analysis of single rna-seq clusters
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "J. Sebastian",
+           family = "Paez",
            role = c("aut", "cre"),
-           email = "first.last@example.com")
-Description: What the package does (one paragraph).
-License: What license it uses
+           email = "jpaezpae@purdue.edu")
+Description: 
+    Attempts to streamline the translation of single-cell rna-seq data to
+    flow cytometry applications.
+License: Apache 2.0
 Encoding: UTF-8
 LazyData: true
 Suggests: 
@@ -22,5 +24,14 @@ Imports:
     memoise,
     shiny,
     forcats,
-    partykit
+    partykit,
+    DT,
+    ggplot2,
+    purrr,
+    rvest,
+    tidyr,
+    viridis,
+    wrapr,
+    xml2
 RoxygenNote: 6.1.1
+biocViews:

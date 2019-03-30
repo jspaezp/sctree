@@ -5,16 +5,28 @@
 \title{featureplot_gadget}
 \usage{
 featureplot_gadget(seurat_object = Seurat::pbmc_small,
-  starting_genes = NULL, cache = "./.cache")
+  starting_genes = NULL, genes.use = NULL, cache = "./.cache")
 }
 \arguments{
 \item{seurat_object}{a seurat object to explore}
 
 \item{starting_genes}{genes to start with}
+
+\item{genes.use}{genes use for the classification}
+
+\item{cache}{a directory where the caching will occur}
 }
 \value{
 TODO return something ... its a gadget after all ...
 }
 \description{
 Shiny gadget to explore clusters and features for a seurat object.
+}
+\examples{
+#'\dontrun{
+> featureplot_gadget(seurat_object = dataset_5050,
++                    genes.use = dataset_5050@var.genes[
++                        is_gene_membrane(dataset_5050@var.genes)],
++                    cache = "./.cache")
+}
 }

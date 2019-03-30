@@ -4,7 +4,7 @@
 \alias{as.data.frame.Seurat}
 \title{Gets a data frame from a seurat object}
 \usage{
-\method{as.data.frame}{Seurat}(seurat, genes)
+\method{as.data.frame}{Seurat}(seurat, genes, fix_names = FALSE)
 }
 \arguments{
 \item{seurat}{A seurat object}

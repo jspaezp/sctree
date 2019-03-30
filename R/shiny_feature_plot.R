@@ -5,17 +5,29 @@
 #'
 #' @param seurat_object a seurat object to explore
 #' @param starting_genes genes to start with
+#' @param genes.use genes use for the classification
+#' @param cache a directory where the caching will occur
 #'
 #' @return TODO return something ... its a gadget after all ...
 #' @export
 #'
 #'
 #' @importFrom viridis viridis
-#' @importFrom memoise cache_filesystem
+#' @importFrom memoise cache_filesystem memoise
 #' @importFrom DT renderDataTable
+#' @examples
+#' #'\dontrun{
+#' > featureplot_gadget(seurat_object = dataset_5050,
+#' +                    genes.use = dataset_5050@var.genes[
+#' +                        is_gene_membrane(dataset_5050@var.genes)],
+#' +                    cache = "./.cache")
+#'}
 featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
                                starting_genes = NULL,
+                               genes.use = NULL,
                                cache = "./.cache") {
+
+    # TODO modularize the app ...
 
     plotting_pannel <- shiny::sidebarPanel(
         # TODO remove reactive button function to add genes or fix reactivity at startup
@@ -47,16 +59,26 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
 
             shiny::mainPanel(
                 shiny::tabsetPanel(
-                    shiny::tabPanel("TSNE plot", shiny::plotOutput("generalTsne", height = '600px')),
+                    shiny::tabPanel(
+                        "TSNE plot",
+                        shiny::plotOutput("generalTsne", height = '600px')),
                     shiny::tabPanel(
                         "Find Markers",
-                        shiny::div(DT::dataTableOutput("rangerImpTable")),
+                        shiny::div(
+                            DT::dataTableOutput("rangerImpTable")),
                         shiny::plotOutput("rangerImpPlot")),
-                    shiny::tabPanel("Feature plot", shiny::plotOutput("tsnePlot", height = '600px')),
-                    shiny::tabPanel("Violin Plot", shiny::plotOutput("violinPlot", height = '600px')),
+                    shiny::tabPanel(
+                        "Feature plot",
+                        shiny::plotOutput("tsnePlot", height = '600px')),
+                    shiny::tabPanel(
+                        "Violin Plot",
+                        shiny::plotOutput("violinPlot", height = '600px')),
                     shiny::tabPanel(
                         "Pairs Plot",
-                        shiny::plotOutput("generalTsne2", height = '600px', width = '600px'),
+                        shiny::plotOutput(
+                            "generalTsne2",
+                            height = '600px',
+                            width = '600px'),
                         shiny::plotOutput("pairsPlot", height = '800px')))
             )
 
@@ -64,27 +86,35 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
     )
 
     server <- function(input, output) {
-        object_df <- as.data.frame.Seurat(seurat_object, seurat_object@var.genes)
+
+        if (is.null(genes.use)) {
+            genes.use <- seurat_object@var.genes
+        }
+
+        object_df <- as.data.frame.Seurat(
+            seurat_object, genes.use, fix_names = TRUE)
+
+        # TODO: fix issue where memoisation flushes the cache with each run.
+        # TODO: add progress bar for long running processes such as fitting the
+        # ...   random forest
+
         filesys_cache <- memoise::cache_filesystem(cache)
         mem_ranger.df <- memoise::memoise(ranger_importances.df, cache = filesys_cache)
-
 
         colorscale <- viridis::viridis(2, direction = -1)
         # TODO add an option to select either all genes or only variables
         #total_genes <- rownames(seurat_object@raw.data)
         total_genes <- seurat_object@var.genes
 
-
-
         importance_df <- shiny::eventReactive(input$cluster, {
-            importance_df <- mem_ranger.df(object = object_df,
-                                           cluster = input$cluster,
-                                           num.trees = 2000)[[3]]
+            importance_df <- mem_ranger.df(
+                object = object_df,
+                cluster = input$cluster,
+                num.trees = 2000)[[3]]
             return(importance_df)
         })
 
         if (is.null(starting_genes)) {
-            #plottable_genes <- rownames(head(importance_df))
             plottable_genes <- character()
         } else {
             plottable_genes <- starting_genes
@@ -148,8 +178,8 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
             choices <- character()
 
             tryCatch({
-                choices <- sort(total_genes[!total_genes %in%
-                                                get_plottable_genes()])
+                choices <- sort(
+                    total_genes[!total_genes %in% get_plottable_genes()])
             }, error = function(e) {
                 warning("Recovering from error in `output$allgenes <- shiny::renderUI`")
                 choices <<- sort(seurat_object@var.genes)
@@ -210,98 +240,9 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
 
     # Run the application
     shiny::shinyApp(ui = ui, server = server)
+
+    # TODO: select something to return, wether it is the set of markers or the
+    # annotated markers/ proposed gating
+    # TODO: modularize and wrtite more unit testing
 }
 
-##################### ================= NOTE ===================================
-#####################  It seems that the slowest part of the process is to
-#####################  serialize the seurat opbject, could try to run the
-#####################  extraction of the data frame to cache the process ...
-#####################
-##################### ================= END NOTE ===============================
-##################### library(shiny)
-#library(Seurat)
-#library(DT)
-#library(memoise)
-
-#filesys_cache <- memoise::cache_filesystem("./.cache")
-
-#mem_ranger.seurat <- memoise::memoise(ranger_importances.seurat, cache = filesys_cache)
-
-#system.time({mem_ranger.seurat(dataset_5050, cluster = "0", pval_cutoff = 0.05)})
-
-#profvis({mem_ranger.seurat(dataset_5050, cluster = "1", pval_cutoff = 0.05)})
-
-#profvis({shinyApp(ui = ui, server = server, options = "test.mode")} ,prof_input = '/path_to_save_output/random_name.Rprof')
-
-#for (i in c("md5", "sha1", "crc32", "sha256", "sha512",
-#            "xxhash32", "xxhash64", "murmur32")) {
-#    print(i)
-#    print(system.time({digest::digest(dataset_5050, i)}))
-#}
-#print(system.time({digest::digest(dataset_5050)}))
-#require(profvis)
-#profvis({
-#    featureplot_gadget(dataset_5050,
-#                       starting_genes = c("CD3D", "TMSB4X", "ARHGDIB", "CKB", "XIST", "CDKN2A"),
-#                       cache = "./.cache")
-#})
-#for (i in c("md5", "sha1", "crc32", "sha256", "sha512",
-#            "xxhash32", "xxhash64", "murmur32")) {
-#    print(i)
-#    print(system.time({digest::digest(object_df, i)}))
-#}
-#filesys_cache <- memoise::cache_filesystem("./cache")
-#mem_ranger.df <- memoise::memoise(ranger_importances.df, cache = filesys_cache)
-#ranger_importances.df(object_df, cluster = "0")
-#system.time({mem_ranger.df(object_df, cluster = "1")})
-
-#featureplot_gadget()
-
-
-# dataset_5050 <- readRDS("C:/Users/Sebastian/Downloads/seurat_mix5050.RDS")
-
-
-# object_df <- as.data.frame.Seurat(dataset_5050)
-# filesys_cache <- memoise::cache_filesystem("./.cache")
-# mem_ranger.df <- memoise::memoise(ranger_importances.df, cache = filesys_cache)
-#
-#
-#
-#
-# clus_1 <- mem_ranger.df(object_df, cluster = "1")
-#
-# clus_0 <- mem_ranger.df(object_df, cluster = "0")
-#
-# clus_0_antibodies <- head(rownames(clus_0$signif_importances_ranger), 30) %>%
-#     purrr::map(query_biolegend_antibodies)
-#
-# clus_1_antibodies <- head(rownames(clus_1$signif_importances_ranger), 30) %>%
-#     purrr::map(query_biolegend_antibodies)
-#
-#
-# featureplot_gadget(seurat_object = dataset_5050,
-#                    starting_genes = c("CD3D", "TMSB4X", "ARHGDIB", "CKB", "XIST", "CDKN2A", "EIF5A"),
-#                    cache = "./.cache")
-#
-#
-#
-# surface_annotated <- AnnotationDbi::select(
-#     org.Hs.eg.db::org.Hs.eg.db,
-#     keys = dataset_5050@var.genes,
-#     columns = "GO",
-#     keytype = "ALIAS") %>%
-#     dplyr::filter(GO %in% c("GO:0009986", "GO:0005886", "GO:0044459"))
-#
-# head(surface_annotated)
-#
-#
-# surface_annotated
-#
-# clus_1_surface <- mem_ranger.df(object_df[, c(surface_annotated$ALIAS, 'ident')], cluster = "1")
-#
-#
-#
-# #source("./R/antibodies.R")
-#
-#
-# #query_biolegend_antibodies("CD3")

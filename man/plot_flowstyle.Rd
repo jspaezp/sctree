@@ -2,9 +2,17 @@
 % Please edit documentation in R/flowstyle_plot.R
 \name{plot_flowstyle}
 \alias{plot_flowstyle}
+\alias{plot_flowstyle.data.frame}
+\alias{plot_flowstyle.seurat}
 \title{plot_flowstyle}
 \usage{
 plot_flowstyle(object, markernames)
+
+\method{plot_flowstyle}{data.frame}(df, markernames,
+  classif_col = "ident")
+
+\method{plot_flowstyle}{seurat}(Seurat, markernames,
+  classif_col = "ident")
 }
 \arguments{
 \item{object}{data, either a Seurat of a data frame object}
@@ -21,6 +29,13 @@ Simulates flow cytometry plots for single cell rna seq data
 Note that it imputes a little bit of noise to values of 0 just for the
 Sake of visualization
 }
+\section{Methods (by class)}{
+\itemize{
+\item \code{data.frame}: Draw a flowstyle plot from a data.frame
+
+\item \code{seurat}: Draw a flowstyle plot from a seurat object
+}}
+
 \examples{
 plot_flowstyle(Seurat::pbmc_small, c("ACRBP", "TSC22D1", "VDAC3"))
 }
