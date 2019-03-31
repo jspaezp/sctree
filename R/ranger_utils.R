@@ -1,5 +1,6 @@
 
 # TODO: rename functions to make clear that they are fitting the forest
+# TODO: add argument to whitelist, blacklist or filter the genes to use
 # TODO: restructure the function to get method dispatchment (optional)
 
 #' ranger_importances
@@ -13,6 +14,9 @@
 #' @param pval_cutoff p value cutoff for the markers
 #' @param imp_method importance method, either of "janitza" or "altmann"
 #' @param num.trees number of trees to be build using ranger
+#' @param genes_use a character vector indicating which genes to use in
+#'     the classification. currently implemented only for seurat objects.
+#'     (for data frames one can simply subset the input data frame)
 #' @param ... additional arguments to be passed to ranger
 #'
 #' @return  list with 3 elements ranger_fit, importances_ranger, signif_importances_ranger
@@ -41,14 +45,21 @@ ranger_importances.df <- function(object, cluster = NULL,
             mtry = floor(ncol(data)/5),
             importance = importance,
             ...)
+        return(ranger_fit)
     }
 
     tmp <- object
 
-    if (!is.null(cluster)) {
-        stopifnot(cluster %in% unique(tmp$ident))
-        tmp$ident <- factor(make.names(tmp$ident == cluster))
+    if (cluster == "ALL") {
+        tmp$ident <- factor(tmp$ident)
+    } else {
+        if (!is.null(cluster)) {
+            stopifnot(cluster %in% unique(tmp$ident))
+            tmp$ident <- factor(make.names(tmp$ident == cluster))
+        }
     }
+
+
 
     stopifnot(imp_method[1] %in% c("janitza", "altmann"))
 
@@ -88,9 +99,10 @@ ranger_importances.seurat <- function(object, cluster = NULL,
                                       pval_cutoff = 0.05,
                                       imp_method = c("janitza", "altmann"),
                                       num.trees = 500,
+                                      genes_use = object@var.genes,
                                       ...) {
 
-    tmp <- as.data.frame.seurat(object, object@var.genes)
+    tmp <- as.data.frame.seurat(object, object@var.genes, fix_names = TRUE)
     return(ranger_importances.df(tmp,
                                  cluster = cluster,
                                  pval_cutoff = pval_cutoff,

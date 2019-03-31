@@ -100,10 +100,6 @@ is_gene_membrane <- function(gene_symbols,
 
     suppressMessages({
         go_annotated <- AnnotationDbi::select(
-            # "GO:0005886" means plasma membrane
-            # "GO:0044459" means plasma membrane part
-            # "GO:0016021" integral component of membrane
-            # "GO:0005887" integral component of plasma membrane
             db,
             keys = gene_symbols,
             columns = c("GOALL", "EVIDENCEALL"),
@@ -116,9 +112,13 @@ is_gene_membrane <- function(gene_symbols,
                                          evidence_codes,]
     }
 
+    # "GO:0005886" means plasma membrane
+    # "GO:0044459" means plasma membrane part
+    # "GO:0016021" integral component of membrane
+    # "GO:0005887" integral component of plasma membrane
     surface_annotated <- go_annotated[
         go_annotated[["GOALL"]] %in%
-            "GO:0005887",]
+            "GO:0005886",]
 
     return(gene_symbols %in% surface_annotated[["ALIAS"]])
 }

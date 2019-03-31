@@ -15,7 +15,8 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    org.Hs.eg.db
+    org.Hs.eg.db,
+    pkgdown
 VignetteBuilder: knitr
 Imports: 
     AnnotationDbi,

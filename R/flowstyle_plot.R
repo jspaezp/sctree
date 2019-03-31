@@ -29,7 +29,9 @@ plot_flowstyle <- function(object, markernames, classif_col = "ident") {
 #' @importFrom stats rnorm
 #' @describeIn plot_flowstyle Draw a flowstyle plot from a data.frame
 #' @export
-plot_flowstyle.data.frame <- function(object, markernames, classif_col = "ident") {
+plot_flowstyle.data.frame <- function(object,
+                                      markernames,
+                                      classif_col = "ident") {
 
     tmp_ident <- object[[classif_col]]
     object <- object[,markernames]
