@@ -1,0 +1,285 @@
+---
+title: "sctree: a package to connect single cell rna-seq to biology using trees"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
+---
+
+```{r, echo=FALSE}
+cross_validate <- function(train, test, cluster, ...) {
+    rang_importances <- ranger_importances.seurat(
+        train, cluster = cluster, genes_use = train@var.genes, ...)
+    
+    
+    # TODO: implement a way to filter for memrane genes during the cross
+    # validation
+    #
+    # imp_genes <- rang_importances$signif_importances_ranger$gene[
+    #     is_gene_membrane(rang_importances$signif_importances_ranger$gene)]
+    #
+    
+    ranger_significance_table <- rang_importances$signif_importances_ranger
+    
+    imp_genes <- rang_importances$signif_importances_ranger$gene
+    
+    comm_genes <- train@var.genes[train@var.genes %in% test@var.genes]
+    comm_imp_genes <- comm_genes[make.names(comm_genes) %in% imp_genes]
+    
+    # this make.names nonsense is only because ranger needs r-valid names
+    # which is not allways the case for gene names
+    
+    treedata <- as.data.frame(
+        train, genes = train@var.genes[
+            train@var.genes %in% comm_imp_genes],
+        fix_names = TRUE)
+    
+    # TODO make this its own function and place it in utils ...
+    # something like "clean_ident_name"
+    if (cluster == "ALL") {
+        treedata$ident <- factor(treedata$ident)
+    } else {
+        classif_names <- c(
+            FALSE. = paste0("not clus ", cluster),
+            TRUE. = paste0("indeed clus ", cluster))
+        
+        treedata$ident <- factor(
+            classif_names[make.names(treedata$ident == cluster)])
+    }
+    
+    myformula <- as.formula("ident ~ .")
+    # TODO add option to have another column name as the classifier
+    partyfit <- partykit::ctree(formula = myformula, data = treedata)
+    concensusrules <- get_concensus_rules(partyfit)
+    plot(partyfit)
+    
+    # TODO add method to support data frames as inputs
+    
+    testset <- as.data.frame(test, comm_imp_genes, fix_names = TRUE)
+    predicted <- predict(partyfit, testset)
+    
+    gating_genes <- names(partykit::varimp(partyfit[[1]]))
+    
+    summary_table <- table(data.frame(predicted = predicted,
+                                      cluster = testset$ident))
+    summary_table <- 100 * (t(as.matrix(summary_table)) /
+                                colSums(summary_table))
+    
+    return(list(party_fit = partyfit, summary_table = summary_table,
+                concensus_rules = concensusrules,
+                ranger_significance_table = ranger_significance_table,
+                gating_genes = gating_genes))
+}
+
+```
+
+
+# Usage
+
+I am assuming you have already done your clustering and dimensional reduction
+using seurat and we have our seurat object (here we will use a sub-sampled data
+set)
+
+```{r}
+require(sctree)
+require(Seurat)
+
+set.seed(6)
+
+seurat_mix5050 <- readRDS("seurat_mix5050.RDS")
+seurat_mix9901 <- readRDS("seurat_mix9901.RDS")
+
+TSNEPlot(seurat_mix9901)
+TSNEPlot(seurat_mix5050)
+```
+
+
+Due to prior knowledge we know that Jurkat cells express CD3D but lets try to
+get to that knowledge using our package ...
+
+```{r}
+FeaturePlot(seurat_mix9901, "CD3D", no.legend = FALSE)
+FeaturePlot(seurat_mix5050, "CD3D", no.legend = FALSE)
+
+VlnPlot(seurat_mix5050, "CD3D")
+VlnPlot(seurat_mix9901, "CD3D")
+```
+
+
+## Finding important variables to classify clusters
+
+We base our importances on the "classification value" they give to a random 
+forest (using the implementation in the `ranger` package)
+
+So lets fit the random forest ...
+
+```{r}
+rang_importances <- ranger_importances.seurat(seurat_mix5050, cluster = "ALL")
+names(rang_importances)
+```
+
+This gives us a list with 3 elements.
+
+1. The ranger fit object itself (handy if you want to inspect its classification 
+   accuracy)
+2. The importance matrix deriven from ranger
+3. A data frame containing only importances with pvalues under 0.05 
+   (because biologists love p-values under 0.05)
+
+
+```{r}
+rang_importances[[1]]
+```
+
+We can see that our classifier is not all that great in this case, `r round(rang_importances[[1]]$prediction.error * 100, 2)` % as measured by its 
+*OOB prediction error* (since the clustering is not great to start with ...)
+
+
+```{r}
+head(rang_importances[[2]])
+
+head(rang_importances[[3]])
+```
+
+## Visualizing the expected outcome of a flow cutometry experiment
+
+Lets say we choose the top 5 markers from the former list and we did a flow
+experiment ... HYPOTHETICALLY the marker distribution would resemble the rna
+expression profile for which we have the function `plot_flowstyle`
+
+```{r}
+top_markers <- head(rang_importances[[3]]$gene)
+top_markers
+g <- plot_flowstyle(seurat_mix5050, markernames = top_markers)
+g
+```
+
+We can also focus in one of the pannels (and check the color conventions)
+
+```{r}
+g[1,2]
+```
+
+
+## Suggesting a gating strategy for the markers
+
+
+A general strategy to get separate all clusters
+
+```{r}
+rang_importances <- ranger_importances.seurat(seurat_mix5050, cluster = "ALL")
+top_markers <- head(rang_importances[[3]]$gene)
+
+tree_fit <- fit_ctree(seurat_mix5050, genes_use = top_markers, cluster = "ALL")
+
+print(tree_fit)
+```
+
+
+Visualizing the tree as ... a tree ...
+
+```{r fig.height=5, fig.width=12}
+plot(tree_fit)
+```
+
+Sometimes one might think that the proposed strategy is too complicated or not
+implementable in the experimental settings, in order to add constrins to the fit
+one can give additional arguments that will be passed to
+`partykit::ctree_control`, such as `maxdepth = 2`
+
+```{r fig.height=5, fig.width=12}
+tree_fit <- fit_ctree(
+  seurat_mix5050, genes_use = top_markers, 
+  cluster = "ALL", maxdepth = 2)
+print(tree_fit)
+plot(tree_fit)
+```
+
+Since not all variables are ultimately used in our classifier, one can acces the
+ones that were by using `varimp(tree_fit)`
+
+```{r}
+partykit::varimp(tree_fit)
+plot_flowstyle(seurat_mix5050, names(partykit::varimp(tree_fit)))
+```
+
+
+A specific strategy only for cluster 1
+
+```{r}
+tree_fit <- fit_ctree(seurat_mix5050, genes_use = top_markers, cluster = "1")
+
+print(tree_fit)
+```
+
+Visualizing the tree as ... a tree ...
+
+```{r fig.height=5, fig.width=12}
+plot(tree_fit)
+```
+
+## Finding equivalent clusters in two datasets
+
+```{r}
+validation_results <- cross_validate(
+    seurat_mix5050, seurat_mix9901, 
+    cluster = "1")
+
+validation_results[[1]]
+```
+
+```{r}
+validation_results$summary_table
+```
+
+
+```{r}
+cluster_prediction <- as.data.frame(validation_results[[2]])
+
+validation_results[[3]]
+```
+
+
+```{r}
+gating_genes <- validation_results$gating_genes
+gating_genes
+```
+
+```{r}
+g1 <- plot_flowstyle(seurat_mix5050, 
+                     markernames = seurat_mix5050@var.genes[seurat_mix5050@var.genes %in% gating_genes])
+g2 <- plot_flowstyle(seurat_mix9901, 
+                     markernames = seurat_mix9901@var.genes[seurat_mix9901@var.genes %in% gating_genes])
+ 
+g1
+g2
+```
+
+```{r}
+g1[1,2]
+g2[1,2]
+```
+
+## Finding antibodies for the experiment
+
+Since we acknowledge most experimental workflows need antibodies. We have 
+implemented several functions to look for antibodies in vendor websites, as well
+as some helper functions to find the other posible aliases a gene might have.
+
+
+```{r}
+aliases <- get_aliases(gating_genes[[1]])
+
+print(aliases)
+
+lapply(aliases[[1]], function(alias) {
+  list(query_biolegend_antibodies(alias),
+       query_sc_antibodies(alias))
+})
+
+```
+
+
+```{r}
+sessionInfo()
+```

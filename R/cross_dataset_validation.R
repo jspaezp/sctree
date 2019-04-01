@@ -65,7 +65,7 @@ cross_validate <- function(train, test, cluster, ...) {
 
         # TODO add method to support data frames as inputs
 
-        testset <- as.data.frame.seurat(test, test@var.genes, fix_names = TRUE)
+        testset <- as.data.frame.seurat(test, comm_imp_genes, fix_names = TRUE)
         predicted <- predict(partyfit, testset)
 
         gating_genes <- names(partykit::varimp(partyfit[[1]]))
