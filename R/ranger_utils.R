@@ -102,7 +102,7 @@ ranger_importances.seurat <- function(object, cluster = NULL,
                                       genes_use = object@var.genes,
                                       ...) {
 
-    tmp <- as.data.frame.seurat(object, object@var.genes, fix_names = TRUE)
+    tmp <- as.data.frame.seurat(object, genes = genes_use, fix_names = TRUE)
     return(ranger_importances.df(tmp,
                                  cluster = cluster,
                                  pval_cutoff = pval_cutoff,
