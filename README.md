@@ -1,3 +1,22 @@
+sctree: a package to connect single cell rna-seq to biology using trees
+================
+
+  - [sctree](#sctree)
+  - [Installation](#installation)
+  - [Usage](#usage)
+      - [Finding important variables to classify
+        clusters](#finding-important-variables-to-classify-clusters)
+      - [Visualizing the expected outcome of a flow cutometry
+        experiment](#visualizing-the-expected-outcome-of-a-flow-cutometry-experiment)
+      - [Suggesting a gating strategy for the
+        markers](#suggesting-a-gating-strategy-for-the-markers)
+      - [Finding equivalent clusters in two
+        datasets](#finding-equivalent-clusters-in-two-datasets)
+      - [Finding antibodies for the
+        experiment](#finding-antibodies-for-the-experiment)
+  - [Reproducing the runs in the purdue
+    cluster](#reproducing-the-runs-in-the-purdue-cluster)
+  - [Steps down the road](#steps-down-the-road)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -10,6 +29,10 @@ discovery.
 Features suggesting pseudo-gating strategies to purify found populations
 via flow-cytometry, antibody querying and cross validations between
 datasets.
+
+Number of lines in roxygen comments: 494
+
+Number of lines in R code: 808
 
 # Installation
 
@@ -527,7 +550,7 @@ final seurat
     objects
 
     bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_5050/hg19/ mix5050
-    bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_9901/hg19 mix9901 
+    bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_9901/hg19/ mix9901 
 
 3.  Whenever those are done, run this …
 

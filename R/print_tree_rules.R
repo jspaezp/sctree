@@ -162,11 +162,11 @@ get_concensus_rules <-  function(tree) {
 
 #' Fits a classification tree on a seurat object
 #'
-#' @param object
+#' @param object a seurat object
 #' @param genes_use a character vector indicating which genes to use in
 #'     the classification. currently implemented only for seurat objects.
 #'     (for data frames one can simply subset the input data frame)
-#' @param cluster
+#' @param cluster a cluster name for which the markers will be found
 #' @param ... additional arguments to be passed to partykit::ctree_control
 #'
 #' @return a ctree fit

@@ -1,5 +1,9 @@
 ---
-output: github_document
+title: "sctree: a package to connect single cell rna-seq to biology using trees"
+output: 
+  github_document:
+    toc: true
+    toc_depth: 2
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -18,6 +22,12 @@ single cell rna-sequencing to calidation and new sub-population discovery.
 
 Features suggesting pseudo-gating strategies to purify found populations via
 flow-cytometry, antibody querying and cross validations between datasets.
+
+Number of lines in roxygen comments:
+`r system2("bash", "-c \"grep -RP '^#' ./R | wc -l\"", stdout = TRUE)`
+
+Number of lines in R code:
+`r system2("bash", "-c \"grep -RP '^[^#]' ./R | grep -vP '^$' | wc -l \"", stdout = TRUE)`
 
 # Installation
 
@@ -247,7 +257,7 @@ seurat objects
 
 ```
 bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_5050/hg19/ mix5050
-bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_9901/hg19 mix9901 
+bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_9901/hg19/ mix9901 
 ```
 
 3. Whenever those are done, run this ...
