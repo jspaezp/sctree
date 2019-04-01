@@ -28,6 +28,205 @@ cd sctree
 R -e "devtools::install('.')"
 ```
 
+# Usage
+
+I am assuming you have already done your clustering and dimensional reduction
+using seurat and we have our seurat object (here we will use a sub-sampled data
+set)
+
+```{r}
+require(sctree)
+require(Seurat)
+
+set.seed(6)
+
+small_5050_mix
+
+TSNEPlot(small_5050_mix)
+```
+
+## Finding important variables to classify clusters
+
+We base our importances on the "classification value" they give to a random 
+forest (using the implementation in the `ranger` package)
+
+So lets fit the random forest ...
+
+```{r}
+rang_importances <- ranger_importances.seurat(small_5050_mix, cluster = "ALL")
+names(rang_importances)
+```
+
+This gives us a list with 3 elements.
+
+1. The ranger fit object itself (handy if you want to inspect its classification 
+   accuracy)
+2. The importance matrix deriven from ranger
+3. A data frame containing only importances with pvalues under 0.05 
+   (because biologists love p-values under 0.05)
+
+
+```{r}
+rang_importances[[1]]
+```
+
+We can see that our classifier is not all that great in this case, `r round(rang_importances[[1]]$prediction.error * 100, 2)` % as measured by its 
+*OOB prediction error* (since the clustering is not great to start with ...)
+
+
+```{r}
+head(rang_importances[[2]])
+
+head(rang_importances[[3]])
+```
+
+## Visualizing the expected outcome of a flow cutometry experiment
+
+Lets say we choose the top 5 markers from the former list and we did a flow
+experiment ... HYPOTHETICALLY the marker distribution would resemble the rna
+expression profile for which we have the function `plot_flowstyle`
+
+```{r}
+top_markers <- head(rang_importances[[3]]$gene)
+top_markers
+g <- plot_flowstyle(small_5050_mix, markernames = top_markers)
+g
+```
+
+We can also focus in one of the pannels (and check the color conventions)
+
+```{r}
+g[1,2]
+```
+
+
+## Suggesting a gating strategy for the markers
+
+
+A general strategy to get separate all clusters
+
+```{r}
+rang_importances <- ranger_importances.seurat(small_9901_mix, cluster = "ALL")
+top_markers <- head(rang_importances[[3]]$gene)
+
+tree_fit <- fit_ctree(small_9901_mix, genes_use = top_markers, cluster = "ALL")
+
+print(tree_fit)
+```
+
+
+Visualizing the tree as ... a tree ...
+
+```{r fig.height=5, fig.width=12}
+plot(tree_fit)
+```
+
+Sometimes one might think that the proposed strategy is too complicated or not
+implementable in the experimental settings, in order to add constrins to the fit
+one can give additional arguments that will be passed to
+`partykit::ctree_control`, such as `maxdepth = 2`
+
+```{r fig.height=5, fig.width=12}
+tree_fit <- fit_ctree(
+  small_9901_mix, genes_use = top_markers, 
+  cluster = "ALL", maxdepth = 2)
+print(tree_fit)
+plot(tree_fit)
+```
+
+Since not all variables are ultimately used in our classifier, one can acces the
+ones that were by using `varimp(tree_fit)`
+
+```{r}
+partykit::varimp(tree_fit)
+plot_flowstyle(small_9901_mix, names(partykit::varimp(tree_fit)))
+```
+
+
+A specific strategy only for cluster 2
+
+```{r}
+tree_fit <- fit_ctree(small_9901_mix, genes_use = top_markers, cluster = "2")
+
+print(tree_fit)
+```
+
+Visualizing the tree as ... a tree ...
+
+```{r fig.height=5, fig.width=12}
+plot(tree_fit)
+```
+
+## Finding equivalent clusters in two datasets
+
+```{r}
+validation_results <- cross_validate(
+    small_5050_mix, small_9901_mix, 
+    cluster = "ALL")
+
+validation_results[[1]]
+```
+
+```{r}
+validation_results$summary_table
+```
+
+
+Here we can see that in the *9901* dataset (predicted), both clusters 0 and 1
+are classified mostrly as cluster 0 in the *5050* dataset, while the cluster 2
+is mainly classified as 1
+
+(remember that the numbers are arbitrary and only mean )
+
+```{r}
+cluster_prediction <- as.data.frame(validation_results[[2]])
+
+validation_results[[3]]
+```
+
+
+```{r}
+gating_genes <- validation_results$gating_genes
+gating_genes
+```
+
+```{r}
+g1 <- plot_flowstyle(small_5050_mix, markernames = gating_genes)
+g2 <- plot_flowstyle(small_9901_mix, markernames = gating_genes)
+ 
+g1
+g2
+```
+
+```{r}
+g1[1,2]
+g2[1,2]
+```
+
+## Finding antibodies for the experiment
+
+Since we acknowledge most experimental workflows need antibodies. We have 
+implemented several functions to look for antibodies in vendor websites, as well
+as some helper functions to find the other posible aliases a gene might have.
+
+
+```{r}
+aliases <- get_aliases(gating_genes[[1]])
+
+print(aliases)
+
+lapply(aliases[[1]], function(alias) {
+  list(query_biolegend_antibodies(alias),
+       query_sc_antibodies(alias))
+})
+
+```
+
+
+```{r}
+sessionInfo()
+```
+
 
 # Reproducing the runs in the purdue cluster
 
@@ -66,5 +265,9 @@ for i in seurat*.RDS ; do bash ./bash/build_jobs_acc_benchmark.bash $i ; done
 2. Start actually writting the verbose part of the paper.
 3. Address some of the TODO's in this repository
 4. Reduce dependecies by replacing functions to base equivalents.
+5. Add links to the documentation to make nicer to explore the package from inside R
+6. Implement plot that actually illustrates the progressive gating in the decision tree
+7. DRASTICALLY increase code coverage (right now everything runs without errors due to R CMD check) but expectations are not tested
+8. Implement a way to find markers for clusters exclusively upregulated
 
 

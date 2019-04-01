@@ -23,13 +23,14 @@
 #' @export
 #'
 #' @examples
-#' summary(ranger_importances.seurat(Seurat::pbmc_small))
+#' summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "ALL"))
 #' # ranger.seurat being called
 #' # Length Class      Mode
 #' # ranger_fit                15     ranger     list
 #' # importances_ranger        62     -none-     numeric
 #' # signif_importances_ranger  3     data.frame list
-#' @importFrom ranger ranger
+#' #' summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "0"))
+#' @importFrom ranger ranger importance_pvalues
 ranger_importances.df <- function(object, cluster = NULL,
                                   pval_cutoff = 0.05,
                                   imp_method = c("janitza", "altmann"),
@@ -59,8 +60,7 @@ ranger_importances.df <- function(object, cluster = NULL,
         }
     }
 
-
-
+    if (all(imp_method == c("janitza", "altmann"))) imp_method <- "janitza"
     stopifnot(imp_method[1] %in% c("janitza", "altmann"))
 
     if (imp_method == "altmann") {

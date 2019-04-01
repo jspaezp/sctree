@@ -12,7 +12,8 @@ ranger_importances.df(object, cluster = NULL, pval_cutoff = 0.05,
   imp_method = c("janitza", "altmann"), num.trees = 500, ...)
 
 ranger_importances.seurat(object, cluster = NULL, pval_cutoff = 0.05,
-  imp_method = c("janitza", "altmann"), num.trees = 500, ...)
+  imp_method = c("janitza", "altmann"), num.trees = 500,
+  genes_use = object@var.genes, ...)
 }
 \arguments{
 \item{object}{a seurat or data frame object}
@@ -26,6 +27,10 @@ ranger_importances.seurat(object, cluster = NULL, pval_cutoff = 0.05,
 \item{num.trees}{number of trees to be build using ranger}
 
 \item{...}{additional arguments to be passed to ranger}
+
+\item{genes_use}{a character vector indicating which genes to use in
+the classification. currently implemented only for seurat objects.
+(for data frames one can simply subset the input data frame)}
 }
 \value{
 list with 3 elements ranger_fit, importances_ranger, signif_importances_ranger
@@ -39,10 +44,11 @@ ranger_importances
 }}
 
 \examples{
-summary(ranger_importances.seurat(Seurat::pbmc_small))
+summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "ALL"))
 # ranger.seurat being called
 # Length Class      Mode
 # ranger_fit                15     ranger     list
 # importances_ranger        62     -none-     numeric
 # signif_importances_ranger  3     data.frame list
+#' summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "0"))
 }

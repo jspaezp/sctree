@@ -12,13 +12,14 @@
 #' @param markernames names of the markers to be used for the plot
 #' @param classif_col name of the classification column to be used for
 #'     the grouping, defaults to "ident"
+#' @param ... additional argumetns to be passed to GGally::ggpairs
 #'
 #' @return a ggplot grid with the plots
 #' @export
 #'
 #' @examples
 #' plot_flowstyle(Seurat::pbmc_small, c("ACRBP", "TSC22D1", "VDAC3"))
-plot_flowstyle <- function(object, markernames, classif_col = "ident") {
+plot_flowstyle <- function(object, markernames, classif_col = "ident", ...) {
     # TODO add argument to change to natural scale ...
     UseMethod("plot_flowstyle", object)
 }
@@ -31,7 +32,7 @@ plot_flowstyle <- function(object, markernames, classif_col = "ident") {
 #' @export
 plot_flowstyle.data.frame <- function(object,
                                       markernames,
-                                      classif_col = "ident") {
+                                      classif_col = "ident", ...) {
 
     tmp_ident <- object[[classif_col]]
     object <- object[,markernames]
@@ -57,7 +58,7 @@ plot_flowstyle.data.frame <- function(object,
         upper = list(
             continuous =  GGally::wrap(
                 "density",
-                alpha = 0.4))) +
+                alpha = 0.4)), ...) +
         ggplot2::theme_bw()
     return(g)
 }
@@ -65,9 +66,9 @@ plot_flowstyle.data.frame <- function(object,
 
 #' @describeIn plot_flowstyle Draw a flowstyle plot from a seurat object
 #' @export
-plot_flowstyle.seurat <- function(object, markernames, classif_col = "ident") {
+plot_flowstyle.seurat <- function(object, markernames, classif_col = "ident", ...) {
     tmp <- as.data.frame.seurat(object, markernames)
     plot_flowstyle.data.frame(
         tmp, markernames = markernames,
-        classif_col = classif_col)
+        classif_col = classif_col, ...)
 }
