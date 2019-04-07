@@ -17,6 +17,7 @@
 #' @param genes_use a character vector indicating which genes to use in
 #'     the classification. currently implemented only for seurat objects.
 #'     (for data frames one can simply subset the input data frame)
+#' @param warn.imp.method logical indicating wether warning should be
 #' @param ... additional arguments to be passed to ranger
 #'
 #' @return  list with 3 elements ranger_fit, importances_ranger, signif_importances_ranger
@@ -24,7 +25,6 @@
 #'
 #' @examples
 #' summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "ALL"))
-#' # ranger.seurat being called
 #' # Length Class      Mode
 #' # ranger_fit                15     ranger     list
 #' # importances_ranger        62     -none-     numeric
@@ -34,10 +34,9 @@
 ranger_importances.df <- function(object, cluster = NULL,
                                   pval_cutoff = 0.05,
                                   imp_method = c("janitza", "altmann"),
-                                  num.trees = 500,
+                                  num.trees = 500, warn.imp.method = TRUE,
                                   ...) {
 
-    message("ranger.seurat being called")
     base_ranger <- function(data, importance) {
         ranger_fit <- ranger::ranger(
             ident ~ .,
@@ -73,7 +72,15 @@ ranger_importances.df <- function(object, cluster = NULL,
         ranger_fit <- base_ranger(
             data = tmp,
             importance = "impurity_corrected", ...)
-        importances_ranger <- ranger::importance_pvalues(ranger_fit)
+
+        if (!warn.imp.method) {
+            suppressWarnings(suppressMessages({{
+                importances_ranger <- ranger::importance_pvalues(ranger_fit)
+            }}))
+        } else {
+            importances_ranger <- ranger::importance_pvalues(ranger_fit)
+        }
+
 
     }
 
@@ -100,6 +107,7 @@ ranger_importances.seurat <- function(object, cluster = NULL,
                                       imp_method = c("janitza", "altmann"),
                                       num.trees = 500,
                                       genes_use = object@var.genes,
+                                      warn.imp.method = TRUE,
                                       ...) {
 
     tmp <- as.data.frame.seurat(object, genes = genes_use, fix_names = TRUE)
@@ -108,5 +116,6 @@ ranger_importances.seurat <- function(object, cluster = NULL,
                                  pval_cutoff = pval_cutoff,
                                  imp_method = imp_method,
                                  num.trees = num.trees,
+                                 warn.imp.method = warn.imp.method,
                                  ...))
 }
