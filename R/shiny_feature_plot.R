@@ -22,9 +22,9 @@
 #' @importFrom shiny renderPlot renderCachedPlot
 #' @examples
 #' \donttest{
-#' featureplot_gadget(seurat_object = seurat::pbmc_small,
-#'                     genes.use = Seurat::pbmc_small@@var.genes[
-#'                         is_gene_membrane(Seurat::pbmc_small@@var.genes)],
+#' featureplot_gadget(seurat_object = small_5050_mix,
+#'                     genes.use = small_5050_mix@@var.genes[
+#'                         is_gene_membrane(small_5050_mix@@var.genes)],
 #'                     cache = "./.cache")
 #' }
 featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,

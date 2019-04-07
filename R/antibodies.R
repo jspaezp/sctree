@@ -12,7 +12,7 @@
 #' Queries Cell Signaling Technologies and
 #' filters for antibodies for IFC, IHC, and FLOW.
 #'
-#' Note that it is jsut a wrapper arround the web search of the site, so please
+#' Note that it is just a wrapper arround the web search of the site, so please
 #' be nice on them and dont get your IP banned ...
 #'
 #' @param search_term The term used to query the cell signaling webpage
@@ -82,7 +82,7 @@ query_cc_antibodies <- function(search_term) {
 #' Queries Santa Cruz for antibodies and
 #' filters for antibodies for IFC, IHC, and FCM
 #'
-#' Note that it is jsut a wrapper arround the web search of the site, so please
+#' Note that it is just a wrapper arround the web search of the site, so please
 #' be nice on them and dont get your IP banned ...
 #'
 #' @param search_term The term used to query the webpage
@@ -198,6 +198,77 @@ query_ab_antibodies <- function() {
     #     descriptions)
 
     # return(antibody_df)
+}
+
+
+#' Query Biocompare for antibodies
+#'
+#' Queries Biocompare for antibodies.
+#' https://www.biocompare.com/
+#'
+#' Note that it is just a wrapper arround the web search of the site, so please
+#' be nice on them and dont get your IP banned ...
+#'
+#'
+#'
+#' @param search_term The term used to query the webpage
+#'
+#' @return NULL when no results are found or a DF with information
+#' @export
+#'
+#' @examples
+#' query_biocompare_antibodies("CD11bfakename")
+#' # NULL
+#' head(query_biocompare_antibodies("CD11C"),3)
+#' @importFrom rvest html_nodes html_table html_text
+#' @importFrom xml2 read_html
+query_biocompare_antibodies <- function(search_term) {
+    url <- paste0("https://www.biocompare.com/Search-Antibodies/?search=",
+                  search_term, "&said=0&vcmpv=true")
+
+    product_nodes <- rvest::html_nodes(
+        xml2::read_html(url),
+        "[class=product]")
+
+    if (length(product_nodes) == 0) {return(NULL)}
+
+    clean <- Vectorize(function(string) {
+        gsub("\\t+|\\r\\n", "", string)
+    }, SIMPLIFY = TRUE)
+
+    parse_product <- Vectorize(function(product_xml_node) {
+        title_section <- rvest::html_nodes(product_xml_node, "[class=title]")
+
+        title <- rvest::html_nodes(
+            product_xml_node,
+            "[class*=fn]")
+        title <- clean(rvest::html_text(title, trim = TRUE))
+
+        vendor <- rvest::html_nodes(
+            product_xml_node,
+            "[class=manufacturer]")
+        vendor <- clean(rvest::html_text(vendor, trim = TRUE))
+
+        specification <- rvest::html_nodes(
+            product_xml_node,
+            "[class*=specification]")
+
+        specification <- rvest::html_text(specification, trim = TRUE)
+
+        specification <- strsplit(specification, "(?<!:\\s)\\r\\n", perl = TRUE)
+        specification <- paste(clean(specification), collapse = "; ")
+
+        return(data.frame(
+            title = unlist(title),
+            vendor = unlist(vendor),
+            specification = unlist(specification)))
+    }, SIMPLIFY = FALSE)
+
+
+    antibody_df <- do.call(rbind, parse_product(product_nodes))
+    antibody_df <- as.data.frame(antibody_df)
+    rownames(antibody_df) <- NULL
+    return(antibody_df)
 }
 
 

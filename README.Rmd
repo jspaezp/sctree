@@ -41,8 +41,18 @@ R -e "devtools::install('.')"
 # Usage
 
 I am assuming you have already done your clustering and dimensional reduction
-using seurat and we have our seurat object (here we will use a sub-sampled data
-set)
+using seurat and we have our seurat object.
+
+For this examples we will use a dummy dataset that come bundled with the package
+
+`small_5050_mix`, this dataset comes originally from the 1:1 mixture of Jurkat 
+and 293T cells provided by 10x.
+
+Original data can be found here:
+
+1. [1:1 mixture](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/jurkat:293t_50:50)
+2. [99:1 mixture](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/jurkat_293t_99_1)
+
 
 ```{r}
 require(sctree)
@@ -50,6 +60,7 @@ require(Seurat)
 
 set.seed(6)
 
+data(small_5050_mix)
 small_5050_mix
 
 TSNEPlot(small_5050_mix)
@@ -61,9 +72,19 @@ We base our importances on the "classification value" they give to a random
 forest (using the implementation in the `ranger` package)
 
 So lets fit the random forest ...
+Here we are adding the `warn.imp.method` to prevent a warning message sent by
+`ranger` when most of the variables are correlated with the clustering.
+
+Please reffer to the  of the `importance_pvalues` section in the
+[ranger documentation](https://cran.r-project.org/web/packages/ranger/ranger.pdf)
+when addressing this issue and for more details.
 
 ```{r}
-rang_importances <- ranger_importances.seurat(small_5050_mix, cluster = "ALL")
+rang_importances <- ranger_importances.seurat(
+    small_5050_mix,
+    cluster = "ALL",
+    warn.imp.method = FALSE)
+
 names(rang_importances)
 ```
 
@@ -80,17 +101,31 @@ This gives us a list with 3 elements.
 rang_importances[[1]]
 ```
 
-We can see that our classifier is not all that great in this case, `r round(rang_importances[[1]]$prediction.error * 100, 2)` % as measured by its 
-*OOB prediction error* (since the clustering is not great to start with ...)
+We can see that our classifier is `r round(rang_importances[[1]]$prediction.error * 100, 2)` % accurate, as measured by its 
+*OOB prediction error*.
 
+Your classifier USUALLY will be just as good as your initial clustering is, 
+therefore if your clustering is not all that consistent to start with, it is 
+unrealistic that predicions will be done accurately.
+
+Now ... taking a look at the importance matrix we can see that a `pvalue` and a
+relative importance has been given to each gene.
 
 ```{r}
 head(rang_importances[[2]])
+```
 
+For simplicity we return by default a `data.frame` containing the ones with
+`pvalue < 0.05` 
+
+```{r}
 head(rang_importances[[3]])
 ```
 
-## Visualizing the expected outcome of a flow cutometry experiment
+Therefore, in this case we can say that the expression of the following genes 
+would be usefull to form the clusters. `r cat(head(rang_importances[[3]])$gene)`
+
+## Visualizing the expected outcome of a flow cytometry experiment
 
 Lets say we choose the top 5 markers from the former list and we did a flow
 experiment ... HYPOTHETICALLY the marker distribution would resemble the rna
@@ -103,6 +138,9 @@ g <- plot_flowstyle(small_5050_mix, markernames = top_markers)
 g
 ```
 
+Based on this, we can see that the red cluster in this plot is predominantly
+CD3+ ADA+ and ARHGDIB+, as well as ASNS-
+
 We can also focus in one of the pannels (and check the color conventions)
 
 ```{r}
@@ -112,33 +150,44 @@ g[1,2]
 
 ## Suggesting a gating strategy for the markers
 
-
 A general strategy to get separate all clusters
 
 ```{r}
-rang_importances <- ranger_importances.seurat(small_9901_mix, cluster = "ALL")
+
 top_markers <- head(rang_importances[[3]]$gene)
 
-tree_fit <- fit_ctree(small_9901_mix, genes_use = top_markers, cluster = "ALL")
-
-print(tree_fit)
+tree_fit <- fit_ctree(small_5050_mix, genes_use = top_markers, cluster = "ALL")
 ```
 
+Visualizing the tree as ... a tree ... we can see how our model is a simple
+series of yes/no questions.
 
-Visualizing the tree as ... a tree ...
+If we wanted to classifiy a random cell: in the first `node`, we check if the 
+expression of that gene is higher or lower than a given value, if it is lower,
+we proceed to the left, if not we go right. We keep doing that until we have no
+more `branches`. This final node will have a predicted cluster, in this plot we
+can also see how pure can we expect this group to be and how many of the cells
+in our training set clasify as part of it.
 
 ```{r fig.height=5, fig.width=12}
 plot(tree_fit)
 ```
 
+When inspecting the tree_fit, we can see a more detailed text representation
+of this tree.
+
+```{r}
+print(tree_fit)
+```
+
 Sometimes one might think that the proposed strategy is too complicated or not
-implementable in the experimental settings, in order to add constrins to the fit
+implementable in the experimental settings, in order to add constrians to the fit
 one can give additional arguments that will be passed to
-`partykit::ctree_control`, such as `maxdepth = 2`
+`partykit::ctree_control`, such as `maxdepth = 2` (maximum 2 questions per cell)
 
 ```{r fig.height=5, fig.width=12}
 tree_fit <- fit_ctree(
-  small_9901_mix, genes_use = top_markers, 
+  small_5050_mix, genes_use = top_markers, 
   cluster = "ALL", maxdepth = 2)
 print(tree_fit)
 plot(tree_fit)
@@ -149,25 +198,28 @@ ones that were by using `varimp(tree_fit)`
 
 ```{r}
 partykit::varimp(tree_fit)
-plot_flowstyle(small_9901_mix, names(partykit::varimp(tree_fit)))
+plot_flowstyle(small_5050_mix, names(partykit::varimp(tree_fit)))
 ```
 
 
-A specific strategy only for cluster 2
+One can also request the package to suggest a specific strategy only for a given
+cluster. This function is not expected to give drastically different results in 
+datasets with few clusters, but it can definitely come usefull when many clusters
+are present and one is interested in a specific one. 
 
 ```{r}
-tree_fit <- fit_ctree(small_9901_mix, genes_use = top_markers, cluster = "2")
-
+tree_fit <- fit_ctree(small_5050_mix, genes_use = top_markers, cluster = "0")
 print(tree_fit)
 ```
 
-Visualizing the tree as ... a tree ...
-
-```{r fig.height=5, fig.width=12}
-plot(tree_fit)
-```
 
 ## Finding equivalent clusters in two datasets
+
+```{r}
+data(small_9901_mix)
+small_9901_mix
+```
+
 
 ```{r}
 validation_results <- cross_validate(
@@ -178,19 +230,35 @@ validation_results[[1]]
 ```
 
 ```{r}
-validation_results$summary_table
+validation_results$confusion_matrix
+
 ```
 
+```{r}
+freq_matrix <- as.frequency.matrix(validation_results$confusion_matrix)
+freq_matrix
+```
+
+This would mean that cells in cluster 0 in the `small_9901_mix` dataset are 
+classified 99.23 % of the time as bleonging to cluster 0 of the `small_5050_mix`
+
+These frequencies can be visualized by plotting them in a heatmap
+
+```{r fig.height=3, fig.width=6}
+
+autoplot.table(freq_matrix,
+               min_color = 50,
+               show_number = TRUE)
+```
 
 Here we can see that in the *9901* dataset (predicted), both clusters 0 and 1
 are classified mostrly as cluster 0 in the *5050* dataset, while the cluster 2
-is mainly classified as 1
+is mainly classified as 1.
 
-(remember that the numbers are arbitrary and only mean )
+(remember that the numbers are arbitrary and only mean something within 
+each dataset)
 
 ```{r}
-cluster_prediction <- as.data.frame(validation_results[[2]])
-
 validation_results[[3]]
 ```
 
@@ -209,15 +277,22 @@ g2
 ```
 
 ```{r}
-g1[1,2]
 g2[1,2]
 ```
+
 
 ## Finding antibodies for the experiment
 
 Since we acknowledge most experimental workflows need antibodies. We have 
 implemented several functions to look for antibodies in vendor websites, as well
 as some helper functions to find the other posible aliases a gene might have.
+
+Here is a simple example for a gene widely know to have an antibody available
+
+```{r}
+head(query_biocompare_antibodies("CD11b"))
+```
+
 
 
 ```{r}
@@ -226,8 +301,7 @@ aliases <- get_aliases(gating_genes[[1]])
 print(aliases)
 
 lapply(aliases[[1]], function(alias) {
-  list(query_biolegend_antibodies(alias),
-       query_sc_antibodies(alias))
+     head(query_biocompare_antibodies(alias))
 })
 
 ```
@@ -272,7 +346,6 @@ for i in seurat*.RDS ; do bash ./bash/build_jobs_acc_benchmark.bash $i ; done
 # Steps down the road
 
 1. Make figure list.
-2. Start actually writting the verbose part of the paper.
 3. Address some of the TODO's in this repository
 4. Reduce dependecies by replacing functions to base equivalents.
 5. Add links to the documentation to make nicer to explore the package from inside R

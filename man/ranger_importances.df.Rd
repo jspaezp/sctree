@@ -9,11 +9,12 @@ Calculates ranger-based variable importances for data frames and
 seurat objects}
 \usage{
 ranger_importances.df(object, cluster = NULL, pval_cutoff = 0.05,
-  imp_method = c("janitza", "altmann"), num.trees = 500, ...)
+  imp_method = c("janitza", "altmann"), num.trees = 500,
+  warn.imp.method = TRUE, ...)
 
 ranger_importances.seurat(object, cluster = NULL, pval_cutoff = 0.05,
   imp_method = c("janitza", "altmann"), num.trees = 500,
-  genes_use = object@var.genes, ...)
+  genes_use = object@var.genes, warn.imp.method = TRUE, ...)
 }
 \arguments{
 \item{object}{a seurat or data frame object}
@@ -25,6 +26,8 @@ ranger_importances.seurat(object, cluster = NULL, pval_cutoff = 0.05,
 \item{imp_method}{importance method, either of "janitza" or "altmann"}
 
 \item{num.trees}{number of trees to be build using ranger}
+
+\item{warn.imp.method}{logical indicating wether warning should be}
 
 \item{...}{additional arguments to be passed to ranger}
 
@@ -45,7 +48,6 @@ ranger_importances
 
 \examples{
 summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "ALL"))
-# ranger.seurat being called
 # Length Class      Mode
 # ranger_fit                15     ranger     list
 # importances_ranger        62     -none-     numeric

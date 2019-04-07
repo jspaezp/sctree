@@ -7,9 +7,13 @@
 fit_ctree(object, genes_use = object@var.genes, cluster = "ALL", ...)
 }
 \arguments{
+\item{object}{a seurat object}
+
 \item{genes_use}{a character vector indicating which genes to use in
 the classification. currently implemented only for seurat objects.
 (for data frames one can simply subset the input data frame)}
+
+\item{cluster}{a cluster name for which the markers will be found}
 
 \item{...}{additional arguments to be passed to partykit::ctree_control}
 }

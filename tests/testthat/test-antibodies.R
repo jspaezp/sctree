@@ -9,6 +9,9 @@ test_that("functions work on known markers", {
 
     expect_gt(length(query_biolegend_antibodies("CD11C")), 1)
     expect_gt(length(query_biolegend_antibodies("CD3")), 1)
+
+    expect_gt(length(query_biocompare_antibodies("CD11C")), 1)
+    expect_gt(length(query_biocompare_antibodies("CD3")), 1)
 })
 
 
@@ -18,4 +21,6 @@ test_that("functions return null or empty df on imposible markers", {
     expect_null(query_sc_antibodies("SUPERFAKEMARKER"))
 
     expect_length(query_biolegend_antibodies("SUPERFAKEMARKER"), 0)
+
+    expect_null(query_biocompare_antibodies("SUPERFAKEMARKER"))
 })

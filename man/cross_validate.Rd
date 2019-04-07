@@ -17,7 +17,8 @@ cross_validate(train, test, cluster, ...)
 }
 \value{
 a list containing the (1) tree fit,
-    (2) a summary_table, (3) the concensus rules of the tree
+    (2) a summary_table
+    (3) the concensus rules of the tree
     (4) ranger_significance_table
     (5) the suggested genes for the gating
 }
