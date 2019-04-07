@@ -17,7 +17,9 @@
 #' @param genes_use a character vector indicating which genes to use in
 #'     the classification. currently implemented only for seurat objects.
 #'     (for data frames one can simply subset the input data frame)
-#' @param warn.imp.method logical indicating wether warning should be
+#' @param warn.imp.method logical indicating wether warning should be issued
+#'     when few negative importances are found to calculate the p.values in
+#'     ranger.
 #' @param ... additional arguments to be passed to ranger
 #'
 #' @return  list with 3 elements ranger_fit, importances_ranger, signif_importances_ranger
@@ -39,11 +41,12 @@ ranger_importances.df <- function(object, cluster = NULL,
 
     base_ranger <- function(data, importance) {
         ranger_fit <- ranger::ranger(
-            ident ~ .,
+            dependent.variable.name = "ident",
             data = data,
             num.trees = num.trees,
             mtry = floor(ncol(data)/5),
             importance = importance,
+            classification = TRUE,
             ...)
         return(ranger_fit)
     }
@@ -110,7 +113,8 @@ ranger_importances.seurat <- function(object, cluster = NULL,
                                       warn.imp.method = TRUE,
                                       ...) {
 
-    tmp <- as.data.frame.seurat(object, genes = genes_use, fix_names = TRUE)
+    tmp <- as.data.frame.seurat(object, genes = genes_use, fix_names = FALSE)
+
     return(ranger_importances.df(tmp,
                                  cluster = cluster,
                                  pval_cutoff = pval_cutoff,

@@ -21,10 +21,14 @@
 #' cross_validate(small_5050_mix, small_9901_mix, cluster = "0")
 #' cross_validate(small_5050_mix, small_9901_mix, cluster = "ALL")
 #' @importFrom stats as.formula predict
-cross_validate <- function(train, test, cluster, ...) {
+cross_validate <- function(train, test,
+                           cluster, genes_use = train@var.genes,
+                           warn.gene.removal = TRUE,
+                           ...) {
+
     rang_importances <- ranger_importances.seurat(train,
                                                   cluster = cluster,
-                                                  genes_use = train@var.genes,
+                                                  genes_use = genes_use,
                                                   ...)
 
 
@@ -40,45 +44,25 @@ cross_validate <- function(train, test, cluster, ...) {
 
     imp_genes <- rang_importances$signif_importances_ranger$gene
 
-    comm_genes <-
-        train@var.genes[train@var.genes %in% test@var.genes]
-    comm_imp_genes <-
-        comm_genes[make.names(comm_genes) %in% imp_genes]
+    comm_genes <- imp_genes[imp_genes %in% rownames(test@data)]
+    removed_genes <- imp_genes[!imp_genes %in% comm_genes]
 
-    # this make.names nonsense is only because ranger needs r-valid names
-    # which is not allways the case for gene names
-
-    treedata <- as.data.frame.seurat(
-        train,
-        genes = train@var.genes[train@var.genes %in% comm_imp_genes],
-        fix_names = TRUE)
-
-    # TODO make this its own function and place it in utils ...
-    # something like "clean_ident_name"
-    if (cluster == "ALL") {
-        treedata$ident <- factor(treedata$ident)
-    } else {
-        classif_names <- c(
-            # TODO add a way to bundle clusters ...
-            # or to give a vector of potential clusters
-            FALSE. = paste0("not clus ", cluster),
-            TRUE. = paste0("indeed clus ", cluster)
-        )
-
-        treedata$ident <-
-            factor(classif_names[make.names(treedata$ident == cluster)])
+    if (warn.gene.removal & length(removed_genes) > 0) {
+        warning(paste0(
+            "Some important genes were removed because they are not present in ",
+            "the test dataset. \n",
+            "Removed genes: ", paste(removed_genes, collapse = ", ")
+        ))
     }
 
-    myformula <- as.formula("ident ~ .")
-    # TODO add option to have another column name as the classifier
-    partyfit <-
-        partykit::ctree(formula = myformula, data = treedata)
+    partyfit <- fit_ctree(train, comm_genes, cluster = cluster)
+
     concensusrules <- get_concensus_rules(partyfit)
 
     # TODO add method to support data frames as inputs
 
     testset <-
-        as.data.frame.seurat(test, comm_imp_genes, fix_names = TRUE)
+        as.data.frame.seurat(test, comm_genes, fix_names = FALSE)
     predicted <- predict(partyfit, testset)
 
     gating_genes <- names(partykit::varimp(partyfit[[1]]))

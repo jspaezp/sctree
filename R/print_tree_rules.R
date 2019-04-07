@@ -31,7 +31,9 @@ get_cluster_mapping <- function(tree) {
     return(cluster_mapping)
 }
 
-
+# TODO, there is a known issue where suboptimas classification trees return
+# 3: In max(elems_per_rule) :
+# no non-missing arguments to max; returning -Inf
 
 #' get_concensus_rules
 #'
