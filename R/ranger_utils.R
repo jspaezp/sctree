@@ -66,10 +66,21 @@ ranger_importances.df <- function(object, cluster = NULL,
     stopifnot(imp_method[1] %in% c("janitza", "altmann"))
 
     if (imp_method == "altmann") {
+        # This name shift seems to be necessary because the altman in ranger
+        # method does not implement a dependent variable interface
+        oldnames <- colnames(tmp)
+        newnames <- make.names(oldnames)
+
+        colnames(tmp) <- newnames
         ranger_fit <- base_ranger(data = tmp, importance = "permutation", ...)
         importances_ranger <- ranger::importance_pvalues(
-            ranger_fit, "altman",
-            formula = ident ~ ., data = tmp)
+            ranger_fit, "altmann",
+            formula = "ident ~ .", data = tmp)
+
+        stopifnot(all.equal(newnames[!newnames == "ident"],
+                            rownames(importances_ranger)))
+
+        rownames(importances_ranger) <- oldnames[!oldnames == "ident"]
 
     } else if (imp_method == "janitza") {
         ranger_fit <- base_ranger(

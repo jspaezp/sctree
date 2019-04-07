@@ -2,7 +2,7 @@
 % Please edit documentation in R/antibodies.R
 \name{query_biocompare_antibodies}
 \alias{query_biocompare_antibodies}
-\title{Query Santa Cruz for antibodies}
+\title{Query Biocompare for antibodies}
 \usage{
 query_biocompare_antibodies(search_term)
 }
@@ -13,11 +13,11 @@ query_biocompare_antibodies(search_term)
 NULL when no results are found or a DF with information
 }
 \description{
-Queries Santa Cruz for antibodies and
-filters for antibodies for IFC, IHC, and FCM
+Queries Biocompare for antibodies.
+https://www.biocompare.com/
 }
 \details{
-Note that it is jsut a wrapper arround the web search of the site, so please
+Note that it is just a wrapper arround the web search of the site, so please
 be nice on them and dont get your IP banned ...
 }
 \examples{

@@ -154,8 +154,8 @@ query_sc_antibodies <- function(search_term) {
 
 
 # ABCAM
-query_ab_antibodies <- function() {
-    stop("NOT IMPLEMENTED")
+#query_ab_antibodies <- function() {
+#    stop("NOT IMPLEMENTED")
 
 
     # url <- paste0("https://www.scbt.com/scbt/search?Ntt=",
@@ -198,7 +198,7 @@ query_ab_antibodies <- function() {
     #     descriptions)
 
     # return(antibody_df)
-}
+#}
 
 
 #' Query Biocompare for antibodies

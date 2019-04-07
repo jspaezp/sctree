@@ -17,7 +17,7 @@ Queries Santa Cruz for antibodies and
 filters for antibodies for IFC, IHC, and FCM
 }
 \details{
-Note that it is jsut a wrapper arround the web search of the site, so please
+Note that it is just a wrapper arround the web search of the site, so please
 be nice on them and dont get your IP banned ...
 }
 \examples{

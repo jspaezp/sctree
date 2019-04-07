@@ -136,13 +136,11 @@ get_concensus_rules <-  function(tree) {
       sum(number_per_node[names(nodes_logical)[which(nodes_logical)]])
       }
 
-    .in <- function(x, y) {
-      x %in% y
-    }
 
     elems_per_rule <- purrr::map(
       all_rules, # TODO remove this annonimous function ... could use outer instead of a nested lapply ...
       function(x) purrr::map_lgl(split_rules, function(y) { x %in% y }))
+
     elems_per_rule <- purrr::map_dbl(
       elems_per_rule,
       count_per_rule,

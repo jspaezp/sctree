@@ -27,7 +27,9 @@ ranger_importances.seurat(object, cluster = NULL, pval_cutoff = 0.05,
 
 \item{num.trees}{number of trees to be build using ranger}
 
-\item{warn.imp.method}{logical indicating wether warning should be}
+\item{warn.imp.method}{logical indicating wether warning should be issued
+when few negative importances are found to calculate the p.values in
+ranger.}
 
 \item{...}{additional arguments to be passed to ranger}
 

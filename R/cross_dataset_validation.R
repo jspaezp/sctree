@@ -201,6 +201,7 @@ ggheatmap_base <- function(df,
 #' @export
 #'
 #' @examples
+#' require(ggplot2)
 #' autoplot(table(1:10, 1:10), show_number = TRUE)
 #' @importFrom ggplot2 geom_tile geom_point aes_string labs
 autoplot.table <- function(tbl,
