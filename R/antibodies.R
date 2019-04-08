@@ -45,6 +45,7 @@
 #' @importFrom rvest html_nodes html_table
 #' @importFrom xml2 read_html
 query_cc_antibodies <- function(search_term) {
+    Sys.sleep(1)
     url <- paste0( "https://www.cellsignal.com/browse/?Ntt=",
                    search_term,
                    "&N=4294960091+4294960086+4294960087+4294964832+4294956287",
@@ -111,6 +112,7 @@ query_cc_antibodies <- function(search_term) {
 #' @importFrom rvest html_nodes html_table
 #' @importFrom xml2 read_html
 query_sc_antibodies <- function(search_term) {
+    Sys.sleep(1)
     url <- paste0("https://www.scbt.com/scbt/search?Ntt=",
                   search_term,
                   "&N=1354381666&Nrpp=50")
@@ -223,6 +225,7 @@ query_sc_antibodies <- function(search_term) {
 #' @importFrom rvest html_nodes html_table html_text
 #' @importFrom xml2 read_html
 query_biocompare_antibodies <- function(search_term) {
+    Sys.sleep(1)
     url <- paste0("https://www.biocompare.com/Search-Antibodies/?search=",
                   search_term, "&said=0&vcmpv=true")
 
@@ -298,6 +301,7 @@ query_biocompare_antibodies <- function(search_term) {
 #' @importFrom rvest html_nodes html_table
 #' @importFrom xml2 read_html
 query_biolegend_antibodies <- function(search_term) {
+    Sys.sleep(1)
     url <- paste0("https://www.biolegend.com/en-us/search-results?Applications=FC&Keywords=",
                   search_term)
 

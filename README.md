@@ -20,6 +20,11 @@ sctree: a package to connect single cell rna-seq to biology using trees
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+[![Travis build
+status](https://travis-ci.org/jspaezp/sctree.svg?branch=master)](https://travis-ci.org/jspaezp/sctree)
+[![Coverage
+status](https://codecov.io/gh/jspaezp/sctree/branch/master/graph/badge.svg)](https://codecov.io/github/jspaezp/sctree?branch=master)
+
 # sctree
 
 The goal of sctree is to create a tool to accelerate the transition from
@@ -30,9 +35,9 @@ Features suggesting pseudo-gating strategies to purify found populations
 via flow-cytometry, antibody querying and cross validations between
 datasets.
 
-Number of lines in roxygen comments: 586
+Number of lines in roxygen comments: 644
 
-Number of lines in R code: 980
+Number of lines in R code: 1004
 
 # Installation
 
@@ -67,6 +72,11 @@ require(sctree)
 require(Seurat)
 #> Loading required package: Seurat
 #> Loading required package: ggplot2
+#> 
+#> Attaching package: 'ggplot2'
+#> The following object is masked from 'package:sctree':
+#> 
+#>     autoplot
 #> Loading required package: cowplot
 #> 
 #> Attaching package: 'cowplot'
@@ -126,7 +136,7 @@ rang_importances[[1]]
 #> Ranger result
 #> 
 #> Call:
-#>  ranger::ranger(ident ~ ., data = data, num.trees = num.trees,      mtry = floor(ncol(data)/5), importance = importance, ...) 
+#>  ranger::ranger(dependent.variable.name = "ident", data = data,      num.trees = num.trees, mtry = floor(ncol(data)/5), importance = importance,      classification = TRUE, ...) 
 #> 
 #> Type:                             Classification 
 #> Number of trees:                  500 
@@ -153,7 +163,7 @@ and a relative importance has been given to each gene.
 head(rang_importances[[2]])
 #>                importance     pvalue
 #> TNFRSF4       -0.20663582 0.94318182
-#> RP3.395M20.12  0.03391993 0.36363636
+#> RP3-395M20.12  0.03391993 0.36363636
 #> ID3            0.09088435 0.18181818
 #> JUN            0.19175235 0.09090909
 #> DEPDC1         0.15176841 0.09090909
@@ -346,21 +356,24 @@ validation_results <- cross_validate(
 #> Warning in ranger::importance_pvalues(ranger_fit): Only few negative
 #> importance values found, inaccurate p-values. Consider the 'altmann'
 #> approach.
+#> Warning in cross_validate(small_5050_mix, small_9901_mix, cluster = "ALL"): Some important genes were removed because they are not present in the test dataset. 
+#> Removed genes: ASNS, CD3D, ADA, HEY1, XIST, RPL26, CDKN2A, CA2, TSC22D3, AIF1, MAP1A, PSMB8, TSTD1, CSRP2, MDK, FAM127B, PSMB9, GAL, ID2, ZNF503, DMKN, HOXA9, CDC42EP1, IFI16, CTC1, RHOB
 
 validation_results[[1]]
 #> 
 #> Model formula:
-#> ident ~ JUN + CD1E + MZB1 + HIST1H4C + HIST1H1E + HIST1H1D + 
-#>     MYC + CDK1 + UBE2C
+#> ident ~ ARHGDIB + TMSB4X + MZB1 + SOX4 + FYB + ITM2A + CD1E + 
+#>     HIST1H1E + HIST1H4C + UBE2C + CXCR4 + ITGA4 + DDIT4 + MYC + 
+#>     CHI3L2 + HIST1H1C + C12orf57 + CDK1 + JUN + HIST1H1D
 #> 
 #> Fitted party:
 #> [1] root
-#> |   [2] MZB1 <= 1.84943
-#> |   |   [3] UBE2C <= 2.24257: 0 (n = 36, err = 38.9%)
-#> |   |   [4] UBE2C > 2.24257: 1 (n = 64, err = 21.9%)
-#> |   [5] MZB1 > 1.84943
-#> |   |   [6] HIST1H1E <= 1.52487: 0 (n = 93, err = 2.2%)
-#> |   |   [7] HIST1H1E > 1.52487: 0 (n = 62, err = 14.5%)
+#> |   [2] ARHGDIB <= 2.29381
+#> |   |   [3] SOX4 <= 2.74241: 1 (n = 90, err = 27.8%)
+#> |   |   [4] SOX4 > 2.74241: 0 (n = 8, err = 0.0%)
+#> |   [5] ARHGDIB > 2.29381
+#> |   |   [6] DDIT4 <= 2.13797: 0 (n = 148, err = 4.1%)
+#> |   |   [7] DDIT4 > 2.13797: 0 (n = 9, err = 44.4%)
 #> 
 #> Number of inner nodes:    3
 #> Number of terminal nodes: 4
@@ -370,30 +383,30 @@ validation_results[[1]]
 validation_results$confusion_matrix
 #>          cluster
 #> predicted   0   1   2
-#>         0 261  97   9
-#>         1   2   1  14
+#>         0 263  98   8
+#>         1   0   0  15
 ```
 
 ``` r
 freq_matrix <- as.frequency.matrix(validation_results$confusion_matrix)
 freq_matrix
 #>          cluster
-#> predicted          0          1          2
-#>         0 99.2395437 98.9795918 39.1304348
-#>         1  0.7604563  1.0204082 60.8695652
+#> predicted         0         1         2
+#>         0 100.00000 100.00000  34.78261
+#>         1   0.00000   0.00000  65.21739
 ```
 
 This would mean that cells in cluster 0 in the `small_9901_mix` dataset
-are classified 99.23 % of the time as bleonging to cluster 0 of the
+are classified 100 % of the time as bleonging to cluster 0 of the
 `small_5050_mix`
 
 These frequencies can be visualized by plotting them in a heatmap
 
 ``` r
 
-autoplot.table(freq_matrix,
-               min_color = 50,
-               show_number = TRUE)
+autoplot(freq_matrix,
+         min_color = 50,
+         show_number = TRUE)
 #> Warning: Removed 3 rows containing missing values (geom_text).
 ```
 
@@ -407,27 +420,22 @@ the cluster 2 is mainly classified as 1.
 each dataset)
 
 ``` r
-validation_results[[3]]
-#> $`0`
-#> $`0`$all
-#> [1] "MZB1 > 1.84942857412342"
-#> 
-#> $`0`$majority
-#> [1] "HIST1H1E <= 1.52486783772684"
-#> 
-#> 
-#> $`1`
-#> $`1`$all
-#> [1] "MZB1 <= 1.84942857412342" "UBE2C > 2.24257055439926"
-#> 
-#> $`1`$majority
-#> character(0)
+print(validation_results[[3]])
+#> Cluster-0: 
+#>  all elements:
+#>      ARHGDIB +
+#>  majority elements:
+#>      DDIT4 -
+#> Cluster-1: 
+#>  all elements:
+#>      ARHGDIB -
+#>      SOX4 -
 ```
 
 ``` r
 gating_genes <- validation_results$gating_genes
 gating_genes
-#> [1] "MZB1"     "UBE2C"    "HIST1H1E"
+#> [1] "ARHGDIB" "SOX4"    "DDIT4"
 ```
 
 ``` r
@@ -487,95 +495,6 @@ head(query_biocompare_antibodies("CD11b"))
 ```
 
 ``` r
-aliases <- get_aliases(gating_genes[[1]])
-
-print(aliases)
-#> $MZB1
-#> [1] "MEDA-7" "PACAP"  "pERp1"  "MZB1"
-
-lapply(aliases[[1]], function(alias) {
-     head(query_biocompare_antibodies(alias))
-})
-#> [[1]]
-#>                                 title               vendor
-#> 1            MZB1 Polyclonal Antibody LifeSpan BioSciences
-#> 2            MZB1 Polyclonal Antibody LifeSpan BioSciences
-#> 3            MZB1 Polyclonal Antibody LifeSpan BioSciences
-#> 4            MZB1 Polyclonal Antibody LifeSpan BioSciences
-#> 5                 Human MZB1 Antibody             AssayPro
-#> 6 Human MZB1 Antibody (APC Conjugate)             AssayPro
-#>                                                                                                                specification
-#> 1                             Applications: IHC, IHC-p; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 50 µl
-#> 2                                 Applications: ELISA; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100 µl
-#> 3                        Applications: WB, ELISA, IHC; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100 µg
-#> 4                      Applications: Western Blot (WB); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 50 µl
-#> 5                            Applications: ELISA, RIA; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 150 ug
-#> 6 Applications: FCM, ICC, IF, IHC; Reactivity: Human (Hu); Conjugate/Tag: Allophycocyanin (APC) conjugated; Quantity: 150 ug
-#> 
-#> [[2]]
-#>                                             title                vendor
-#> 1                    PACAP-27 Polyclonal Antibody  LifeSpan BioSciences
-#> 2 PRP / PACAP-Related Peptide Polyclonal Antibody  LifeSpan BioSciences
-#> 3                       PACAP Polyclonal Antibody  LifeSpan BioSciences
-#> 4              PACAP Receptor Polyclonal Antibody Invitrogen Antibodies
-#> 5                                  PACAP Antibody       MyBioSource.com
-#> 6                          Sheep Anti-Human PACAP            RayBiotech
-#>                                                                                         specification
-#> 1          Applications: ELISA; Reactivity: Hu, Rt, Sh; Conjugate/Tag: Unconjugated; Quantity: 400 µg
-#> 2 Applications: IF, IHC, IHC-fr; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 50 µl
-#> 3          Applications: ELISA; Reactivity: Hu, Rt, Sh; Conjugate/Tag: Unconjugated; Quantity: 100 µg
-#> 4          Applications: WB, IHC-p; Reactivity: Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100 µL
-#> 5                                     Conjugate/Tag: Unconjugated; Quantity: 0.1 mg Affinity-Purified
-#> 6                                         Applications: ELISA; Reactivity: Human (Hu); Quantity: 1 ml
-#> 
-#> [[3]]
-#>                                                          title
-#> 1                            PERP1 / MZB1 Antibody, Rabbit MAb
-#> 2                            PERP1 / MZB1 Antibody, Rabbit MAb
-#> 3                            PERP1 / MZB1 Antibody, Rabbit PAb
-#> 4 PERP1 / MZB1 Antibody, Rabbit PAb, Antigen Affinity Purified
-#> 5                                               PACAP antibody
-#> 6                                                    Anti-MZB1
-#>                  vendor
-#> 1 Sino Biological, Inc.
-#> 2 Sino Biological, Inc.
-#> 3 Sino Biological, Inc.
-#> 4 Sino Biological, Inc.
-#> 5       MyBioSource.com
-#> 6        MilliporeSigma
-#>                                                                                                               specification
-#> 1                                 Applications: ELISA; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100µL
-#> 2 Applications: Immunohistochemistry-paraffin (IHC-p); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100µL
-#> 3                                 Applications: ELISA; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100µL
-#> 4                  Applications: WB, ELISA, IHC-p, IP; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100µL
-#> 5                    Applications: Western Blot (WB); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 0.1 ml
-#> 6                              Applications: WB, IHC; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 150 UL
-#> 
-#> [[4]]
-#>                                                          title
-#> 1                            PERP1 / MZB1 Antibody, Rabbit MAb
-#> 2                            PERP1 / MZB1 Antibody, Rabbit MAb
-#> 3                            PERP1 / MZB1 Antibody, Rabbit PAb
-#> 4 PERP1 / MZB1 Antibody, Rabbit PAb, Antigen Affinity Purified
-#> 5                                     MZB1 Polyclonal Antibody
-#> 6                                     MZB1 Polyclonal Antibody
-#>                  vendor
-#> 1 Sino Biological, Inc.
-#> 2 Sino Biological, Inc.
-#> 3 Sino Biological, Inc.
-#> 4 Sino Biological, Inc.
-#> 5  LifeSpan BioSciences
-#> 6  LifeSpan BioSciences
-#>                                                                                                               specification
-#> 1                                 Applications: ELISA; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100µL
-#> 2 Applications: Immunohistochemistry-paraffin (IHC-p); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100µL
-#> 3                                 Applications: ELISA; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100µL
-#> 4                  Applications: WB, ELISA, IHC-p, IP; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100µL
-#> 5                            Applications: IHC, IHC-p; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 50 µl
-#> 6                                Applications: ELISA; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100 µl
-```
-
-``` r
 sessionInfo()
 #> R version 3.5.2 (2018-12-20)
 #> Platform: x86_64-w64-mingw32/x64 (64-bit)
@@ -595,7 +514,7 @@ sessionInfo()
 #> 
 #> other attached packages:
 #> [1] Seurat_2.3.4      Matrix_1.2-15     cowplot_0.9.4     ggplot2_3.1.0    
-#> [5] sctree_0.0.1.9002
+#> [5] sctree_0.0.1.9007
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] snow_0.4-3           backports_1.1.3      Hmisc_4.2-0         
@@ -627,26 +546,26 @@ sessionInfo()
 #>  [79] later_0.8.0          AnnotationDbi_1.42.1 munsell_0.5.0       
 #>  [82] tools_3.5.2          RSQLite_2.1.1        ranger_0.11.2       
 #>  [85] ggridges_0.5.1       evaluate_0.13        stringr_1.4.0       
-#>  [88] yaml_2.2.0           npsurv_0.4-0         org.Hs.eg.db_3.6.0  
-#>  [91] knitr_1.22           bit64_0.9-7          fitdistrplus_1.0-14 
-#>  [94] robustbase_0.93-4    caTools_1.17.1.2     purrr_0.3.2         
-#>  [97] RANN_2.6.1           pbapply_1.4-0        nlme_3.1-137        
-#> [100] mime_0.6             R.oo_1.22.0          xml2_1.2.0          
-#> [103] hdf5r_1.1.1          compiler_3.5.2       rstudioapi_0.10     
-#> [106] curl_3.3             png_0.1-7            lsei_1.2-0          
-#> [109] tibble_2.1.1         stringi_1.4.3        lattice_0.20-38     
-#> [112] trimcluster_0.1-2.1  pillar_1.3.1         Rdpack_0.10-1       
-#> [115] lmtest_0.9-36        data.table_1.12.0    bitops_1.0-6        
-#> [118] irlba_2.3.3          gbRd_0.4-11          httpuv_1.5.0        
-#> [121] R6_2.4.0             latticeExtra_0.6-28  promises_1.0.1      
-#> [124] KernSmooth_2.23-15   gridExtra_2.3        IRanges_2.14.12     
-#> [127] codetools_0.2-15     MASS_7.3-51.1        gtools_3.8.1        
-#> [130] assertthat_0.2.1     withr_2.1.2          S4Vectors_0.18.3    
-#> [133] diptest_0.75-7       parallel_3.5.2       doSNOW_1.0.16       
-#> [136] grid_3.5.2           rpart_4.1-13         tidyr_0.8.3         
-#> [139] class_7.3-14         rmarkdown_1.11       inum_1.0-0          
-#> [142] segmented_0.5-3.0    Rtsne_0.15           partykit_1.2-3      
-#> [145] Biobase_2.40.0       shiny_1.2.0          base64enc_0.1-3
+#>  [88] yaml_2.2.0           npsurv_0.4-0         knitr_1.22          
+#>  [91] bit64_0.9-7          fitdistrplus_1.0-14  robustbase_0.93-4   
+#>  [94] caTools_1.17.1.2     purrr_0.3.2          RANN_2.6.1          
+#>  [97] pbapply_1.4-0        nlme_3.1-137         mime_0.6            
+#> [100] R.oo_1.22.0          xml2_1.2.0           hdf5r_1.1.1         
+#> [103] compiler_3.5.2       rstudioapi_0.10      curl_3.3            
+#> [106] png_0.1-7            lsei_1.2-0           tibble_2.1.1        
+#> [109] stringi_1.4.3        lattice_0.20-38      trimcluster_0.1-2.1 
+#> [112] pillar_1.3.1         Rdpack_0.10-1        lmtest_0.9-36       
+#> [115] data.table_1.12.0    bitops_1.0-6         irlba_2.3.3         
+#> [118] gbRd_0.4-11          httpuv_1.5.0         R6_2.4.0            
+#> [121] latticeExtra_0.6-28  promises_1.0.1       KernSmooth_2.23-15  
+#> [124] gridExtra_2.3        IRanges_2.14.12      codetools_0.2-15    
+#> [127] MASS_7.3-51.1        gtools_3.8.1         assertthat_0.2.1    
+#> [130] withr_2.1.2          S4Vectors_0.18.3     diptest_0.75-7      
+#> [133] parallel_3.5.2       doSNOW_1.0.16        grid_3.5.2          
+#> [136] rpart_4.1-13         tidyr_0.8.3          class_7.3-14        
+#> [139] rmarkdown_1.11       inum_1.0-0           segmented_0.5-3.0   
+#> [142] Rtsne_0.15           partykit_1.2-3       Biobase_2.40.0      
+#> [145] shiny_1.2.0          base64enc_0.1-3
 ```
 
 # Reproducing the runs in the purdue cluster

@@ -31,6 +31,6 @@ For additional information on the accepted annotation codes please visit
 http://geneontology.org/docs/guide-go-evidence-codes/
 }
 \examples{
-is_gene_membrane(c("CD4", "GAPDH"))
+is_gene_membrane(c("CD4", "UPP1"))
 # [1]  TRUE FALSE
 }

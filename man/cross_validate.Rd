@@ -14,10 +14,18 @@ cross_validate(train, test, cluster, genes_use = train@var.genes,
 
 \item{cluster}{the cluster whose equivalence needs to be found.}
 
+\item{genes_use}{character vector specifying which genes to use for the
+classification, defaults to train@var.genes}
+
+\item{warn.gene.removal}{logical indicating wether to warn the user when
+genes are removed because they are missing in one of the datasets.
+defults to TRUE}
+
 \item{...}{additional arguments to be passed to ranger_importances.seurat}
 }
 \value{
-a list containing the (1) tree fit,
+a list containing the
+    (1) tree fit,
     (2) a summary_table
     (3) the concensus rules of the tree
     (4) ranger_significance_table

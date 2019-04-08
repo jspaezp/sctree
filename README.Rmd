@@ -15,6 +15,9 @@ knitr::opts_chunk$set(
 )
 ```
 
+[![Travis build status](https://travis-ci.org/jspaezp/sctree.svg?branch=master)](https://travis-ci.org/jspaezp/sctree)
+[![Coverage status](https://codecov.io/gh/jspaezp/sctree/branch/master/graph/badge.svg)](https://codecov.io/github/jspaezp/sctree?branch=master)
+
 # sctree
 
 The goal of sctree is to create a tool to accelerate the transition from
@@ -240,15 +243,16 @@ freq_matrix
 ```
 
 This would mean that cells in cluster 0 in the `small_9901_mix` dataset are 
-classified 99.23 % of the time as bleonging to cluster 0 of the `small_5050_mix`
+classified `r freq_matrix["0","0"]` % of the time as bleonging to cluster 0 of 
+the `small_5050_mix`
 
 These frequencies can be visualized by plotting them in a heatmap
 
 ```{r fig.height=3, fig.width=6}
 
-autoplot.table(freq_matrix,
-               min_color = 50,
-               show_number = TRUE)
+autoplot(freq_matrix,
+         min_color = 50,
+         show_number = TRUE)
 ```
 
 Here we can see that in the *9901* dataset (predicted), both clusters 0 and 1
@@ -259,7 +263,7 @@ is mainly classified as 1.
 each dataset)
 
 ```{r}
-validation_results[[3]]
+print(validation_results[[3]])
 ```
 
 
@@ -291,19 +295,6 @@ Here is a simple example for a gene widely know to have an antibody available
 
 ```{r}
 head(query_biocompare_antibodies("CD11b"))
-```
-
-
-
-```{r}
-aliases <- get_aliases(gating_genes[[1]])
-
-print(aliases)
-
-lapply(aliases[[1]], function(alias) {
-     head(query_biocompare_antibodies(alias))
-})
-
 ```
 
 

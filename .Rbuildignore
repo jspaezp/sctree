@@ -1,4 +1,7 @@
+^codecov\.yml$
+^\.travis\.yml$
 ^Meta$
 ^doc$
+^bash$
 ^sctree\.Rproj$
 ^\.Rproj\.user$

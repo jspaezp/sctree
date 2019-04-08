@@ -156,7 +156,61 @@ get_concensus_rules <-  function(tree) {
     # biologist-friendly form
   }
 
-  purrr::map(rules_per_clus, get_majority_rules)
+  concensus_rules <- purrr::map(rules_per_clus, get_majority_rules)
+  class(concensus_rules) <- c(class(concensus_rules), "concensus.rules")
+  return(concensus_rules)
+}
+
+# TODO write `is.concensus.rules` function.
+# ... a 3 level list with whared names in element 2 and only items interpretable
+# as rules in level 3 ...
+# TODO write a way to print this as a garnett object
+
+#' Prints concensus rules
+#'
+#' Prints in a human readable format a concensus.rules object, usually an output
+#' of `sctree::get_concensus_rules`
+#'
+#' @param concensus_rules a concensus.rules object output from `sctree::get_concensus_rules`
+#'
+#' @return returns silently the same object but prints the rules to the console.
+#' @export
+#'
+#' @examples
+#' iris_tree <- partykit::ctree(Species ~ ., data = iris)
+#' my_rules <- get_concensus_rules(iris_tree)
+#' print(my_rules)
+#' # Cluster-setosa:
+#' #   all elements:
+#' #     Petal.Length -
+#' # Cluster-versicolor:
+#' #   all elements:
+#' #     Petal.Length +
+#' #     Petal.Width -
+#' #   majority elements:
+#' #     Petal.Length -
+#' # Cluster-virginica:
+#' #   all elements:
+#' #     Petal.Length +
+#' #     Petal.Width +
+print.concensus.rules <- function(x) {
+  verbose_rules <- rapply(
+    x,
+    (function(y) gsub(" (>).*", " +", gsub(" (<=).*", " -", y))),
+    classes = "character",
+    how = "list")
+
+  for (rule_name in names(verbose_rules)) {
+    cat(paste0("Cluster-", rule_name, ": "), sep = "\n")
+    rule <- verbose_rules[[rule_name]]
+    for (ruletype in names(rule)) {
+      sub_rules <- rule[[ruletype]]
+      if (length(sub_rules) == 0) next()
+      cat(paste0("\t", ruletype, " elements:\n"))
+      cat(paste0("\t\t", sub_rules), sep = "\n")
+    }
+  }
+  return(invisible(x))
 }
 
 
