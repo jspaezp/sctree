@@ -53,6 +53,10 @@ ranger_importances.df <- function(object, cluster = NULL,
 
     tmp <- object
 
+    if (is.null(cluster)) {
+        stop("Please Specify a cluster to fit the forest (or assign cluster=\"ALL\")")
+    }
+
     if (cluster == "ALL") {
         tmp$ident <- factor(tmp$ident)
     } else {
@@ -133,4 +137,33 @@ ranger_importances.seurat <- function(object, cluster = NULL,
                                  num.trees = num.trees,
                                  warn.imp.method = warn.imp.method,
                                  ...))
+}
+
+# TODO, make functions have the same interface as seurat ...
+#' @describeIn ranger_importances.df Calculate variable importances to each cluster in a seurat object
+#' @export
+FindAllMarkers_ranger.seurat <- function(object,
+                                         genes_use = object@var.genes,
+                                         ...) {
+
+    tmp <- as.data.frame.seurat(object, genes = genes_use, fix_names = FALSE)
+
+    object_ranger_importances.seurat <- function(cluster, ...) {
+        ranger_importances.df(tmp, cluster = cluster)
+    }
+
+    clusters <- sort(as.character(unique(tmp$ident)))
+
+    results <- purrr::map(clusters,
+                          .f = object_ranger_importances.seurat,
+                          ...)
+
+    results <- purrr::map(results, function(x) x[["signif_importances_ranger"]])
+    results <- purrr::map2(results, clusters, function(x, y) {
+        x$cluster <- y
+        return(x)})
+
+    results <- do.call(what = rbind, args = results)
+
+    return(results)
 }

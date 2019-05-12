@@ -3,6 +3,7 @@
 \name{ranger_importances.df}
 \alias{ranger_importances.df}
 \alias{ranger_importances.seurat}
+\alias{FindAllMarkers_ranger.seurat}
 \title{ranger_importances
 
 Calculates ranger-based variable importances for data frames and
@@ -15,6 +16,8 @@ ranger_importances.df(object, cluster = NULL, pval_cutoff = 0.05,
 ranger_importances.seurat(object, cluster = NULL, pval_cutoff = 0.05,
   imp_method = c("janitza", "altmann"), num.trees = 500,
   genes_use = object@var.genes, warn.imp.method = TRUE, ...)
+
+FindAllMarkers_ranger.seurat(object, genes_use = object@var.genes, ...)
 }
 \arguments{
 \item{object}{a seurat or data frame object}
@@ -46,6 +49,8 @@ ranger_importances
 \section{Functions}{
 \itemize{
 \item \code{ranger_importances.seurat}: Calculate variable importances to calssify a seurat object
+
+\item \code{FindAllMarkers_ranger.seurat}: Calculate variable importances to each cluster in a seurat object
 }}
 
 \examples{

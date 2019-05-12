@@ -87,3 +87,9 @@ test_that("ranger importances does not throw warning when called with the altman
     })
 })
 
+
+test_that("ranger importances from seurat objects work", {
+    expect_s3_class(FindAllMarkers_ranger.seurat(Seurat::pbmc_small),
+                    class = "data.frame")
+})
+
