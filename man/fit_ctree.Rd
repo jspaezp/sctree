@@ -2,16 +2,18 @@
 % Please edit documentation in R/print_tree_rules.R
 \name{fit_ctree}
 \alias{fit_ctree}
-\title{Fits a classification tree on a seurat object}
+\title{Fits a classification tree on a Seurat object}
 \usage{
-fit_ctree(object, genes_use = object@var.genes, cluster = "ALL", ...)
+fit_ctree(object, genes_use = Seurat::VariableFeature(object),
+  cluster = "ALL", ...)
 }
 \arguments{
-\item{object}{a seurat object}
+\item{object}{a Seurat object}
 
 \item{genes_use}{a character vector indicating which genes to use in
-the classification. currently implemented only for seurat objects.
-(for data frames one can simply subset the input data frame)}
+the classification. currently implemented only for Seurat objects.
+(for data frames one can simply subset the input data frame)
+defaults to Seurat::VariableFeature(object)}
 
 \item{cluster}{a cluster name for which the markers will be found}
 
@@ -21,7 +23,7 @@ the classification. currently implemented only for seurat objects.
 a ctree fit
 }
 \description{
-Fits a classification tree on a seurat object
+Fits a classification tree on a Seurat object
 }
 \examples{
 fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "ALL")

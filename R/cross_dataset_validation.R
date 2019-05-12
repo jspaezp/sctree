@@ -5,15 +5,15 @@
 
 #' Fits a decision tree in one data set and tests the performance in another
 #'
-#' @param train a seurat object to be used for trainning.
-#' @param test another seurat object to be used for testing.
+#' @param train a Seurat object to be used for trainning.
+#' @param test another Seurat object to be used for testing.
 #' @param cluster the cluster whose equivalence needs to be found.
 #' @param genes_use character vector specifying which genes to use for the
-#'     classification, defaults to train@@var.genes
+#'     classification, defaults to Seurat::VariableFeatures(train)
 #' @param warn.gene.removal logical indicating wether to warn the user when
 #'     genes are removed because they are missing in one of the datasets.
 #'     defults to TRUE
-#' @param ... additional arguments to be passed to ranger_importances.seurat
+#' @param ... additional arguments to be passed to ranger_importances.Seurat
 #'
 #' @return a list containing the
 #'     (1) tree fit,
@@ -28,11 +28,11 @@
 #' cross_validate(small_5050_mix, small_9901_mix, cluster = "ALL")
 #' @importFrom stats as.formula predict
 cross_validate <- function(train, test,
-                           cluster, genes_use = train@var.genes,
+                           cluster, genes_use = Seurat::VariableFeatures(train),
                            warn.gene.removal = TRUE,
                            ...) {
 
-    rang_importances <- ranger_importances.seurat(train,
+    rang_importances <- ranger_importances.Seurat(train,
                                                   cluster = cluster,
                                                   genes_use = genes_use,
                                                   ...)
@@ -50,7 +50,7 @@ cross_validate <- function(train, test,
 
     imp_genes <- rang_importances$signif_importances_ranger$gene
 
-    comm_genes <- imp_genes[imp_genes %in% rownames(test@data)]
+    comm_genes <- imp_genes[imp_genes %in% rownames(test@assays[[test@active.assay]]@data)]
     removed_genes <- imp_genes[!imp_genes %in% comm_genes]
 
     if (warn.gene.removal & length(removed_genes) > 0) {
@@ -68,7 +68,7 @@ cross_validate <- function(train, test,
     # TODO add method to support data frames as inputs
 
     testset <-
-        as.data.frame.seurat(test, comm_genes, fix_names = FALSE)
+        as.data.frame.Seurat(test, comm_genes, fix_names = FALSE)
     predicted <- predict(partyfit, testset)
 
     gating_genes <- names(partykit::varimp(partyfit[[1]]))

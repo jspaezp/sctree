@@ -7,7 +7,7 @@
 \method{print}{concensus.rules}(x)
 }
 \arguments{
-\item{concensus_rules}{a concensus.rules object output from `sctree::get_concensus_rules`}
+\item{x}{a concensus.rules object output from `sctree::get_concensus_rules`}
 }
 \value{
 returns silently the same object but prints the rules to the console.

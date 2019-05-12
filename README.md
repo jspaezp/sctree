@@ -35,9 +35,9 @@ Features suggesting pseudo-gating strategies to purify found populations
 via flow-cytometry, antibody querying and cross validations between
 datasets.
 
-Number of lines in roxygen comments: 644
+Number of lines in roxygen comments: 652
 
-Number of lines in R code: 1004
+Number of lines in R code: 1034
 
 # Installation
 
@@ -69,30 +69,33 @@ Original data can be found here:
 ``` r
 require(sctree)
 #> Loading required package: sctree
+#> Registered S3 methods overwritten by 'ggplot2':
+#>   method         from 
+#>   [.quosures     rlang
+#>   c.quosures     rlang
+#>   print.quosures rlang
+#> Registered S3 method overwritten by 'GGally':
+#>   method from   
+#>   +.gg   ggplot2
+#> Registered S3 method overwritten by 'R.oo':
+#>   method        from       
+#>   throw.default R.methodsS3
+#> Registered S3 method overwritten by 'rvest':
+#>   method            from
+#>   read_xml.response xml2
 require(Seurat)
 #> Loading required package: Seurat
-#> Loading required package: ggplot2
-#> 
-#> Attaching package: 'ggplot2'
-#> The following object is masked from 'package:sctree':
-#> 
-#>     autoplot
-#> Loading required package: cowplot
-#> 
-#> Attaching package: 'cowplot'
-#> The following object is masked from 'package:ggplot2':
-#> 
-#>     ggsave
-#> Loading required package: Matrix
 
 set.seed(6)
 
 data(small_5050_mix)
 small_5050_mix
-#> An object of class seurat in project SeuratProject 
-#>  1031 genes across 255 samples.
+#> An object of class Seurat 
+#> 1031 features across 255 samples within 1 assay 
+#> Active assay: RNA (1031 features)
+#>  2 dimensional reductions calculated: pca, tsne
 
-TSNEPlot(small_5050_mix)
+DimPlot(small_5050_mix, reduction = "tsne")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
@@ -111,7 +114,7 @@ documentation](https://cran.r-project.org/web/packages/ranger/ranger.pdf)
 when addressing this issue and for more details.
 
 ``` r
-rang_importances <- ranger_importances.seurat(
+rang_importances <- ranger_importances.Seurat(
     small_5050_mix,
     cluster = "ALL",
     warn.imp.method = FALSE)
@@ -187,6 +190,24 @@ head(rang_importances[[3]])
 Therefore, in this case we can say that the expression of the following
 genes would be usefull to form the clusters.
 
+As an analogous function to Seurat’s `FindAllMarkers`, we offer
+`FindAllMarkers_ranger.Seurat`
+
+``` r
+markers <- FindAllMarkers_ranger.Seurat(
+  small_5050_mix,
+  warn.imp.method = FALSE)
+
+head(markers)
+#>         importance pvalue    gene cluster
+#> ASNS      5.679208      0    ASNS       0
+#> TMSB4X    5.281722      0  TMSB4X       0
+#> ARHGDIB   5.002977      0 ARHGDIB       0
+#> ADA       3.722655      0     ADA       0
+#> CD3D      3.471757      0    CD3D       0
+#> MZB1      3.033289      0    MZB1       0
+```
+
 ## Visualizing the expected outcome of a flow cytometry experiment
 
 Lets say we choose the top 5 markers from the former list and we did a
@@ -202,7 +223,7 @@ g <- plot_flowstyle(small_5050_mix, markernames = top_markers)
 g
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 Based on this, we can see that the red cluster in this plot is
 predominantly CD3+ ADA+ and ARHGDIB+, as well as ASNS-
@@ -214,7 +235,7 @@ conventions)
 g[1,2]
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ## Suggesting a gating strategy for the markers
 
@@ -224,7 +245,9 @@ A general strategy to get separate all clusters
 
 top_markers <- head(rang_importances[[3]]$gene)
 
-tree_fit <- fit_ctree(small_5050_mix, genes_use = top_markers, cluster = "ALL")
+tree_fit <- fit_ctree(small_5050_mix,
+                      genes_use = top_markers, 
+                      cluster = "ALL")
 ```
 
 Visualizing the tree as … a tree … we can see how our model is a simple
@@ -242,7 +265,7 @@ as part of it.
 plot(tree_fit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 When inspecting the tree\_fit, we can see a more detailed text
 representation of this tree.
@@ -297,7 +320,7 @@ print(tree_fit)
 plot(tree_fit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 Since not all variables are ultimately used in our classifier, one can
 acces the ones that were by using `varimp(tree_fit)`
@@ -305,18 +328,17 @@ acces the ones that were by using `varimp(tree_fit)`
 ``` r
 partykit::varimp(tree_fit)
 #>       ADA      ASNS 
-#> 0.1985014 0.1847596
+#> 0.2231765 0.2185317
 plot_flowstyle(small_5050_mix, names(partykit::varimp(tree_fit)))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 One can also request the package to suggest a specific strategy only for
 a given cluster. This function is not expected to give drastically
 different results in datasets with few clusters, but it can definitely
 come usefull when many clusters are present and one is interested in a
-specific
-one.
+specific one.
 
 ``` r
 tree_fit <- fit_ctree(small_5050_mix, genes_use = top_markers, cluster = "0")
@@ -328,12 +350,12 @@ print(tree_fit)
 #> Fitted party:
 #> [1] root
 #> |   [2] ADA <= 2.83724
-#> |   |   [3] ASNS <= 1.43241: indeed clus 0 (n = 40, err = 35.0%)
+#> |   |   [3] ASNS <= 1.43241: clus 0 (n = 40, err = 35.0%)
 #> |   |   [4] ASNS > 1.43241
 #> |   |   |   [5] ARHGDIB <= 1.90619: not clus 0 (n = 55, err = 10.9%)
-#> |   |   |   [6] ARHGDIB > 1.90619: indeed clus 0 (n = 7, err = 28.6%)
+#> |   |   |   [6] ARHGDIB > 1.90619: clus 0 (n = 7, err = 28.6%)
 #> |   [7] ADA > 2.83724
-#> |   |   [8] ASNS <= 2.10406: indeed clus 0 (n = 146, err = 3.4%)
+#> |   |   [8] ASNS <= 2.10406: clus 0 (n = 146, err = 3.4%)
 #> |   |   [9] ASNS > 2.10406: not clus 0 (n = 7, err = 28.6%)
 #> 
 #> Number of inner nodes:    4
@@ -345,38 +367,37 @@ print(tree_fit)
 ``` r
 data(small_9901_mix)
 small_9901_mix
-#> An object of class seurat in project SeuratProject 
-#>  840 genes across 384 samples.
+#> An object of class Seurat 
+#> 840 features across 384 samples within 1 assay 
+#> Active assay: RNA (840 features)
+#>  2 dimensional reductions calculated: pca, tsne
 ```
 
 ``` r
 validation_results <- cross_validate(
     small_5050_mix, small_9901_mix, 
-    cluster = "ALL")
-#> Warning in ranger::importance_pvalues(ranger_fit): Only few negative
-#> importance values found, inaccurate p-values. Consider the 'altmann'
-#> approach.
-#> Warning in cross_validate(small_5050_mix, small_9901_mix, cluster = "ALL"): Some important genes were removed because they are not present in the test dataset. 
-#> Removed genes: ASNS, CD3D, ADA, HEY1, XIST, RPL26, CDKN2A, CA2, TSC22D3, AIF1, MAP1A, PSMB8, TSTD1, CSRP2, MDK, FAM127B, PSMB9, GAL, ID2, ZNF503, DMKN, HOXA9, CDC42EP1, IFI16, CTC1, RHOB
+    cluster = "ALL",
+    warn.imp.method = FALSE)
+#> Warning in cross_validate(small_5050_mix, small_9901_mix, cluster = "ALL", : Some important genes were removed because they are not present in the test dataset. 
+#> Removed genes: ASNS, CD3D, ADA, HEY1, RPL26, CA2, XIST, CDKN2A, TSC22D3, AIF1, GAL, PSMB9, FAM127B, MAP1A, PSMB8, TSTD1, MDK, CSRP2, DMKN, HOXA9, RNF138, ZNF503, CTC1, C21orf90, HSPA1B, PYGL, SPRED2, ZFAT
 
 validation_results[[1]]
 #> 
 #> Model formula:
-#> ident ~ ARHGDIB + TMSB4X + MZB1 + SOX4 + FYB + ITM2A + CD1E + 
-#>     HIST1H1E + HIST1H4C + UBE2C + CXCR4 + ITGA4 + DDIT4 + MYC + 
-#>     CHI3L2 + HIST1H1C + C12orf57 + CDK1 + JUN + HIST1H1D
+#> ident ~ ARHGDIB + TMSB4X + MZB1 + SOX4 + FYB + UBE2C + HIST1H1E + 
+#>     CD1E + ITGA4 + ITM2A + HIST1H4C + CXCR4 + CDK1 + C12orf57 + 
+#>     HIST1H2BK + ARPP21 + HIST1H1C + CCNB1 + IGLL1 + CHI3L2 + 
+#>     JUN
 #> 
 #> Fitted party:
 #> [1] root
 #> |   [2] ARHGDIB <= 2.29381
 #> |   |   [3] SOX4 <= 2.74241: 1 (n = 90, err = 27.8%)
 #> |   |   [4] SOX4 > 2.74241: 0 (n = 8, err = 0.0%)
-#> |   [5] ARHGDIB > 2.29381
-#> |   |   [6] DDIT4 <= 2.13797: 0 (n = 148, err = 4.1%)
-#> |   |   [7] DDIT4 > 2.13797: 0 (n = 9, err = 44.4%)
+#> |   [5] ARHGDIB > 2.29381: 0 (n = 157, err = 6.4%)
 #> 
-#> Number of inner nodes:    3
-#> Number of terminal nodes: 4
+#> Number of inner nodes:    2
+#> Number of terminal nodes: 3
 ```
 
 ``` r
@@ -410,7 +431,7 @@ autoplot(freq_matrix,
 #> Warning: Removed 3 rows containing missing values (geom_text).
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
 Here we can see that in the *9901* dataset (predicted), both clusters 0
 and 1 are classified mostrly as cluster 0 in the *5050* dataset, while
@@ -424,8 +445,6 @@ print(validation_results[[3]])
 #> Cluster-0: 
 #>  all elements:
 #>      ARHGDIB +
-#>  majority elements:
-#>      DDIT4 -
 #> Cluster-1: 
 #>  all elements:
 #>      ARHGDIB -
@@ -435,7 +454,7 @@ print(validation_results[[3]])
 ``` r
 gating_genes <- validation_results$gating_genes
 gating_genes
-#> [1] "ARHGDIB" "SOX4"    "DDIT4"
+#> [1] "ARHGDIB" "SOX4"
 ```
 
 ``` r
@@ -445,19 +464,19 @@ g2 <- plot_flowstyle(small_9901_mix, markernames = gating_genes)
 g1
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
 
 ``` r
 g2
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-2.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-22-2.png)<!-- -->
 
 ``` r
 g2[1,2]
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 ## Finding antibodies for the experiment
 
@@ -471,32 +490,25 @@ available
 
 ``` r
 head(query_biocompare_antibodies("CD11b"))
-#>                                                                       title
-#> 1                                                 Anti-CD11b/ITGAM Antibody
-#> 2                                        Anti-CD11b/ITGAM Picoband Antibody
-#> 3 Anti-Human CD11b Monoclonal Antibody mFluor450 Conjugated, Flow Validated
-#> 4     Anti-CD11b (integrin alpha-M) Rabbit Monoclonal Antibody, Clone#RM290
-#> 5                                      Monoclonal Antibody to CD11b (human)
-#> 6                                                      Mouse Anti-Rat CD11b
-#>            vendor
-#> 1       BosterBio
-#> 2       BosterBio
-#> 3       BosterBio
-#> 4       BosterBio
-#> 5 MyBioSource.com
-#> 6      RayBiotech
-#>                                                                                                          specification
-#> 1           Applications: Western Blot (WB); Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
-#> 2 Applications: WB, FCM, ICC, IHC-fr, IHC-p; Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
-#> 3  Applications: Flow Cytometry (FCM); Reactivity: Human (Hu); Conjugate/Tag: mFluor450; Quantity: 25 Tests, 100 Tests
-#> 4                          Applications: WB, IHC; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100uL
-#> 5            Applications: Flow Cytometry (FCM); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 0.1 mg
-#> 6                                           Applications: Flow Cytometry (FCM); Reactivity: Rat (Rt); Quantity: 500 µg
+#>                                  title            vendor
+#> 1        Anti-CD11b antibody [EPR1344]             Abcam
+#> 2         Anti-CD11b/c antibody [OX42]             Abcam
+#> 3     InVivoMab anti-mouse/human CD11b        Bio X Cell
+#> 4     InVivoMab anti-mouse/human CD11b        Bio X Cell
+#> 5 Monoclonal Antibody to CD11b (human)   MyBioSource.com
+#> 6               Anti-CD11b (Mouse) mAb MBL International
+#>                                                                                                               specification
+#> 1    Applications: WB, IHC-p; Reactivity: Hu, Ms, Rt, Pg, RhMk; Conjugate/Tag: Unconjugated; Quantity: 10 µl, 40 µl, 100 µl
+#> 2 Applications: ELISA, FCM, ICC, IF, IHC-fr, IP; Reactivity: Rat (Rt); Conjugate/Tag: Unconjugated; Quantity: 10 µg, 100 µg
+#> 3                             Applications: FCM, AfP, Neut; Reactivity: Hu, Ms; Conjugate/Tag: Unconjugated; Quantity: 1 mg
+#> 4                            Applications: FCM, AfP, Neut; Reactivity: Hu, Ms; Conjugate/Tag: Unconjugated; Quantity: 50 mg
+#> 5                 Applications: Flow Cytometry (FCM); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 0.1 mg
+#> 6                 Applications: Flow Cytometry (FCM); Reactivity: Mouse (Ms); Conjugate/Tag: Unconjugated; Quantity: 100 ug
 ```
 
 ``` r
 sessionInfo()
-#> R version 3.5.2 (2018-12-20)
+#> R version 3.6.0 (2019-04-26)
 #> Platform: x86_64-w64-mingw32/x64 (64-bit)
 #> Running under: Windows 10 x64 (build 18356)
 #> 
@@ -513,59 +525,51 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_2.3.4      Matrix_1.2-15     cowplot_0.9.4     ggplot2_3.1.0    
-#> [5] sctree_0.0.1.9007
+#> [1] Seurat_3.0.0      sctree_0.0.2.0001
 #> 
 #> loaded via a namespace (and not attached):
-#>   [1] snow_0.4-3           backports_1.1.3      Hmisc_4.2-0         
-#>   [4] selectr_0.4-1        wrapr_1.8.6          plyr_1.8.4          
-#>   [7] igraph_1.2.4         lazyeval_0.2.2       splines_3.5.2       
-#>  [10] digest_0.6.18        foreach_1.4.4        htmltools_0.3.6     
-#>  [13] viridis_0.5.1        lars_1.2             gdata_2.18.0        
-#>  [16] magrittr_1.5         checkmate_1.9.1      memoise_1.1.0.9000  
-#>  [19] cluster_2.0.7-1      mixtools_1.1.0       ROCR_1.0-7          
-#>  [22] R.utils_2.8.0        colorspace_1.4-1     blob_1.1.1          
-#>  [25] rvest_0.3.2          xfun_0.6             dplyr_0.8.0.1       
-#>  [28] crayon_1.3.4         jsonlite_1.6         libcoin_1.0-4       
-#>  [31] survival_2.43-3      zoo_1.8-5            iterators_1.0.10    
-#>  [34] ape_5.3              glue_1.3.1           gtable_0.3.0        
-#>  [37] kernlab_0.9-27       prabclus_2.2-7       BiocGenerics_0.26.0 
-#>  [40] DEoptimR_1.0-8       scales_1.0.0         mvtnorm_1.0-10      
-#>  [43] DBI_1.0.0            GGally_1.4.0         bibtex_0.4.2        
-#>  [46] Rcpp_1.0.1           metap_1.1            dtw_1.20-1          
-#>  [49] viridisLite_0.3.0    xtable_1.8-3         htmlTable_1.13.1    
-#>  [52] reticulate_1.11.1    foreign_0.8-71       bit_1.1-14          
-#>  [55] proxy_0.4-23         mclust_5.4.3         SDMTools_1.1-221    
-#>  [58] Formula_1.2-3        stats4_3.5.2         tsne_0.1-3          
-#>  [61] DT_0.5               htmlwidgets_1.3      httr_1.4.0          
-#>  [64] gplots_3.0.1.1       RColorBrewer_1.1-2   fpc_2.1-11.1        
-#>  [67] acepack_1.4.1        modeltools_0.2-22    ica_1.0-2           
-#>  [70] pkgconfig_2.0.2      reshape_0.8.8        R.methodsS3_1.7.1   
-#>  [73] flexmix_2.3-15       nnet_7.3-12          labeling_0.3        
-#>  [76] tidyselect_0.2.5     rlang_0.3.3          reshape2_1.4.3      
-#>  [79] later_0.8.0          AnnotationDbi_1.42.1 munsell_0.5.0       
-#>  [82] tools_3.5.2          RSQLite_2.1.1        ranger_0.11.2       
-#>  [85] ggridges_0.5.1       evaluate_0.13        stringr_1.4.0       
-#>  [88] yaml_2.2.0           npsurv_0.4-0         knitr_1.22          
-#>  [91] bit64_0.9-7          fitdistrplus_1.0-14  robustbase_0.93-4   
-#>  [94] caTools_1.17.1.2     purrr_0.3.2          RANN_2.6.1          
-#>  [97] pbapply_1.4-0        nlme_3.1-137         mime_0.6            
-#> [100] R.oo_1.22.0          xml2_1.2.0           hdf5r_1.1.1         
-#> [103] compiler_3.5.2       rstudioapi_0.10      curl_3.3            
-#> [106] png_0.1-7            lsei_1.2-0           tibble_2.1.1        
-#> [109] stringi_1.4.3        lattice_0.20-38      trimcluster_0.1-2.1 
-#> [112] pillar_1.3.1         Rdpack_0.10-1        lmtest_0.9-36       
-#> [115] data.table_1.12.0    bitops_1.0-6         irlba_2.3.3         
-#> [118] gbRd_0.4-11          httpuv_1.5.0         R6_2.4.0            
-#> [121] latticeExtra_0.6-28  promises_1.0.1       KernSmooth_2.23-15  
-#> [124] gridExtra_2.3        IRanges_2.14.12      codetools_0.2-15    
-#> [127] MASS_7.3-51.1        gtools_3.8.1         assertthat_0.2.1    
-#> [130] withr_2.1.2          S4Vectors_0.18.3     diptest_0.75-7      
-#> [133] parallel_3.5.2       doSNOW_1.0.16        grid_3.5.2          
-#> [136] rpart_4.1-13         tidyr_0.8.3          class_7.3-14        
-#> [139] rmarkdown_1.11       inum_1.0-0           segmented_0.5-3.0   
-#> [142] Rtsne_0.15           partykit_1.2-3       Biobase_2.40.0      
-#> [145] shiny_1.2.0          base64enc_0.1-3
+#>   [1] Rtsne_0.15           colorspace_1.4-1     selectr_0.4-1       
+#>   [4] ggridges_0.5.1       listenv_0.7.0        npsurv_0.4-0        
+#>   [7] ggrepel_0.8.1        DT_0.6               bit64_0.9-7         
+#>  [10] AnnotationDbi_1.46.0 mvtnorm_1.0-10       ranger_0.11.2       
+#>  [13] xml2_1.2.0           codetools_0.2-16     splines_3.6.0       
+#>  [16] R.methodsS3_1.7.1    lsei_1.2-0           libcoin_1.0-4       
+#>  [19] knitr_1.22           Formula_1.2-3        jsonlite_1.6        
+#>  [22] ica_1.0-2            cluster_2.0.8        png_0.1-7           
+#>  [25] R.oo_1.22.0          shiny_1.3.2          sctransform_0.2.0   
+#>  [28] compiler_3.6.0       httr_1.4.0           assertthat_0.2.1    
+#>  [31] Matrix_1.2-17        lazyeval_0.2.2       later_0.8.0         
+#>  [34] htmltools_0.3.6      tools_3.6.0          rsvd_1.0.0          
+#>  [37] igraph_1.2.4.1       partykit_1.2-3       gtable_0.3.0        
+#>  [40] glue_1.3.1           RANN_2.6.1           reshape2_1.4.3      
+#>  [43] dplyr_0.8.0.1        Rcpp_1.0.1           Biobase_2.44.0      
+#>  [46] gdata_2.18.0         ape_5.3              nlme_3.1-139        
+#>  [49] gbRd_0.4-11          lmtest_0.9-37        inum_1.0-1          
+#>  [52] xfun_0.6             stringr_1.4.0        globals_0.12.4      
+#>  [55] rvest_0.3.3          mime_0.6             irlba_2.3.3         
+#>  [58] gtools_3.8.1         future_1.13.0        MASS_7.3-51.4       
+#>  [61] zoo_1.8-5            scales_1.0.0         promises_1.0.1      
+#>  [64] parallel_3.6.0       RColorBrewer_1.1-2   curl_3.3            
+#>  [67] yaml_2.2.0           memoise_1.1.0        reticulate_1.12     
+#>  [70] pbapply_1.4-0        gridExtra_2.3        ggplot2_3.1.1       
+#>  [73] rpart_4.1-15         reshape_0.8.8        stringi_1.4.3       
+#>  [76] RSQLite_2.1.1        S4Vectors_0.22.0     caTools_1.17.1.2    
+#>  [79] BiocGenerics_0.30.0  bibtex_0.4.2         Rdpack_0.11-0       
+#>  [82] SDMTools_1.1-221.1   rlang_0.3.4          pkgconfig_2.0.2     
+#>  [85] bitops_1.0-6         evaluate_0.13        lattice_0.20-38     
+#>  [88] ROCR_1.0-7           purrr_0.3.2          labeling_0.3        
+#>  [91] htmlwidgets_1.3      cowplot_0.9.4        bit_1.1-14          
+#>  [94] tidyselect_0.2.5     GGally_1.4.0         wrapr_1.8.6         
+#>  [97] plyr_1.8.4           magrittr_1.5         R6_2.4.0            
+#> [100] IRanges_2.18.0       gplots_3.0.1.1       DBI_1.0.0           
+#> [103] pillar_1.4.0         fitdistrplus_1.0-14  survival_2.44-1.1   
+#> [106] tibble_2.1.1         future.apply_1.2.0   tsne_0.1-3          
+#> [109] crayon_1.3.4         KernSmooth_2.23-15   plotly_4.9.0        
+#> [112] rmarkdown_1.12       viridis_0.5.1        grid_3.6.0          
+#> [115] data.table_1.12.2    blob_1.1.1           metap_1.1           
+#> [118] digest_0.6.18        xtable_1.8-4         httpuv_1.5.1        
+#> [121] tidyr_0.8.3          R.utils_2.8.0        stats4_3.6.0        
+#> [124] munsell_0.5.0        viridisLite_0.3.0
 ```
 
 # Reproducing the runs in the purdue cluster
@@ -583,8 +587,7 @@ To reproduce the runs in the purdue cluster run as follows …
 2.  We run the standard seurat workflow.
 
 This will output a report and generate an .RDS file for each of the
-final seurat
-    objects
+final seurat objects
 
     bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_5050/hg19/ mix5050
     bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_9901/hg19/ mix9901 
@@ -592,20 +595,16 @@ final seurat
 3.  Whenever those are done, run this …
 
 This will run the benchmarks for the datasets. Will also generate 2 .RDS
-files containing a list with a lot of stuff in
-    it.
+files containing a list with a lot of stuff in it.
 
     for i in seurat*.RDS ; do bash ./bash/build_jobs_acc_benchmark.bash $i ; done
 
 # Steps down the road
 
-1.  Make figure list.
-2.  Address some of the TODO’s in this repository
-3.  Reduce dependecies by replacing functions to base equivalents.
-4.  Add links to the documentation to make nicer to explore the package
+3.  Address some of the TODO’s in this repository
+4.  Reduce dependecies by replacing functions to base equivalents.
+5.  Add links to the documentation to make nicer to explore the package
     from inside R
-5.  Implement plot that actually illustrates the progressive gating in
+6.  Implement plot that actually illustrates the progressive gating in
     the decision tree
-6.  DRASTICALLY increase code coverage (right now everything runs
-    without errors due to R CMD check) but expectations are not tested
 7.  Implement a way to find markers for clusters exclusively upregulated

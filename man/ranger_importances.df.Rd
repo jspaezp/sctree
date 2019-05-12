@@ -2,25 +2,27 @@
 % Please edit documentation in R/ranger_utils.R
 \name{ranger_importances.df}
 \alias{ranger_importances.df}
-\alias{ranger_importances.seurat}
-\alias{FindAllMarkers_ranger.seurat}
+\alias{ranger_importances.Seurat}
+\alias{FindAllMarkers_ranger.Seurat}
 \title{ranger_importances
 
 Calculates ranger-based variable importances for data frames and
-seurat objects}
+Seurat objects}
 \usage{
 ranger_importances.df(object, cluster = NULL, pval_cutoff = 0.05,
   imp_method = c("janitza", "altmann"), num.trees = 500,
   warn.imp.method = TRUE, ...)
 
-ranger_importances.seurat(object, cluster = NULL, pval_cutoff = 0.05,
+ranger_importances.Seurat(object, cluster = NULL, pval_cutoff = 0.05,
   imp_method = c("janitza", "altmann"), num.trees = 500,
-  genes_use = object@var.genes, warn.imp.method = TRUE, ...)
+  genes_use = Seurat::VariableFeatures(object), warn.imp.method = TRUE,
+  ...)
 
-FindAllMarkers_ranger.seurat(object, genes_use = object@var.genes, ...)
+FindAllMarkers_ranger.Seurat(object,
+  genes_use = Seurat::VariableFeatures(object), ...)
 }
 \arguments{
-\item{object}{a seurat or data frame object}
+\item{object}{a Seurat or data frame object}
 
 \item{cluster}{a cluster name for which the markers will be found}
 
@@ -37,7 +39,7 @@ ranger.}
 \item{...}{additional arguments to be passed to ranger}
 
 \item{genes_use}{a character vector indicating which genes to use in
-the classification. currently implemented only for seurat objects.
+the classification. currently implemented only for Seurat objects.
 (for data frames one can simply subset the input data frame)}
 }
 \value{
@@ -48,16 +50,16 @@ ranger_importances
 }
 \section{Functions}{
 \itemize{
-\item \code{ranger_importances.seurat}: Calculate variable importances to calssify a seurat object
+\item \code{ranger_importances.Seurat}: Calculate variable importances to calssify a Seurat object
 
-\item \code{FindAllMarkers_ranger.seurat}: Calculate variable importances to each cluster in a seurat object
+\item \code{FindAllMarkers_ranger.Seurat}: Calculate variable importances to each cluster in a Seurat object
 }}
 
 \examples{
-summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "ALL"))
+summary(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "ALL"))
 # Length Class      Mode
 # ranger_fit                15     ranger     list
 # importances_ranger        62     -none-     numeric
 # signif_importances_ranger  3     data.frame list
-#' summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "0"))
+#' summary(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "0"))
 }

@@ -4,7 +4,7 @@ author: "J. Sebastian Paez"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{antibodies}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -31,6 +31,9 @@ query_sc_antibodies("CD3")
 
 query_biolegend_antibodies("CD11C")
 query_biolegend_antibodies("CD3")
+
+query_biocompare_antibodies("CD11C")
+query_biocompare_antibodies("CD3")
 ```
 
 ## Functions return null or empty vectors on imposible markers
@@ -39,5 +42,6 @@ query_biolegend_antibodies("CD3")
 query_cc_antibodies("SUPERFAKEMARKER")
 query_sc_antibodies("SUPERFAKEMARKER")
 query_biolegend_antibodies("SUPERFAKEMARKER")
+query_biocompare_antibodies("SUPERFAKEMARKER")
 ```
 

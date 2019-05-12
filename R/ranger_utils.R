@@ -7,15 +7,15 @@
 #' @title ranger_importances
 #'
 #' Calculates ranger-based variable importances for data frames and
-#' seurat objects
+#' Seurat objects
 #'
-#' @param object a seurat or data frame object
+#' @param object a Seurat or data frame object
 #' @param cluster a cluster name for which the markers will be found
 #' @param pval_cutoff p value cutoff for the markers
 #' @param imp_method importance method, either of "janitza" or "altmann"
 #' @param num.trees number of trees to be build using ranger
 #' @param genes_use a character vector indicating which genes to use in
-#'     the classification. currently implemented only for seurat objects.
+#'     the classification. currently implemented only for Seurat objects.
 #'     (for data frames one can simply subset the input data frame)
 #' @param warn.imp.method logical indicating wether warning should be issued
 #'     when few negative importances are found to calculate the p.values in
@@ -26,12 +26,12 @@
 #' @export
 #'
 #' @examples
-#' summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "ALL"))
+#' summary(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "ALL"))
 #' # Length Class      Mode
 #' # ranger_fit                15     ranger     list
 #' # importances_ranger        62     -none-     numeric
 #' # signif_importances_ranger  3     data.frame list
-#' #' summary(ranger_importances.seurat(Seurat::pbmc_small, cluster = "0"))
+#' #' summary(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "0"))
 #' @importFrom ranger ranger importance_pvalues
 ranger_importances.df <- function(object, cluster = NULL,
                                   pval_cutoff = 0.05,
@@ -118,17 +118,18 @@ ranger_importances.df <- function(object, cluster = NULL,
 
 
 
-#' @describeIn ranger_importances.df Calculate variable importances to calssify a seurat object
+#' @describeIn ranger_importances.df Calculate variable importances to calssify a Seurat object
 #' @export
-ranger_importances.seurat <- function(object, cluster = NULL,
+#' @importFrom Seurat VariableFeatures
+ranger_importances.Seurat <- function(object, cluster = NULL,
                                       pval_cutoff = 0.05,
                                       imp_method = c("janitza", "altmann"),
                                       num.trees = 500,
-                                      genes_use = object@var.genes,
+                                      genes_use = Seurat::VariableFeatures(object),
                                       warn.imp.method = TRUE,
                                       ...) {
 
-    tmp <- as.data.frame.seurat(object, genes = genes_use, fix_names = FALSE)
+    tmp <- as.data.frame.Seurat(object, genes = genes_use, fix_names = FALSE)
 
     return(ranger_importances.df(tmp,
                                  cluster = cluster,
@@ -139,23 +140,23 @@ ranger_importances.seurat <- function(object, cluster = NULL,
                                  ...))
 }
 
-# TODO, make functions have the same interface as seurat ...
-#' @describeIn ranger_importances.df Calculate variable importances to each cluster in a seurat object
+# TODO, make functions have the same interface as Seurat ...
+#' @describeIn ranger_importances.df Calculate variable importances to each cluster in a Seurat object
 #' @export
-FindAllMarkers_ranger.seurat <- function(object,
-                                         genes_use = object@var.genes,
+FindAllMarkers_ranger.Seurat <- function(object,
+                                         genes_use = Seurat::VariableFeatures(object),
                                          ...) {
 
-    tmp <- as.data.frame.seurat(object, genes = genes_use, fix_names = FALSE)
+    tmp <- as.data.frame.Seurat(object, genes = genes_use, fix_names = FALSE)
 
-    object_ranger_importances.seurat <- function(cluster, ...) {
-        ranger_importances.df(tmp, cluster = cluster)
+    object_ranger_importances.Seurat <- function(cluster, ...) {
+        ranger_importances.df(tmp, cluster = cluster, ...)
     }
 
     clusters <- sort(as.character(unique(tmp$ident)))
 
     results <- purrr::map(clusters,
-                          .f = object_ranger_importances.seurat,
+                          .f = object_ranger_importances.Seurat,
                           ...)
 
     results <- purrr::map(results, function(x) x[["signif_importances_ranger"]])

@@ -4,11 +4,11 @@
 \alias{featureplot_gadget}
 \title{featureplot_gadget}
 \usage{
-featureplot_gadget(seurat_object = Seurat::pbmc_small,
+featureplot_gadget(Seurat_object = Seurat::pbmc_small,
   starting_genes = NULL, genes.use = NULL, cache = "./.cache")
 }
 \arguments{
-\item{seurat_object}{a seurat object to explore}
+\item{Seurat_object}{a Seurat object to explore}
 
 \item{starting_genes}{genes to start with}
 
@@ -20,11 +20,11 @@ featureplot_gadget(seurat_object = Seurat::pbmc_small,
 TODO return something ... its a gadget after all ...
 }
 \description{
-Shiny gadget to explore clusters and features for a seurat object.
+Shiny gadget to explore clusters and features for a Seurat object.
 }
 \examples{
 \donttest{
-featureplot_gadget(seurat_object = small_5050_mix,
+featureplot_gadget(Seurat_object = small_5050_mix,
                     genes.use = small_5050_mix@var.genes[
                         is_gene_membrane(small_5050_mix@var.genes)],
                     cache = "./.cache")

@@ -6,4 +6,5 @@
 ^sctree\.Rproj$
 ^\.Rproj\.user$
 ^packrat/
+^\.cache/
 ^\.Rprofile$

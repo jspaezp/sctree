@@ -5,7 +5,7 @@
 #' slim wrapper arround Seurat::TSNEPlot that overwrites the return option and
 #' by default uses a tenth of the data.
 #'
-#' @param object A seurat object
+#' @param object A Seurat object
 #' @param fraction fraction of the data to be used for plotting, defaults to 0.1
 #' @param ... Additional arguments to be passed to Seurat::TSNEPlot
 #'
@@ -14,27 +14,27 @@
 #'
 #' @examples
 #' tsne_plot(Seurat::pbmc_small)
-#' @importFrom Seurat TSNEPlot
+#' @importFrom Seurat DimPlot Cells
 tsne_plot <- function(object, fraction = 0.1, ...) {
-    g <- Seurat::TSNEPlot(
+    g <- Seurat::DimPlot(
         object = object,
-        dim.1 = 1,
-        do.return = TRUE,
-        cells.use = sample(object@cell.names,
-                           size = ceiling(length(object@cell.names)*fraction)),
+        cells = sample(Seurat::Cells(object),
+                           size = ceiling(
+                               length(Seurat::Cells(object))*fraction)),
+        reduction = "tsne",
         ...)
     g
 }
 
 
-#' Gets a data frame from a seurat object
+#' Gets a data frame from a Seurat object
 #'
-#' Provided a seurat object, returs a data frame of the count values, being
+#' Provided a Seurat object, returs a data frame of the count values, being
 #' the columns each 'gene' and the rows each UMI/cell.
 #'
 #' It returns only the genes annotated as variable and the identity column.
 #'
-#' @param x A seurat object
+#' @param x A Seurat object
 #' @param genes genes to extract to the data.frame
 #' @param fix_names logical value indicating wether the gene names should be
 #'     converted to R-compatible names. defaults to FALSE
@@ -43,19 +43,20 @@ tsne_plot <- function(object, fraction = 0.1, ...) {
 #' @export
 #'
 #' @examples
-#' as.data.frame(Seurat::pbmc_small, Seurat::pbmc_small@@var.genes)[1:3,1:3]
+#' as.data.frame(Seurat::pbmc_small,
+#'     Seurat::VariableFeatures(Seurat::pbmc_small))[1:3,1:3]
 #' #                     LTB EAF2 CD19
 #' # ATGCCAGAACGACT 6.062788    0    0
 #' # CATGGCCTGTGCAT 6.714813    0    0
 #' # GAACCTGATGAACC 7.143118    0    0
-#' @importFrom Seurat FetchData GetIdent
-as.data.frame.seurat <- function(x, genes, fix_names = FALSE) {
+#' @importFrom Seurat FetchData Idents VariableFeatures
+as.data.frame.Seurat <- function(x, genes, fix_names = FALSE) {
     # TODO possibly also a warning if it is not a variable gene and an error if it does not exist
     # also an argument to force though the error ...
-    tmp <- Seurat::FetchData(x, vars.all = genes)
+    tmp <- Seurat::FetchData(x, vars = genes)
     tmp <-  as.data.frame(tmp, stringsAsFactors = FALSE)
 
-    tmp$ident <- Seurat::GetIdent(x, uniq = FALSE, cells.use = rownames(tmp))
+    tmp$ident <- Seurat::Idents(x, uniq = FALSE, cells.use = rownames(tmp))
 
     if (fix_names) {
         colnames(tmp) <- make.names(colnames(tmp))
@@ -376,11 +377,13 @@ autoplot <- function(object, ...) {
 #'
 #' Heatmap with ggplot from table objects
 #'
-#' @param tbl a table object
+#' @param object a table object
 #' @param min_color minimum value to show colored, value sunder this will
 #'     be shown as gray
 #' @param show_number logical indicating wether the number should be printed
 #'     in the box of the heatmap
+#' @param ... additional arguments passed to downstream methods
+#'
 #'
 #' @return ggpplot object
 #' @export
@@ -391,7 +394,8 @@ autoplot <- function(object, ...) {
 #' @importFrom ggplot2 geom_tile geom_point aes_string labs autoplot
 autoplot.table <- function(object,
                            min_color = NULL,
-                           show_number = FALSE) {
+                           show_number = FALSE,
+                           ...) {
     df <- as.data.frame(object)
 
     df[["Freq"]] <- round(df[["Freq"]], 2)

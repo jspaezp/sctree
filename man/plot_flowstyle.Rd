@@ -3,7 +3,7 @@
 \name{plot_flowstyle}
 \alias{plot_flowstyle}
 \alias{plot_flowstyle.data.frame}
-\alias{plot_flowstyle.seurat}
+\alias{plot_flowstyle.Seurat}
 \title{plot_flowstyle}
 \usage{
 plot_flowstyle(object, markernames, classif_col = "ident", ...)
@@ -11,7 +11,7 @@ plot_flowstyle(object, markernames, classif_col = "ident", ...)
 \method{plot_flowstyle}{data.frame}(object, markernames,
   classif_col = "ident", ...)
 
-\method{plot_flowstyle}{seurat}(object, markernames,
+\method{plot_flowstyle}{Seurat}(object, markernames,
   classif_col = "ident", ...)
 }
 \arguments{
@@ -38,7 +38,7 @@ Sake of visualization
 \itemize{
 \item \code{data.frame}: Draw a flowstyle plot from a data.frame
 
-\item \code{seurat}: Draw a flowstyle plot from a seurat object
+\item \code{Seurat}: Draw a flowstyle plot from a Seurat object
 }}
 
 \examples{

@@ -13,30 +13,35 @@ test_that("tsne plot wrapper works", {
 
 test_that("converting seurat to data frame works", {
     data("small_5050_mix")
-    num_genes <- length(rownames(small_5050_mix@data))
-    num_vargenes <- length(small_5050_mix@var.genes)
+    geneneames <- rownames(
+        Seurat::FetchData(small_5050_mix,
+                          vars = rownames(small_5050_mix@assays$RNA@data)))
+    num_genes <- length(geneneames)
+    num_vargenes <- length(Seurat::VariableFeatures(small_5050_mix))
     expect_s3_class({
-        as.data.frame(small_5050_mix, genes = rownames(small_5050_mix@data))
+        as.data.frame(
+            small_5050_mix,
+            genes = rownames(small_5050_mix@assays$RNA@data))
     }, "data.frame")
 
     expect_equal({
         ncol(as.data.frame(
             small_5050_mix,
-            genes = small_5050_mix@var.genes))
+            genes = Seurat::VariableFeatures(small_5050_mix)))
     }, num_vargenes + 1)
 
     expect_equal({
         colnames(as.data.frame(
             small_5050_mix,
-            genes = small_5050_mix@var.genes))
-    }, c(small_5050_mix@var.genes, "ident"))
+            genes = Seurat::VariableFeatures(small_5050_mix)))
+    }, c(Seurat::VariableFeatures(small_5050_mix), "ident"))
 
     expect_equal({
         colnames(as.data.frame(
             small_5050_mix,
-            genes = small_5050_mix@var.genes,
+            genes = Seurat::VariableFeatures(small_5050_mix),
             fix_names = TRUE))
-    }, make.names(c(small_5050_mix@var.genes, "ident")))
+    }, make.names(c(Seurat::VariableFeatures(small_5050_mix), "ident")))
 })
 
 
