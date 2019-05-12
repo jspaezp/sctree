@@ -33,7 +33,9 @@ test_that("ranger importances from seurat objects work", {
         )
     )
 
-    test_that("ranger importances match the names in the original seurat object", {
+    test_that(
+        paste0("ranger importances match the names ",
+               "in the original seurat object"), {
         expect_warning({
             expect_equal(
                 rownames(ranger_importances.seurat(
@@ -48,7 +50,9 @@ test_that("ranger importances from seurat objects work", {
 })
 
 
-test_that("ranger importances does not throw warning when called with the altman method", {
+test_that(
+    paste0("ranger importances does not throw warning ",
+           "when called with the altman method"), {
     expect_silent({
         altmann_output <- ranger_importances.seurat(
             Seurat::pbmc_small,
@@ -60,7 +64,9 @@ test_that("ranger importances does not throw warning when called with the altman
 
     expect_s3_class(altmann_output[[1]],"ranger")
 
-    test_that("ranger importances match the names in the original seurat object with the altmann method",{
+    test_that(
+        paste0("ranger importances match the names in the",
+               " original seurat object with the altmann method"),{
         expect_equal(
             rownames(altmann_output[[2]]),
             rownames(Seurat::pbmc_small@data))
@@ -79,7 +85,9 @@ test_that("ranger importances does not throw warning when called with the altman
 
     expect_s3_class(altmann_output[[1]],"ranger")
 
-    test_that("ranger importances match the names in the original seurat object with the altmann method",{
+    test_that(
+        paste0("ranger importances match the names in the ",
+               "original seurat object with the altmann method"),{
         expect_equal(
             rownames(altmann_output[[2]]),
             rownames(Seurat::pbmc_small@data))
