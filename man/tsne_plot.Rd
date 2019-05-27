@@ -7,7 +7,7 @@
 tsne_plot(object, fraction = 0.1, ...)
 }
 \arguments{
-\item{object}{A seurat object}
+\item{object}{A Seurat object}
 
 \item{fraction}{fraction of the data to be used for plotting, defaults to 0.1}
 

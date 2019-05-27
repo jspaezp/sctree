@@ -24,11 +24,12 @@ test_that("cross validation works in the bundled datasets", {
 
 
 test_that("cross validation handles correctly non-standard names",{
-    names_5050 <- rownames(small_5050_mix@data)
+    names_5050 <- rownames(small_5050_mix@assays$RNA@data)
     standard_names_version <- make.names(names_5050)
     non_standard_names <- names_5050[names_5050 != standard_names_version]
 
-    mix_standard_names <- c(small_5050_mix@var.genes, non_standard_names)
+    mix_standard_names <- c(Seurat::VariableFeatures(small_5050_mix),
+                            non_standard_names)
 
     expect_warning({
         expect_s3_class(

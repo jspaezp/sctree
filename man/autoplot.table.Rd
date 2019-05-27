@@ -5,18 +5,20 @@
 \alias{autoplot.matrix}
 \title{autoplot.table}
 \usage{
-autoplot.table(object, min_color = NULL, show_number = FALSE)
+autoplot.table(object, min_color = NULL, show_number = FALSE, ...)
 
 autoplot.matrix(object, ...)
 }
 \arguments{
+\item{object}{a table object}
+
 \item{min_color}{minimum value to show colored, value sunder this will
 be shown as gray}
 
 \item{show_number}{logical indicating wether the number should be printed
 in the box of the heatmap}
 
-\item{tbl}{a table object}
+\item{...}{additional arguments passed to downstream methods}
 }
 \value{
 ggpplot object

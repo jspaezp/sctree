@@ -4,7 +4,7 @@
 \name{small_5050_mix}
 \alias{small_5050_mix}
 \title{A random subset of genes and cells from a 50:50 mixture of 293T:Jurkat cells}
-\format{A seurat object with 840 genes and 384 cells:
+\format{A Seurat object with 840 genes and 384 cells:
 \describe{
   \item{1031 genes}{}
   \item{255 cells}{}
@@ -14,9 +14,9 @@
 small_5050_mix
 }
 \description{
-The dataset is a fully processed seurat object of the mixture sub-sampled
-data set by the standard seurat procedure, therefore should contain all
-normal fields expected from a seurat object, sucha as identities, pca and
+The dataset is a fully processed Seurat object of the mixture sub-sampled
+data set by the standard Seurat procedure, therefore should contain all
+normal fields expected from a Seurat object, sucha as identities, pca and
 tsne dimensions.
 }
 \details{

@@ -66,7 +66,7 @@ set.seed(6)
 data(small_5050_mix)
 small_5050_mix
 
-TSNEPlot(small_5050_mix)
+DimPlot(small_5050_mix, reduction = "tsne")
 ```
 
 ## Finding important variables to classify clusters
@@ -83,7 +83,7 @@ Please reffer to the  of the `importance_pvalues` section in the
 when addressing this issue and for more details.
 
 ```{r}
-rang_importances <- ranger_importances.seurat(
+rang_importances <- ranger_importances.Seurat(
     small_5050_mix,
     cluster = "ALL",
     warn.imp.method = FALSE)
@@ -128,6 +128,18 @@ head(rang_importances[[3]])
 Therefore, in this case we can say that the expression of the following genes 
 would be usefull to form the clusters. `r cat(head(rang_importances[[3]])$gene)`
 
+As an analogous function to Seurat's `FindAllMarkers`, we offer
+`FindAllMarkers_ranger.Seurat`
+
+```{r}
+markers <- FindAllMarkers_ranger.Seurat(
+  small_5050_mix,
+  warn.imp.method = FALSE)
+
+head(markers)
+```
+
+
 ## Visualizing the expected outcome of a flow cytometry experiment
 
 Lets say we choose the top 5 markers from the former list and we did a flow
@@ -159,7 +171,9 @@ A general strategy to get separate all clusters
 
 top_markers <- head(rang_importances[[3]]$gene)
 
-tree_fit <- fit_ctree(small_5050_mix, genes_use = top_markers, cluster = "ALL")
+tree_fit <- fit_ctree(small_5050_mix,
+                      genes_use = top_markers, 
+                      cluster = "ALL")
 ```
 
 Visualizing the tree as ... a tree ... we can see how our model is a simple
@@ -227,7 +241,8 @@ small_9901_mix
 ```{r}
 validation_results <- cross_validate(
     small_5050_mix, small_9901_mix, 
-    cluster = "ALL")
+    cluster = "ALL",
+    warn.imp.method = FALSE)
 
 validation_results[[1]]
 ```
@@ -336,12 +351,10 @@ for i in seurat*.RDS ; do bash ./bash/build_jobs_acc_benchmark.bash $i ; done
 
 # Steps down the road
 
-1. Make figure list.
 3. Address some of the TODO's in this repository
 4. Reduce dependecies by replacing functions to base equivalents.
 5. Add links to the documentation to make nicer to explore the package from inside R
 6. Implement plot that actually illustrates the progressive gating in the decision tree
-7. DRASTICALLY increase code coverage (right now everything runs without errors due to R CMD check) but expectations are not tested
 8. Implement a way to find markers for clusters exclusively upregulated
 
 

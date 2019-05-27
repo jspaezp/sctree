@@ -1,9 +1,9 @@
 
 #' featureplot_gadget
 #'
-#' Shiny gadget to explore clusters and features for a seurat object.
+#' Shiny gadget to explore clusters and features for a Seurat object.
 #'
-#' @param seurat_object a seurat object to explore
+#' @param Seurat_object a Seurat object to explore
 #' @param starting_genes genes to start with
 #' @param genes.use genes use for the classification
 #' @param cache a directory where the caching will occur
@@ -22,12 +22,12 @@
 #' @importFrom shiny renderPlot renderCachedPlot
 #' @examples
 #' \donttest{
-#' featureplot_gadget(seurat_object = small_5050_mix,
+#' featureplot_gadget(Seurat_object = small_5050_mix,
 #'                     genes.use = small_5050_mix@@var.genes[
 #'                         is_gene_membrane(small_5050_mix@@var.genes)],
 #'                     cache = "./.cache")
 #' }
-featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
+featureplot_gadget <- function(Seurat_object = Seurat::pbmc_small,
                                starting_genes = NULL,
                                genes.use = NULL,
                                cache = "./.cache") {
@@ -93,11 +93,11 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
     server <- function(input, output) {
 
         if (is.null(genes.use)) {
-            genes.use <- seurat_object@var.genes
+            genes.use <- Seurat::VariableFeatures(Seurat_object)
         }
 
-        object_df <- as.data.frame.seurat(
-            seurat_object, genes.use, fix_names = TRUE)
+        object_df <- as.data.frame.Seurat(
+            Seurat_object, genes.use, fix_names = TRUE)
 
         # TODO: fix issue where memoisation flushes the cache with each run.
         # TODO: add progress bar for long running processes such as fitting the
@@ -108,8 +108,8 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
 
         colorscale <- viridis::viridis(2, direction = -1)
         # TODO add an option to select either all genes or only variables
-        #total_genes <- rownames(seurat_object@raw.data)
-        total_genes <- seurat_object@var.genes
+        #total_genes <- rownames(Seurat_object@raw.data)
+        total_genes <- Seurat_object@var.genes
 
         importance_df <- shiny::eventReactive(input$cluster, {
             importance_df <- mem_ranger.df(
@@ -137,16 +137,16 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
             shiny::selectInput(
                 inputId = "cluster",
                 label = "Cluster to find markers for",
-                choices = sort(unique(seurat_object@ident)))
+                choices = sort(unique(Seurat_object@ident)))
         })
 
 
         output$generalTsne <- shiny::renderPlot({
-            tsne_plot(seurat_object)
+            tsne_plot(Seurat_object)
         })
 
         output$generalTsne2 <- shiny::renderPlot({
-            tsne_plot(seurat_object)
+            tsne_plot(Seurat_object)
         })
 
         output$rangerImpTable <- DT::renderDataTable({
@@ -187,7 +187,7 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
                     total_genes[!total_genes %in% get_plottable_genes()])
             }, error = function(e) {
                 warning("Recovering from error in `output$allgenes <- shiny::renderUI`")
-                choices <<- sort(seurat_object@var.genes)
+                choices <<- sort(Seurat_object@var.genes)
             })
 
             shiny::selectInput(
@@ -208,7 +208,7 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
            capt_input <- captured_input()
 
            Seurat::FeaturePlot(
-                object = seurat_object,
+                object = Seurat_object,
                 features.plot = capt_input$genenames,
                 cols.use = colorscale,
                 reduction.use = "tsne",
@@ -224,7 +224,7 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
            capt_input <- captured_input()
 
            Seurat::VlnPlot(
-               object = seurat_object,
+               object = Seurat_object,
                features.plot = capt_input$genenames,
                do.return = FALSE)
        }, cacheKeyExpr = {
@@ -235,7 +235,7 @@ featureplot_gadget <- function(seurat_object = Seurat::pbmc_small,
            capt_input <- captured_input()
 
            plot_flowstyle(
-               object = seurat_object,
+               object = Seurat_object,
                markernames = make.names(capt_input$genenames))
        }, cacheKeyExpr = {
            captured_input()

@@ -171,7 +171,7 @@ get_concensus_rules <-  function(tree) {
 #' Prints in a human readable format a concensus.rules object, usually an output
 #' of `sctree::get_concensus_rules`
 #'
-#' @param concensus_rules a concensus.rules object output from `sctree::get_concensus_rules`
+#' @param x a concensus.rules object output from `sctree::get_concensus_rules`
 #'
 #' @return returns silently the same object but prints the rules to the console.
 #' @export
@@ -214,12 +214,13 @@ print.concensus.rules <- function(x) {
 }
 
 
-#' Fits a classification tree on a seurat object
+#' Fits a classification tree on a Seurat object
 #'
-#' @param object a seurat object
+#' @param object a Seurat object
 #' @param genes_use a character vector indicating which genes to use in
-#'     the classification. currently implemented only for seurat objects.
+#'     the classification. currently implemented only for Seurat objects.
 #'     (for data frames one can simply subset the input data frame)
+#'     defaults to Seurat::VariableFeature(object)
 #' @param cluster a cluster name for which the markers will be found
 #' @param ... additional arguments to be passed to partykit::ctree_control
 #'
@@ -264,9 +265,9 @@ print.concensus.rules <- function(x) {
 #' # Number of inner nodes:    3
 #' # Number of terminal nodes: 4
 fit_ctree <- function(object,
-                      genes_use = object@var.genes,
+                      genes_use = Seurat::VariableFeature(object),
                       cluster = "ALL", ...) {
-    treedata <- as.data.frame.seurat(
+    treedata <- as.data.frame.Seurat(
       object, genes = genes_use, fix_names = FALSE)
 
     # TODO make this its own function and place it in utils ...
@@ -277,7 +278,7 @@ fit_ctree <- function(object,
     } else {
       classif_names <- c(
         FALSE. = paste0("not clus ", cluster),
-        TRUE. = paste0("indeed clus ", cluster))
+        TRUE. = paste0("clus ", cluster))
 
       treedata$ident <- factor(
         classif_names[make.names(treedata$ident == cluster)])

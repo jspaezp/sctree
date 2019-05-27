@@ -4,24 +4,25 @@
 \alias{cross_validate}
 \title{Fits a decision tree in one data set and tests the performance in another}
 \usage{
-cross_validate(train, test, cluster, genes_use = train@var.genes,
+cross_validate(train, test, cluster,
+  genes_use = Seurat::VariableFeatures(train),
   warn.gene.removal = TRUE, ...)
 }
 \arguments{
-\item{train}{a seurat object to be used for trainning.}
+\item{train}{a Seurat object to be used for trainning.}
 
-\item{test}{another seurat object to be used for testing.}
+\item{test}{another Seurat object to be used for testing.}
 
 \item{cluster}{the cluster whose equivalence needs to be found.}
 
 \item{genes_use}{character vector specifying which genes to use for the
-classification, defaults to train@var.genes}
+classification, defaults to Seurat::VariableFeatures(train)}
 
 \item{warn.gene.removal}{logical indicating wether to warn the user when
 genes are removed because they are missing in one of the datasets.
 defults to TRUE}
 
-\item{...}{additional arguments to be passed to ranger_importances.seurat}
+\item{...}{additional arguments to be passed to ranger_importances.Seurat}
 }
 \value{
 a list containing the
