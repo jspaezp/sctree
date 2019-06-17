@@ -20,17 +20,17 @@ of `sctree::get_concensus_rules`
 iris_tree <- partykit::ctree(Species ~ ., data = iris)
 my_rules <- get_concensus_rules(iris_tree)
 print(my_rules)
-# Cluster-setosa:
-#   all elements:
-#     Petal.Length -
-# Cluster-versicolor:
-#   all elements:
-#     Petal.Length +
-#     Petal.Width -
-#   majority elements:
-#     Petal.Length -
-# Cluster-virginica:
-#   all elements:
-#     Petal.Length +
-#     Petal.Width +
 }
+#  Cluster-setosa: 
+#  	all elements:
+#  		Petal.Length -
+#  Cluster-versicolor: 
+#  	all elements:
+#  		Petal.Length +
+#  		Petal.Width -
+#  	majority elements:
+#  		Petal.Length -
+#  Cluster-virginica: 
+#  	all elements:
+#  		Petal.Length +
+#  		Petal.Width +

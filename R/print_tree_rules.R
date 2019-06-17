@@ -12,9 +12,10 @@
 #' @examples
 #' iris_tree <- partykit::ctree(Species ~ ., data = iris)
 #' get_cluster_mapping(iris_tree)
-#' # 2          5          6          7
-#' # setosa versicolor versicolor  virginica
-#' # Levels: setosa versicolor virginica
+#'
+#' @evalRd paste("# ", capture.output(
+#'     get_cluster_mapping(partykit::ctree(Species ~ ., data = iris))
+#'     ))
 get_cluster_mapping <- function(tree) {
     # list of factor vectors, each element is a node and each elem in the
     # factor is the majority prediction
@@ -25,11 +26,161 @@ get_cluster_mapping <- function(tree) {
 
     # Named vector, each name the node id and each element the predicted cluster
     cluster_mapping <- wrapr::named_map_builder(
-      names(predictions),
-      unlist(predictions))
+      names(predictions), # This is the node ids
+      unlist(predictions)) # And this is the prediction (identity)
 
     return(cluster_mapping)
 }
+
+
+#' as.garnett
+#'
+#' Converts a fitted ctree object to the classifier format supported by garnett
+#' for more information on the specification please visit:
+#' https://cole-trapnell-lab.github.io/garnett/docs/#submitting-a-classifier
+#'
+#' @param tree a fitted constparty/party object
+#' @param digits an integer stating how many decimal places should be conserved
+#'
+#' @return a complex list that prints as a garnett file
+#' @export
+#'
+#' @evalRd include_roxygen_example({
+#'     "as.garnett(fit_ctree(Seurat::pbmc_small))"
+#'     })
+as.garnett <- function(tree, digits = 3) {
+  cluster_mappings <- get_cluster_mapping(tree)
+  node_ids <- names(cluster_mappings)
+  cluster_mappings <- as.character(cluster_mappings)
+
+  dup_names <- cluster_mappings %in%
+    cluster_mappings[duplicated(cluster_mappings)]
+
+  classif_in_many <- cluster_mappings[dup_names]
+  replacement_names <- paste0(
+    as.character(classif_in_many),
+    "_node_",
+    node_ids[dup_names])
+
+  cluster_mappings[dup_names] <- replacement_names
+
+  num_elements <- unlist(
+    partykit::nodeapply(
+      partykit::as.simpleparty(tree),
+      partykit::nodeids(tree, terminal = TRUE),
+      FUN = function(x) partykit::info_node(x)$n))
+
+  cluster_mappings <- paste(
+    cluster_mappings,
+    paste0("\t(n = ", num_elements, ")"))
+
+  rule_list <- partykit:::.list.rules.party(tree)
+  split_rules <- strsplit(rule_list, "\\s&\\s")
+  names(split_rules) <- cluster_mappings
+
+
+  group_sub_rules <- function(split_rules) {
+
+    rules_per_var <- split(
+      split_rules,
+      gsub(" (>|<).*$", "", split_rules))
+
+    get_min_and_max_rule <- function(rule_group) {
+
+      gt_lt_rules <- split(
+        rule_group,
+        gsub("(^.*)(>|<)(.*$)", "\\2", rule_group))
+
+      get_nums <- function(x) {
+        ret <- as.numeric(gsub(".* (-?[0-9.]+)\\s*$", "\\1", x, perl = TRUE))
+        ret <- round(ret, digits = digits)
+        return(ret)
+      }
+
+      if (length(gt_lt_rules[[">"]] > 0)) {
+        max_gt <- max(get_nums(gt_lt_rules[[">"]]))
+      } else {
+        max_gt <- NA
+      }
+
+      if (length(gt_lt_rules[["<"]] > 0)) {
+        min_lt <- min(get_nums(gt_lt_rules[["<"]]))
+      } else {
+        min_lt <- NA
+      }
+
+      ret <- c(min_lt, max_gt)
+
+      ruletype <- c("TRUE_FALSE" = "gt",
+                    "FALSE_FALSE" = "mixed",
+                    "FALSE_TRUE" = "lt")[
+        paste0(is.na(ret), collapse = "_")]
+
+      ret <- ret[!is.na(ret)]
+      attr(ret, "ruletype") <- ruletype
+
+      return(ret)
+    }
+
+    max_n_mins <- lapply(rules_per_var, get_min_and_max_rule)
+    names(max_n_mins) <- names(rules_per_var)
+
+    ruletypes <- sapply(max_n_mins, function(x) attr(x, "ruletype"))
+
+    ret_vars <- split(max_n_mins, ruletypes)
+
+    list(`expressed above` = ret_vars[["gt"]],
+         `expressed below` = ret_vars[["lt"]],
+         `expressed between` =  ret_vars[["mixed"]])
+  }
+
+  garnett.list <- lapply(split_rules, group_sub_rules)
+  class(garnett.list) <- "garnett.list"
+
+  return(garnett.list)
+}
+
+
+#' @describeIn as.garnett Print a garnett classifier
+#' @export
+print.garnett.list <- function(x) {
+  tmpfile <- tempfile()
+
+  cat <- function(..., file = tmpfile) base::cat(..., file = file, append = TRUE)
+  x <- x[sort(names(x))]
+  for (entry in names(x)) {
+
+    cat(paste0("> ", entry, "\n"))
+    # For instance : "> clus 1 	(n = 54)\n"
+
+    for (expression_type in names(x[[entry]])) {
+      if (length(x[[entry]][[expression_type]]) == 0)  next()
+
+      cat(paste0(expression_type, ": "))
+      # for isntance: "expressed above: "
+
+      pasted_expressions <- sapply(
+        x[[entry]][[expression_type]],
+        function(x) paste(x, collapse = " "))
+
+      cat(paste(names(x[[entry]][[expression_type]]),
+                pasted_expressions,
+                collapse = ", "))
+      # for instance:  "ASNS 1.432, ITGA4 0"
+
+      cat("\n")
+    }
+    if (entry == names(x)[length(x)]) next()
+    cat("\n")
+  }
+
+  ret <- readLines(tmpfile)
+  unlink(tmpfile)
+
+  cat(ret, file = "", sep = "\n")
+  return(invisible(ret))
+}
+
 
 # TODO, there is a known issue where suboptimas classification trees return
 # 3: In max(elems_per_rule) :
@@ -52,37 +203,14 @@ get_cluster_mapping <- function(tree) {
 #' @examples
 #' iris_tree <- partykit::ctree(Species ~ ., data = iris)
 #' str(get_concensus_rules(iris_tree))
-#' # List of 3
-#' # $ setosa    :List of 2
-#' # ..$ all     : chr "Petal.Length <= 1.9"
-#' # ..$ majority: chr(0)
-#' # $ versicolor:List of 2
-#' # ..$ all     : chr [1:2] "Petal.Length > 1.9" "Petal.Width <= 1.7"
-#' # ..$ majority: chr "Petal.Length <= 4.8"
-#' # $ virginica :List of 2
-#' # ..$ all     : chr [1:2] "Petal.Length > 1.9" "Petal.Width > 1.7"
-#' # ..$ majority: chr(0)
+#' @evalRd paste("# ", capture.output(str(get_concensus_rules(partykit::ctree(Species ~ ., data = iris)))))
 #'
+#' @examples
 #' diamonds_tree <- partykit::ctree(cut ~ ., data = ggplot2::diamonds)
 #' str(get_concensus_rules(diamonds_tree))
-#' # List of 5
-#' # $ Fair     :List of 2
-#' # ..$ all     : chr [1:2] "depth > 63" "depth > 64.3"
-#' # ..$ majority: chr [1:3] "table <= 57" "table > 57" "table <= 62"
-#' # $ Good     :List of 2
-#' # ..$ all     : chr [1:2] "depth > 63" "depth <= 64.3"
-#' # ..$ majority: chr [1:4] "table <= 57" "depth > 63.5" "table > 57" "table <= 62"
-#' # $ Very Good:List of 2
-#' # ..$ all     : chr [1:3] "depth > 63" "depth <= 64.3" "depth <= 63.5"
-#' # ..$ majority: chr [1:3] "table <= 57" "table > 57" "table <= 62"
-#' # $ Premium  :List of 2
-#' # ..$ all     : chr [1:3] "table > 57" "table <= 62" "depth <= 63"
-#' # ..$ majority: chr [1:3] "table <= 60" "depth > 58" "color %in% c(\"E\", \"G\", \"I\")"
-#' # $ Ideal    :List of 2
-#' # ..$ all     : chr [1:2] "table <= 57" "depth <= 63"
-#' # ..$ majority: chr [1:2] "table <= 56.4" "z > 2.64"
+#' @evalRd paste("# ", capture.output(str(get_concensus_rules(partykit::ctree(cut ~ ., data = ggplot2::diamonds)))))
+#'
 #' @importFrom partykit as.simpleparty nodeids info_node
-# @importFrom partykit as.simpleparty nodeids info_node .list.rules.party
 #' @importFrom purrr map2_dbl
 get_concensus_rules <-  function(tree) {
   # TODO the logic on this function is really hard to understand, we should
@@ -180,19 +308,9 @@ get_concensus_rules <-  function(tree) {
 #' iris_tree <- partykit::ctree(Species ~ ., data = iris)
 #' my_rules <- get_concensus_rules(iris_tree)
 #' print(my_rules)
-#' # Cluster-setosa:
-#' #   all elements:
-#' #     Petal.Length -
-#' # Cluster-versicolor:
-#' #   all elements:
-#' #     Petal.Length +
-#' #     Petal.Width -
-#' #   majority elements:
-#' #     Petal.Length -
-#' # Cluster-virginica:
-#' #   all elements:
-#' #     Petal.Length +
-#' #     Petal.Width +
+#' @evalRd paste("# ", capture.output(
+#'     print(get_concensus_rules(partykit::ctree(Species ~ ., data = iris)))
+#'     ))
 print.concensus.rules <- function(x) {
   verbose_rules <- rapply(
     x,
@@ -220,7 +338,7 @@ print.concensus.rules <- function(x) {
 #' @param genes_use a character vector indicating which genes to use in
 #'     the classification. currently implemented only for Seurat objects.
 #'     (for data frames one can simply subset the input data frame)
-#'     defaults to Seurat::VariableFeature(object)
+#'     defaults to Seurat::VariableFeatures(object)
 #' @param cluster a cluster name for which the markers will be found
 #' @param ... additional arguments to be passed to partykit::ctree_control
 #'
@@ -230,42 +348,19 @@ print.concensus.rules <- function(x) {
 #' @examples
 #' fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "ALL")
 #' fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0")
-#' # Model formula:
-#' #   ident ~ CCNB1 + PLK1 + AURKA
-#' #
-#' # Fitted party:
-#' #   [1] root
-#' # |   [2] PLK1 <= 2.31327
-#' # |   |   [3] CCNB1 <= 3.01197
-#' # |   |   |   [4] PLK1 <= 1.75363: indeed clus 0 (n = 202, err = 4.0%)
-#' # |   |   |   [5] PLK1 > 1.75363: indeed clus 0 (n = 45, err = 20.0%)
-#' # |   |   [6] CCNB1 > 3.01197
-#' # |   |   |   [7] PLK1 <= 1.67634: indeed clus 0 (n = 26, err = 38.5%)
-#' # |   |   |   [8] PLK1 > 1.67634: not clus 0 (n = 23, err = 17.4%)
-#' # |   [9] PLK1 > 2.31327
-#' # |   |   [10] AURKA <= 2.02766: not clus 0 (n = 21, err = 47.6%)
-#' # |   |   [11] AURKA > 2.02766: not clus 0 (n = 67, err = 4.5%)
-#' #
-#' # Number of inner nodes:    5
-#' # Number of terminal nodes: 6
+#' @evalRd paste("# ", capture.output(
+#'     fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0")
+#'     ))
+#'
+#' @examples
 #' fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0", maxdepth = 2)
-#' #
-#' # Model formula:
-#' #   ident ~ CCNB1 + PLK1 + AURKA
-#' #
-#' # Fitted party:
-#' #   [1] root
-#' # |   [2] PLK1 <= 2.31327
-#' # |   |   [3] CCNB1 <= 3.01197: indeed clus 0 (n = 247, err = 6.9%)
-#' # |   |   [4] CCNB1 > 3.01197: not clus 0 (n = 49, err = 40.8%)
-#' # |   [5] PLK1 > 2.31327
-#' # |   |   [6] AURKA <= 2.02766: not clus 0 (n = 21, err = 47.6%)
-#' # |   |   [7] AURKA > 2.02766: not clus 0 (n = 67, err = 4.5%)
-#' #
-#' # Number of inner nodes:    3
-#' # Number of terminal nodes: 4
+#' @evalRd paste("# ", capture.output(
+#'     fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0", maxdepth = 2)
+#'     ))
+#' @importFrom Seurat VariableFeatures
+#' @importFrom partykit ctree_control ctree
 fit_ctree <- function(object,
-                      genes_use = Seurat::VariableFeature(object),
+                      genes_use = Seurat::VariableFeatures(object),
                       cluster = "ALL", ...) {
     treedata <- as.data.frame.Seurat(
       object, genes = genes_use, fix_names = FALSE)
@@ -292,3 +387,105 @@ fit_ctree <- function(object,
       control = partykit::ctree_control(...))
     return(partyfit)
 }
+
+
+#' Plot Decision trees as gates
+#'
+#'
+#' @param object a seurat object that will be used to draw the plots
+#' @param tree a decision tree that will be used to construct the gates
+#' @param terminal_node the name of the terminal node that will be used for the gating
+#'
+#' @return a ggplot object.
+#' @export
+#'
+#' @examples
+#' plot_gates(Seurat::pbmc_small, fit_ctree(Seurat::pbmc_small), '5')
+#'
+#' @importFrom ggplot2 geom_point ggplot aes_string
+#' @importFrom partykit varimp
+#' @importFrom cowplot plot_grid
+plot_gates <- function(object, tree, terminal_node) {
+
+  plot_gate_subset <- function(data_subset,
+                               next_expr,
+                               cutoff_var,
+                               next_cutoff_var) {
+    data_subset$in_next <-
+      with(data_subset, eval(parse(text = next_expr)))
+    g <- ggplot2::ggplot(
+      data_subset,
+      ggplot2::aes_string(
+        x = cutoff_var,
+        y = next_cutoff_var,
+        fill = "ident",
+        colour = "ident",
+        group = "ident"
+      )
+    )
+
+    g <- g + ggplot2::geom_point(
+      data = data_subset[data_subset$in_next,],
+      alpha = 0.3,
+      size = 4)
+    g <- g + ggplot2::geom_point(
+      data = data_subset[data_subset$in_next,],
+      alpha = 1)
+    g <- g + ggplot2::geom_point(
+      data = data_subset[!data_subset$in_next,],
+      alpha = 0.2)
+    g <- g + ggplot2::theme_bw()
+    return(g)
+  }
+
+  foo <- partykit:::.list.rules.party(tree)
+  variable_names <- names(partykit::varimp(tree))
+
+  split_rules <-
+    unlist(strsplit(foo[[as.character(terminal_node)]], " & "))
+
+  intermediates <- Reduce(function(x, y) {
+    paste(x, y, sep = " & ")
+  },
+  split_rules, accumulate = TRUE)
+
+  intermediates <-
+    gsub("(?<=\\.\\d{2})(\\d+)", "", intermediates, perl = TRUE)
+
+  last_var <- gsub(".*&\\s*", "", intermediates, perl = TRUE)
+
+  # strips the conditional, for instance "FOO >= -0.001" becomes "FOO"
+  last_var_names <- gsub("(.*)\\s([><=]+)\\s+(-?[0-9.]+)\\s*$",
+                         "\\1",
+                         last_var,
+                         perl = TRUE)
+
+  whole_data <- as.data.frame(object, genes = variable_names)
+
+  intermediate_data <-
+    lapply(intermediates, function(x, whole_data) {
+      whole_data[with(whole_data, eval(parse(text = x))),]
+    }, whole_data)
+
+  g <- mapply(
+    plot_gate_subset,
+    data_subset = c(list(whole_data), intermediate_data[-length(intermediate_data)]),
+    next_expr = c(intermediates),
+    cutoff_var = c(last_var_names),
+    next_cutoff_var = c(last_var_names[-1], last_var_names[length(last_var_names) - 1]),
+    SIMPLIFY = FALSE
+  )
+
+  g <- cowplot::plot_grid(
+    plotlist = g,
+    labels = paste0(seq_along(intermediates), ". ", intermediates),
+    label_size = 10,
+    align = "hv",
+    scale = 0.9,
+    label_x = 0.1,
+    hjust = 0
+  )
+  return(g)
+}
+
+

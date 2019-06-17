@@ -4,7 +4,7 @@
 \alias{as.data.frame.Seurat}
 \title{Gets a data frame from a Seurat object}
 \usage{
-\method{as.data.frame}{Seurat}(x, genes, fix_names = FALSE)
+\method{as.data.frame}{Seurat}(x, genes, fix_names = FALSE, ...)
 }
 \arguments{
 \item{x}{A Seurat object}
@@ -13,6 +13,8 @@
 
 \item{fix_names}{logical value indicating wether the gene names should be
 converted to R-compatible names. defaults to FALSE}
+
+\item{...}{additional arguments passed to `Seurat::FetchData`}
 }
 \value{
 a data frame.
@@ -27,8 +29,8 @@ It returns only the genes annotated as variable and the identity column.
 \examples{
 as.data.frame(Seurat::pbmc_small,
     Seurat::VariableFeatures(Seurat::pbmc_small))[1:3,1:3]
-#                     LTB EAF2 CD19
-# ATGCCAGAACGACT 6.062788    0    0
-# CATGGCCTGTGCAT 6.714813    0    0
-# GAACCTGATGAACC 7.143118    0    0
+#                    PPBP IGLL5 VDAC3
+# ATGCCAGAACGACT 0.000000     0     0
+# CATGGCCTGTGCAT 0.000000     0     0
+# GAACCTGATGAACC 4.753095     0     0
 }

@@ -19,7 +19,8 @@ and the values being the classification it corresponds to
 \examples{
 iris_tree <- partykit::ctree(Species ~ ., data = iris)
 get_cluster_mapping(iris_tree)
-# 2          5          6          7
-# setosa versicolor versicolor  virginica
-# Levels: setosa versicolor virginica
+
 }
+#           2          5          6          7 
+#      setosa versicolor versicolor  virginica 
+#  Levels: setosa versicolor virginica

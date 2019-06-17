@@ -1,0 +1,45 @@
+
+# Returning Garnett Classifiers
+
+We provide an interface to export the decision trees as garnett classifiers
+for more information on the specification please visit:
+https://cole-trapnell-lab.github.io/garnett/docs/#submitting-a-classifier
+
+
+```{r}
+data("small_5050_mix")
+DimPlot(small_5050_mix)
+```
+
+```{r}
+tree_fit <- fit_ctree(small_5050_mix, cluster = "0", minprob = 0.1, alpha = 0.01)
+plot(tree_fit)
+```
+
+```{r}
+plot_flowstyle(small_5050_mix, c("ASNS", "ADA", "TSC22D3"))
+```
+
+
+
+```{r}
+as.garnett(tree_fit)
+```
+
+
+
+
+### Exporting the garnett classifier to a file
+
+
+```{r}
+tmp <- as.garnett(tree_fit)
+class(tmp)
+```
+
+```{r}
+tmp2 <- print(tmp)
+class(tmp2)
+```
+
+

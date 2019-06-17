@@ -1,4 +1,7 @@
 context("test-ranger_importances")
+library(Seurat)
+library(sctree)
+
 
 test_that("ranger importances from Seurat objects work", {
 
@@ -8,7 +11,7 @@ test_that("ranger importances from Seurat objects work", {
                 Seurat::pbmc_small,
                 cluster = "ALL",
                 warn.imp.method = FALSE
-            )[[3]],
+            ),
             "data.frame"
         )
 
@@ -16,7 +19,7 @@ test_that("ranger importances from Seurat objects work", {
             ranger_importances.Seurat(
                 Seurat::pbmc_small,
                 genes_use = rownames(Seurat::pbmc_small@assays[[Seurat::pbmc_small@active.assay]]@data),
-                cluster = "ALL")[[1]],
+                cluster = "ALL", return_what = "ranger_fit"),
             "ranger"
         )
     })
@@ -41,7 +44,7 @@ test_that("ranger importances from Seurat objects work", {
                 rownames(ranger_importances.Seurat(
                     Seurat::pbmc_small,
                     genes_use = rownames(Seurat::pbmc_small@assays[[Seurat::pbmc_small@active.assay]]@data),
-                    cluster = "ALL")[[2]]),
+                    cluster = "ALL", return_what = "importances_ranger")),
                 rownames(Seurat::pbmc_small@assays[[Seurat::pbmc_small@active.assay]]@data))
         })
     })
@@ -61,10 +64,10 @@ test_that(
             Seurat::pbmc_small,
             genes_use = data_names,
             cluster = "ALL", imp_method = "altmann",
-            num.trees = 10)
+            num.trees = 10, return_what = c("ranger_fit", "importances_ranger"))
     })
 
-    expect_s3_class(altmann_output[[3]],"data.frame")
+    expect_s3_class(altmann_output[[2]], "data.frame")
 
     expect_s3_class(altmann_output[[1]],"ranger")
 
@@ -84,10 +87,10 @@ test_that(
             Seurat::pbmc_small,
             genes_use = data_names,
             cluster = "0", imp_method = "altmann",
-            num.trees = 10)
+            num.trees = 10, return_what = c("ranger_fit", "importances_ranger"))
     })
 
-    expect_s3_class(altmann_output[[3]],"data.frame")
+    expect_s3_class(altmann_output[[2]],"data.frame")
 
     expect_s3_class(altmann_output[[1]],"ranger")
 
@@ -102,7 +105,7 @@ test_that(
 })
 
 
-test_that("ranger importances from Seurat objects work", {
+test_that("FindAllMarkers_ranger from Seurat objects work", {
     expect_warning({
         expect_s3_class(FindAllMarkers_ranger.Seurat(Seurat::pbmc_small),
                         class = "data.frame")
@@ -116,3 +119,19 @@ test_that("ranger importances from Seurat objects work", {
         class = "data.frame")
 })
 
+
+test_that("FindMarkers interface with work", {
+    expect_warning({
+        Seurat::FindMarkers(
+            object = Seurat::pbmc_small, ident.1 = 0, ident.2 = 1,
+            test.use = "RangerDE", verbose = FALSE)
+    })
+
+    expect_s3_class(
+        Seurat::FindMarkers(
+            object = Seurat::pbmc_small, ident.1 = 0, ident.2 = 1,
+            test.use = "RangerDE", verbose = FALSE,
+            imp_method = "altmann",
+            num.trees = 10),
+        class = "data.frame")
+})

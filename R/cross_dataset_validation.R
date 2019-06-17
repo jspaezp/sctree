@@ -32,10 +32,12 @@ cross_validate <- function(train, test,
                            warn.gene.removal = TRUE,
                            ...) {
 
-    rang_importances <- ranger_importances.Seurat(train,
-                                                  cluster = cluster,
-                                                  genes_use = genes_use,
-                                                  ...)
+    rang_importances <- ranger_importances.Seurat(
+        train,
+        cluster = cluster,
+        genes_use = genes_use,
+        return_what = c("ranger_fit", "signif_importances_ranger"),
+        ...)
 
 
     # TODO: implement a way to filter for memrane genes during the cross
@@ -55,7 +57,8 @@ cross_validate <- function(train, test,
 
     if (warn.gene.removal & length(removed_genes) > 0) {
         warning(paste0(
-            "Some important genes were removed because they are not present in ",
+            "Some important genes were removed because ",
+            "they are not present in ",
             "the test dataset. \n",
             "Removed genes: ", paste(removed_genes, collapse = ", ")
         ))

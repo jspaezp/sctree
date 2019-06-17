@@ -14,44 +14,85 @@
 #' @param pval_cutoff p value cutoff for the markers
 #' @param imp_method importance method, either of "janitza" or "altmann"
 #' @param num.trees number of trees to be build using ranger
+#' @param return_what a subset of "ranger_fit", "importances_ranger",
+#'     "signif_importances_ranger", defaults to signif_importances_ranger
 #' @param genes_use a character vector indicating which genes to use in
 #'     the classification. currently implemented only for Seurat objects.
 #'     (for data frames one can simply subset the input data frame)
 #' @param warn.imp.method logical indicating wether warning should be issued
 #'     when few negative importances are found to calculate the p.values in
 #'     ranger.
+#' @param return ranger_fit, importances_ranger, signif_importances_ranger
 #' @param ... additional arguments to be passed to ranger
 #'
-#' @return  list with 3 elements ranger_fit, importances_ranger, signif_importances_ranger
+#' @return by default returns a data frame with the importances and p values
+#'     but this behavior can be modified by the
 #' @export
 #'
 #' @examples
-#' summary(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "ALL"))
-#' # Length Class      Mode
-#' # ranger_fit                15     ranger     list
-#' # importances_ranger        62     -none-     numeric
-#' # signif_importances_ranger  3     data.frame list
-#' #' summary(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "0"))
+#' head(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "ALL", warn.imp.method = FALSE))
+#' @evalRd paste( "# ", capture.output(
+#'     ranger_importances.Seurat(Seurat::pbmc_small, cluster = "ALL",
+#'             warn.imp.method = FALSE)
+#'     ))
+#'
 #' @importFrom ranger ranger importance_pvalues
 ranger_importances.df <- function(object, cluster = NULL,
                                   pval_cutoff = 0.05,
                                   imp_method = c("janitza", "altmann"),
-                                  num.trees = 500, warn.imp.method = TRUE,
+                                  num.trees = 500,
+                                  warn.imp.method = TRUE,
+                                  identity_col_name = "ident",
+                                  return_what = "signif_importances_ranger",
+                                  sort_results = TRUE,
                                   ...) {
 
-    base_ranger <- function(data, importance) {
+    # TODO find a better name for the `return_what` argument
+    redirect_altmann_warn <- function(w) {
+        warn_message1 <- paste0(
+            "Only few negative importance values found, ",
+            "inaccurate p-values. Consider the 'altmann' approach.")
+        warn_message2 <- paste0(
+            "No negative importance values found, ",
+            "Consider the 'altmann' approach.")
+
+        new_warning <- paste0(
+            "Only few negative importance values found, ",
+            "inaccurate p-values. Consider the 'altmann' approach.\n",
+            "This can be done by setting the argument 'imp_method' to ",
+            "'altmann', note that this method is extremely computationally ",
+            "intensive.\n",
+            "For more information please refer to ?ranger::ranger")
+
+        if (grepl(paste(warn_message1, warn_message2, sep = "|"), w$message)) {
+            warning(
+                new_warning,
+                call. = FALSE,
+                immediate. = FALSE)
+            invokeRestart("muffleWarning")
+        }
+    }
+
+    base_ranger <- function(data, importance, ...) {
         ranger_fit <- ranger::ranger(
-            dependent.variable.name = "ident",
-            data = data,
-            num.trees = num.trees,
-            mtry = floor(ncol(data)/5),
-            importance = importance,
-            classification = TRUE,
-            ...)
+                dependent.variable.name = identity_col_name,
+                data = data,
+                num.trees = num.trees,
+                mtry = floor(ncol(data)/5),
+                importance = importance,
+                classification = TRUE,
+                ...)
+
         return(ranger_fit)
     }
 
     tmp <- object
+
+    stopifnot(imp_method[1] %in%
+                  c("janitza", "altmann"))
+    stopifnot(return_what[1] %in%
+                  c("ranger_fit", "importances_ranger",
+                    "signif_importances_ranger"))
 
     if (is.null(cluster)) {
         stop("Please Specify a cluster to fit the forest (or assign cluster=\"ALL\")")
@@ -67,7 +108,6 @@ ranger_importances.df <- function(object, cluster = NULL,
     }
 
     if (all(imp_method == c("janitza", "altmann"))) imp_method <- "janitza"
-    stopifnot(imp_method[1] %in% c("janitza", "altmann"))
 
     if (imp_method == "altmann") {
         # This name shift seems to be necessary because the altman in ranger
@@ -96,26 +136,35 @@ ranger_importances.df <- function(object, cluster = NULL,
                 importances_ranger <- ranger::importance_pvalues(ranger_fit)
             }}))
         } else {
-            importances_ranger <- ranger::importance_pvalues(ranger_fit)
+            withCallingHandlers({
+                importances_ranger <- ranger::importance_pvalues(ranger_fit)
+            }, warning = redirect_altmann_warn)
         }
 
 
     }
 
+    importances_ranger <- as.data.frame(importances_ranger)
+    importances_ranger[["gene"]] <- rownames(importances_ranger)
+
     signif_importances_ranger <- importances_ranger[
         importances_ranger[,'pvalue'] < pval_cutoff,]
 
-    signif_importances_ranger <- signif_importances_ranger[
-        order(signif_importances_ranger[,"importance"], decreasing = TRUE), ]
+    if (sort_results) {
+        signif_importances_ranger <- signif_importances_ranger[
+            order(signif_importances_ranger[,"importance"], decreasing = TRUE), ]
+    }
 
-    signif_importances_ranger <- as.data.frame(signif_importances_ranger)
-    signif_importances_ranger[["gene"]] <- rownames(signif_importances_ranger)
+    posible_returns <- list(
+        ranger_fit = ranger_fit,
+        importances_ranger = importances_ranger,
+        signif_importances_ranger = signif_importances_ranger)
 
-    return(list(ranger_fit = ranger_fit,
-                importances_ranger = importances_ranger,
-                signif_importances_ranger = signif_importances_ranger))
+    ret <- posible_returns[return_what]
+    if (length(ret) == 1 & is.list(ret) & !is.data.frame(ret)) ret <- ret[[1]]
+
+    return(ret)
 }
-
 
 
 #' @describeIn ranger_importances.df Calculate variable importances to calssify a Seurat object
@@ -140,8 +189,10 @@ ranger_importances.Seurat <- function(object, cluster = NULL,
                                  ...))
 }
 
+
 # TODO, make functions have the same interface as Seurat ...
-#' @describeIn ranger_importances.df Calculate variable importances to each cluster in a Seurat object
+#' @describeIn ranger_importances.df Calculate variable importances
+#'     to each cluster in a Seurat object
 #' @export
 FindAllMarkers_ranger.Seurat <- function(object,
                                          genes_use = Seurat::VariableFeatures(object),
@@ -150,7 +201,9 @@ FindAllMarkers_ranger.Seurat <- function(object,
     tmp <- as.data.frame.Seurat(object, genes = genes_use, fix_names = FALSE)
 
     object_ranger_importances.Seurat <- function(cluster, ...) {
-        ranger_importances.df(tmp, cluster = cluster, ...)
+        ranger_importances.df(
+            tmp, cluster = cluster,
+            return_what = "signif_importances_ranger", ...)
     }
 
     clusters <- sort(as.character(unique(tmp$ident)))
@@ -159,7 +212,6 @@ FindAllMarkers_ranger.Seurat <- function(object,
                           .f = object_ranger_importances.Seurat,
                           ...)
 
-    results <- purrr::map(results, function(x) x[["signif_importances_ranger"]])
     results <- purrr::map2(results, clusters, function(x, y) {
         x$cluster <- y
         return(x)})
@@ -167,4 +219,35 @@ FindAllMarkers_ranger.Seurat <- function(object,
     results <- do.call(what = rbind, args = results)
 
     return(results)
+}
+
+
+#' RangerDE
+#'
+#' A Helper function that interfaces with Seurat::FindMarkers
+#'
+#' @param data.use sparse matrix passed by seurat
+#' @param cells.1 barcode names of the cells asigned as cluster 1
+#' @param cells.2 barcode names of the cells asigned as cluster 2
+#' @param verbose logical indicating wether the run should be verbose
+#' @param ... additional arguments passed to sctree::ranger_importances.df
+#'
+#' @examples
+#' library(sctree)
+#' library(Seurat)
+#' Seurat::FindMarkers(object = Seurat::pbmc_small, ident.1 = 0, ident.2 = 1, test.use = "RangerDE", verbose = FALSE)
+#' @evalRd paste( "# ", capture.output(
+#'     head(Seurat::FindMarkers(object = Seurat::pbmc_small,
+#'     ident.1 = 0, test.use = "RangerDE", warn.imp.method = FALSE))
+#'     ))
+#' @importFrom Matrix t
+#' @export
+RangerDE <- function(data.use, cells.1, cells.2, verbose, ...) {
+    df <- as.data.frame(Matrix::t(data.use))
+    df$ident <- as.character(rownames(df) %in% cells.1)
+    ret <- ranger_importances.df(
+        df, cluster = "TRUE", verbose = verbose,
+        return_what = "importances_ranger", ...)
+    names(ret) <- gsub("pvalue", "p_value", names(ret))
+    return(ret)
 }

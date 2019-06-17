@@ -1,0 +1,19 @@
+
+## Plotting Functions for decision trees
+
+
+```{r}
+tree_fit <- fit_ctree(small_5050_mix, cluster = "0", minprob = 0.1, alpha = 0.01)
+plot(tree_fit)
+```
+
+
+```{r}
+tree_fit
+plot(tree_fit)
+```
+
+
+```{r fig.height=3, fig.width=8}
+plot_gates(small_5050_mix, tree_fit, "6")
+```
