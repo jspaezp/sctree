@@ -28,7 +28,6 @@ as.garnett(tree_fit)
 
 
 
-
 ### Exporting the garnett classifier to a file
 
 

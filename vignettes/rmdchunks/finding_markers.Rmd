@@ -1,0 +1,77 @@
+
+
+## Finding important variables to classify clusters
+
+We base our importances on the "classification value" they give to a random 
+forest (using the implementation in the `ranger` package)
+
+So lets fit the random forest ...
+Here we are adding the `warn.imp.method` to prevent a warning message sent by
+`ranger` when most of the variables are correlated with the clustering.
+
+Please reffer to the  of the `importance_pvalues` section in the
+[ranger documentation](https://cran.r-project.org/web/packages/ranger/ranger.pdf)
+when addressing this issue and for more details.
+
+```{r}
+rang_importances <- ranger_importances.Seurat(
+    small_5050_mix,
+    cluster = "ALL",
+    warn.imp.method = FALSE)
+
+```
+
+By default, we obtain a data frame containing only importances with pvalues
+under `0.05`.
+
+```{r}
+head(rang_importances)
+```
+
+
+# Seurat Interface
+
+As an analogous function to Seurat's `FindAllMarkers`, we offer
+`FindAllMarkers_ranger.Seurat`
+
+```{r}
+markers <- FindAllMarkers_ranger.Seurat(
+  small_5050_mix,
+  warn.imp.method = FALSE)
+
+head(markers)
+
+plot.markers <- do.call(rbind, lapply(split(markers, markers$cluster), head, 3))
+
+FeaturePlot(small_5050_mix, unique(plot.markers$gene))
+```
+
+Note how variable importances can be high if a marker is either preferentially 
+present of preferentially absent. Therefore as a pre-filtering step we 
+implemented a modified version of seurat's "FindMarkers"
+
+```{r}
+library(Seurat)
+library(sctree)
+
+head(
+    FindMarkers(
+        small_5050_mix, 
+        features = rownames(small_5050_mix@assays$RNA@data),
+        ident.1 = 0, test.use = "RangerDE"))
+
+```
+
+```{r}
+
+markers <- FindAllMarkers(
+        small_5050_mix, 
+        features = rownames(small_5050_mix@assays$RNA@data),
+        test.use = "RangerDE")
+
+plot.markers <- do.call(rbind, lapply(split(markers, markers$cluster), head, 3))
+
+
+plot.markers
+```
+

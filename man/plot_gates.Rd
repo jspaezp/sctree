@@ -13,6 +13,9 @@ plot_gates(object, tree, terminal_node)
 
 \item{terminal_node}{the name of the terminal node that will be used for the gating}
 }
+\value{
+a ggplot object.
+}
 \description{
 Plot Decision trees as gates
 }

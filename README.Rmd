@@ -69,76 +69,8 @@ small_5050_mix
 DimPlot(small_5050_mix, reduction = "tsne")
 ```
 
-## Finding important variables to classify clusters
-
-We base our importances on the "classification value" they give to a random 
-forest (using the implementation in the `ranger` package)
-
-So lets fit the random forest ...
-Here we are adding the `warn.imp.method` to prevent a warning message sent by
-`ranger` when most of the variables are correlated with the clustering.
-
-Please reffer to the  of the `importance_pvalues` section in the
-[ranger documentation](https://cran.r-project.org/web/packages/ranger/ranger.pdf)
-when addressing this issue and for more details.
-
-```{r}
-rang_importances <- ranger_importances.Seurat(
-    small_5050_mix,
-    cluster = "ALL",
-    warn.imp.method = FALSE)
-
-names(rang_importances)
+```{r child="vignettes/rmdchunks/finding_markers.Rmd"}
 ```
-
-This gives us a list with 3 elements.
-
-1. The ranger fit object itself (handy if you want to inspect its classification 
-   accuracy)
-2. The importance matrix deriven from ranger
-3. A data frame containing only importances with pvalues under 0.05 
-   (because biologists love p-values under 0.05)
-
-
-```{r}
-rang_importances[[1]]
-```
-
-We can see that our classifier is `r round(rang_importances[[1]]$prediction.error * 100, 2)` % accurate, as measured by its 
-*OOB prediction error*.
-
-Your classifier USUALLY will be just as good as your initial clustering is, 
-therefore if your clustering is not all that consistent to start with, it is 
-unrealistic that predicions will be done accurately.
-
-Now ... taking a look at the importance matrix we can see that a `pvalue` and a
-relative importance has been given to each gene.
-
-```{r}
-head(rang_importances[[2]])
-```
-
-For simplicity we return by default a `data.frame` containing the ones with
-`pvalue < 0.05` 
-
-```{r}
-head(rang_importances[[3]])
-```
-
-Therefore, in this case we can say that the expression of the following genes 
-would be usefull to form the clusters. `r cat(head(rang_importances[[3]])$gene)`
-
-As an analogous function to Seurat's `FindAllMarkers`, we offer
-`FindAllMarkers_ranger.Seurat`
-
-```{r}
-markers <- FindAllMarkers_ranger.Seurat(
-  small_5050_mix,
-  warn.imp.method = FALSE)
-
-head(markers)
-```
-
 
 ## Visualizing the expected outcome of a flow cytometry experiment
 
@@ -325,5 +257,6 @@ sessionInfo()
 5. Add links to the documentation to make nicer to explore the package from inside R
 6. Implement plot that actually illustrates the progressive gating in the decision tree
 8. Implement a way to find markers for clusters exclusively upregulated
+9. Refctor the code to make the coding nomenclature same as seurat
 
 

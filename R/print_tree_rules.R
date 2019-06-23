@@ -48,7 +48,7 @@ get_cluster_mapping <- function(tree) {
 #' @evalRd include_roxygen_example({
 #'     "as.garnett(fit_ctree(Seurat::pbmc_small))"
 #'     })
-as.garnett <- function(tree, digits = 3) {
+as.garnett <- function(tree, digits = 3, rules_keep = ".*") {
   cluster_mappings <- get_cluster_mapping(tree)
   node_ids <- names(cluster_mappings)
   cluster_mappings <- as.character(cluster_mappings)
@@ -117,6 +117,7 @@ as.garnett <- function(tree, digits = 3) {
         paste0(is.na(ret), collapse = "_")]
 
       ret <- ret[!is.na(ret)]
+
       attr(ret, "ruletype") <- ruletype
 
       return(ret)
@@ -135,6 +136,9 @@ as.garnett <- function(tree, digits = 3) {
   }
 
   garnett.list <- lapply(split_rules, group_sub_rules)
+
+  garnett.list <- garnett.list[grepl(pattern = rules_keep, names(garnett.list))]
+
   class(garnett.list) <- "garnett.list"
 
   return(garnett.list)
@@ -292,7 +296,6 @@ get_concensus_rules <-  function(tree) {
 # TODO write `is.concensus.rules` function.
 # ... a 3 level list with whared names in element 2 and only items interpretable
 # as rules in level 3 ...
-# TODO write a way to print this as a garnett object
 
 #' Prints concensus rules
 #'

@@ -233,13 +233,12 @@ FindAllMarkers_ranger.Seurat <- function(object,
 #' @param ... additional arguments passed to sctree::ranger_importances.df
 #'
 #' @examples
-#' library(sctree)
 #' library(Seurat)
-#' Seurat::FindMarkers(object = Seurat::pbmc_small, ident.1 = 0, ident.2 = 1, test.use = "RangerDE", verbose = FALSE)
-#' @evalRd paste( "# ", capture.output(
-#'     head(Seurat::FindMarkers(object = Seurat::pbmc_small,
-#'     ident.1 = 0, test.use = "RangerDE", warn.imp.method = FALSE))
-#'     ))
+#' library(sctree)
+#' @evalRd include_roxygen_example({
+#'     "head(FindMarkers(object = Seurat::pbmc_small,
+#'     ident.1 = 0, test.use = 'RangerDE', warn.imp.method = FALSE))"
+#'     })
 #' @importFrom Matrix t
 #' @export
 RangerDE <- function(data.use, cells.1, cells.2, verbose, ...) {
@@ -248,6 +247,6 @@ RangerDE <- function(data.use, cells.1, cells.2, verbose, ...) {
     ret <- ranger_importances.df(
         df, cluster = "TRUE", verbose = verbose,
         return_what = "importances_ranger", ...)
-    names(ret) <- gsub("pvalue", "p_value", names(ret))
+    names(ret) <- gsub("pvalue", "p_val", names(ret))
     return(ret)
 }

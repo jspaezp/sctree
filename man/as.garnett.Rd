@@ -5,7 +5,7 @@
 \alias{print.garnett.list}
 \title{as.garnett}
 \usage{
-as.garnett(tree, digits = 3)
+as.garnett(tree, digits = 3, rules_keep = ".*")
 
 \method{print}{garnett.list}(x)
 }
