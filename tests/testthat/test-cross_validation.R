@@ -19,7 +19,6 @@ test_that("cross validation works in the bundled datasets", {
                            warn.imp.method = FALSE)[[1]],
             "party")
     })
-
 })
 
 
@@ -47,7 +46,4 @@ test_that("cross validation handles correctly non-standard names",{
                            warn.gene.removal = FALSE,
                            warn.imp.method = FALSE)[[1]], "party")
     })
-
-
-
 })

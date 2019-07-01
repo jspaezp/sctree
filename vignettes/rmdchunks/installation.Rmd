@@ -1,0 +1,10 @@
+
+
+# Installation
+
+```
+git clone https://github.rcac.purdue.edu/jpaezpae/sctree sctree
+cd sctree
+
+R -e "devtools::install('.')"
+```

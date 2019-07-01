@@ -11,7 +11,8 @@ Seurat objects}
 \usage{
 ranger_importances.df(object, cluster = NULL, pval_cutoff = 0.05,
   imp_method = c("janitza", "altmann"), num.trees = 500,
-  warn.imp.method = TRUE, ...)
+  warn.imp.method = TRUE, identity_col_name = "ident",
+  return_what = "signif_importances_ranger", sort_results = TRUE, ...)
 
 ranger_importances.Seurat(object, cluster = NULL, pval_cutoff = 0.05,
   imp_method = c("janitza", "altmann"), num.trees = 500,
@@ -36,14 +37,20 @@ FindAllMarkers_ranger.Seurat(object,
 when few negative importances are found to calculate the p.values in
 ranger.}
 
+\item{return_what}{a subset of "ranger_fit", "importances_ranger",
+"signif_importances_ranger", defaults to signif_importances_ranger}
+
 \item{...}{additional arguments to be passed to ranger}
 
 \item{genes_use}{a character vector indicating which genes to use in
 the classification. currently implemented only for Seurat objects.
 (for data frames one can simply subset the input data frame)}
+
+\item{return}{ranger_fit, importances_ranger, signif_importances_ranger}
 }
 \value{
-list with 3 elements ranger_fit, importances_ranger, signif_importances_ranger
+by default returns a data frame with the importances and p values
+    but this behavior can be modified by the
 }
 \description{
 ranger_importances
@@ -52,14 +59,19 @@ ranger_importances
 \itemize{
 \item \code{ranger_importances.Seurat}: Calculate variable importances to calssify a Seurat object
 
-\item \code{FindAllMarkers_ranger.Seurat}: Calculate variable importances to each cluster in a Seurat object
+\item \code{FindAllMarkers_ranger.Seurat}: Calculate variable importances
+to each cluster in a Seurat object
 }}
 
 \examples{
-summary(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "ALL"))
-# Length Class      Mode
-# ranger_fit                15     ranger     list
-# importances_ranger        62     -none-     numeric
-# signif_importances_ranger  3     data.frame list
-#' summary(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "0"))
+
+    head(ranger_importances.Seurat(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
+    
+#          importance pvalue     gene
+# HLA-DPB1  7.5145476      0 HLA-DPB1
+# S100A8    7.2494808      0   S100A8
+# S100A9    5.6408359      0   S100A9
+# HLA-DQA1  2.7659832      0 HLA-DQA1
+# GNLY      1.9888445      0     GNLY
+# PPBP      0.4038793      0     PPBP
 }

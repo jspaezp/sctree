@@ -17,20 +17,24 @@ Prints in a human readable format a concensus.rules object, usually an output
 of `sctree::get_concensus_rules`
 }
 \examples{
-iris_tree <- partykit::ctree(Species ~ ., data = iris)
-my_rules <- get_concensus_rules(iris_tree)
-print(my_rules)
-# Cluster-setosa:
-#   all elements:
-#     Petal.Length -
-# Cluster-versicolor:
-#   all elements:
-#     Petal.Length +
-#     Petal.Width -
-#   majority elements:
-#     Petal.Length -
-# Cluster-virginica:
-#   all elements:
-#     Petal.Length +
-#     Petal.Width +
+
+    iris_tree <- partykit::ctree(Species ~ ., data = iris)
+    my_rules <- get_concensus_rules(iris_tree)
+    print(iris_tree)
+    
+# 
+# Model formula:
+# Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
+# 
+# Fitted party:
+# [1] root
+# |   [2] Petal.Length <= 1.9: setosa (n = 50, err = 0.0%)
+# |   [3] Petal.Length > 1.9
+# |   |   [4] Petal.Width <= 1.7
+# |   |   |   [5] Petal.Length <= 4.8: versicolor (n = 46, err = 2.2%)
+# |   |   |   [6] Petal.Length > 4.8: versicolor (n = 8, err = 50.0%)
+# |   |   [7] Petal.Width > 1.7: virginica (n = 46, err = 2.2%)
+# 
+# Number of inner nodes:    3
+# Number of terminal nodes: 4
 }

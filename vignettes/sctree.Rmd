@@ -1,0 +1,52 @@
+---
+title: "sctree"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sctree}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+```{r setup}
+library(sctree)
+```
+
+# sctree
+
+The goal of sctree is to create a tool to accelerate the transition from
+single cell rna-sequencing to calidation and new sub-population discovery.
+
+Features suggesting pseudo-gating strategies to purify found populations via
+flow-cytometry, antibody querying and cross validations between datasets.
+
+
+```{r child="rmdchunks/installation.Rmd"}
+```
+
+```{r child="rmdchunks/usage_intro.Rmd"}
+```
+
+```{r child="rmdchunks/finding_markers.Rmd"}
+```
+
+```{r child="rmdchunks/visualizing_markers.Rmd"}
+```
+
+```{r child="rmdchunks/suggesting_strategies.Rmd"}
+```
+
+```{r child="rmdchunks/antibodies.Rmd"}
+```
+
+```{r}
+sessionInfo()
+```

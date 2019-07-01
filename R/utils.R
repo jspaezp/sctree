@@ -1,29 +1,29 @@
 
 
-#' TSNE plot generation
+#' include_roxygen_example
 #'
-#' slim wrapper arround Seurat::TSNEPlot that overwrites the return option and
-#' by default uses a tenth of the data.
+#' Include the output of code in your documentation automatically
 #'
-#' @param object A Seurat object
-#' @param fraction fraction of the data to be used for plotting, defaults to 0.1
-#' @param ... Additional arguments to be passed to Seurat::TSNEPlot
+#' This function takes a string that can be interpreted as r code and returns it
+#' formatted as a roxygen exmaple, including tags and output commented out.
 #'
-#' @return a ggplot object with the tsne plot
-#' @export
+#' It is meant to be used with the evalRd tag as
+#' `#' @@evalRd include_roxygen_example("print('a')")`
 #'
-#' @examples
-#' tsne_plot(Seurat::pbmc_small)
-#' @importFrom Seurat DimPlot Cells
-tsne_plot <- function(object, fraction = 0.1, ...) {
-    g <- Seurat::DimPlot(
-        object = object,
-        cells = sample(Seurat::Cells(object),
-                           size = ceiling(
-                               length(Seurat::Cells(object))*fraction)),
-        reduction = "tsne",
-        ...)
-    g
+#' @param example_string the string to be interpreted as R code
+#'
+#' @return a string that can be interpreted literally as a roxygen comment
+#' @importFrom utils capture.output
+include_roxygen_example <- function(example_string) {
+
+    run_output <- capture.output(eval(parse(text = example_string)))
+    run_output <- paste0("# ", run_output)
+
+    return_string <- paste0(
+        c("\\examples{", example_string, run_output, "}"),
+        collapse = "\n")
+
+    return(return_string)
 }
 
 
@@ -38,22 +38,20 @@ tsne_plot <- function(object, fraction = 0.1, ...) {
 #' @param genes genes to extract to the data.frame
 #' @param fix_names logical value indicating wether the gene names should be
 #'     converted to R-compatible names. defaults to FALSE
+#' @param ... additional arguments passed to `Seurat::FetchData`
 #'
 #' @return a data frame.
 #' @export
 #'
-#' @examples
-#' as.data.frame(Seurat::pbmc_small,
-#'     Seurat::VariableFeatures(Seurat::pbmc_small))[1:3,1:3]
-#' #                     LTB EAF2 CD19
-#' # ATGCCAGAACGACT 6.062788    0    0
-#' # CATGGCCTGTGCAT 6.714813    0    0
-#' # GAACCTGATGAACC 7.143118    0    0
+#' @evalRd include_roxygen_example({
+#'     "as.data.frame(Seurat::pbmc_small,
+#'     Seurat::VariableFeatures(Seurat::pbmc_small))[1:3,1:3]"
+#'     })
 #' @importFrom Seurat FetchData Idents VariableFeatures
-as.data.frame.Seurat <- function(x, genes, fix_names = FALSE) {
-    # TODO possibly also a warning if it is not a variable gene and an error if it does not exist
-    # also an argument to force though the error ...
-    tmp <- Seurat::FetchData(x, vars = genes)
+as.data.frame.Seurat <- function(x, genes, fix_names = FALSE, ...) {
+    # TODO possibly also a warning if it is not a variable gene and an error
+    # if it does not exist also an argument to force though the error ...
+    tmp <- Seurat::FetchData(x, vars = genes, ...)
     tmp <-  as.data.frame(tmp, stringsAsFactors = FALSE)
 
     tmp$ident <- Seurat::Idents(x, uniq = FALSE, cells.use = rownames(tmp))
@@ -213,43 +211,6 @@ get_genesymbols <- function(gene_aliases,
     })
 
     return(alias_vector)
-}
-
-
-#' top_n
-#'
-#' same as a less robust dplyr::top_n but with standard eval ....
-#' rank gives value of 1 to the minimum
-#' Whenever there is a tie, returns all elements that tied ...
-#'
-#' @param df a data frame
-#' @param n the number of falues to be returned
-#' @param wt the column to be used for the ranking
-#'
-#' @return a data frame of length (number of rows) n
-#' @export
-#' @examples
-#' top_n(iris, 2, "Sepal.Width")
-#' # Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-#' # 16          5.7         4.4          1.5         0.4  setosa
-#' # 34          5.5         4.2          1.4         0.2  setosa
-#' top_n(iris, -2, "Sepal.Width")
-#' # Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
-#' # 61           5.0         2.0          3.5         1.0 versicolor
-#' # 63           6.0         2.2          4.0         1.0 versicolor
-#' # 69           6.2         2.2          4.5         1.5 versicolor
-#' # 120          6.0         2.2          5.0         1.5  virginica
-top_n <- function(df, n, wt) {
-    if (n > 0) {
-        thresh <- df[[wt]][which(rank(-df[[wt]], ties.method = "random") == n)]
-        df[df[[wt]] >= unique(thresh),]
-
-
-    } else {
-        thresh <- df[[wt]][which(rank(df[[wt]], ties.method = "random") == -n)]
-        df[df[[wt]] <= unique(thresh),]
-    }
-
 }
 
 
