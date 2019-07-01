@@ -6,16 +6,13 @@ sctree: a package to connect single cell rna-seq to biology using trees
   - [Usage](#usage)
       - [Finding important variables to classify
         clusters](#finding-important-variables-to-classify-clusters)
+  - [Seurat Interface](#seurat-interface)
       - [Visualizing the expected outcome of a flow cytometry
         experiment](#visualizing-the-expected-outcome-of-a-flow-cytometry-experiment)
       - [Suggesting a gating strategy for the
         markers](#suggesting-a-gating-strategy-for-the-markers)
-      - [Finding equivalent clusters in two
-        datasets](#finding-equivalent-clusters-in-two-datasets)
       - [Finding antibodies for the
         experiment](#finding-antibodies-for-the-experiment)
-  - [Reproducing the runs in the purdue
-    cluster](#reproducing-the-runs-in-the-purdue-cluster)
   - [Steps down the road](#steps-down-the-road)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -35,9 +32,9 @@ Features suggesting pseudo-gating strategies to purify found populations
 via flow-cytometry, antibody querying and cross validations between
 datasets.
 
-Number of lines in roxygen comments: 652
+Number of lines in roxygen comments: 1063
 
-Number of lines in R code: 1034
+Number of lines in R code: 2230
 
 # Installation
 
@@ -69,6 +66,10 @@ Original data can be found here:
 ``` r
 require(sctree)
 #> Loading required package: sctree
+#> Loading required package: Seurat
+#> Registered S3 method overwritten by 'R.oo':
+#>   method        from       
+#>   throw.default R.methodsS3
 #> Registered S3 methods overwritten by 'ggplot2':
 #>   method         from 
 #>   [.quosures     rlang
@@ -77,14 +78,12 @@ require(sctree)
 #> Registered S3 method overwritten by 'GGally':
 #>   method from   
 #>   +.gg   ggplot2
-#> Registered S3 method overwritten by 'R.oo':
-#>   method        from       
-#>   throw.default R.methodsS3
-#> Registered S3 method overwritten by 'rvest':
-#>   method            from
-#>   read_xml.response xml2
+#> 
+#> Attaching package: 'sctree'
+#> The following objects are masked from 'package:Seurat':
+#> 
+#>     FindAllMarkers, FindConservedMarkers, FindMarkers
 require(Seurat)
-#> Loading required package: Seurat
 
 set.seed(6)
 
@@ -98,7 +97,7 @@ small_5050_mix
 DimPlot(small_5050_mix, reduction = "tsne")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ## Finding important variables to classify clusters
 
@@ -118,66 +117,13 @@ rang_importances <- ranger_importances.Seurat(
     small_5050_mix,
     cluster = "ALL",
     warn.imp.method = FALSE)
-
-names(rang_importances)
-#> [1] "ranger_fit"                "importances_ranger"       
-#> [3] "signif_importances_ranger"
 ```
 
-This gives us a list with 3 elements.
-
-1.  The ranger fit object itself (handy if you want to inspect its
-    classification accuracy)
-2.  The importance matrix deriven from ranger
-3.  A data frame containing only importances with pvalues under 0.05
-    (because biologists love p-values under 0.05)
-
-<!-- end list -->
+By default, we obtain a data frame containing only importances with
+pvalues under `0.05`.
 
 ``` r
-rang_importances[[1]]
-#> Ranger result
-#> 
-#> Call:
-#>  ranger::ranger(dependent.variable.name = "ident", data = data,      num.trees = num.trees, mtry = floor(ncol(data)/5), importance = importance,      classification = TRUE, ...) 
-#> 
-#> Type:                             Classification 
-#> Number of trees:                  500 
-#> Sample size:                      255 
-#> Number of independent variables:  140 
-#> Mtry:                             28 
-#> Target node size:                 1 
-#> Variable importance mode:         impurity_corrected 
-#> Splitrule:                        gini 
-#> OOB prediction error:             18.04 %
-```
-
-We can see that our classifier is 18.04 % accurate, as measured by its
-*OOB prediction error*.
-
-Your classifier USUALLY will be just as good as your initial clustering
-is, therefore if your clustering is not all that consistent to start
-with, it is unrealistic that predicions will be done accurately.
-
-Now … taking a look at the importance matrix we can see that a `pvalue`
-and a relative importance has been given to each gene.
-
-``` r
-head(rang_importances[[2]])
-#>                importance     pvalue
-#> TNFRSF4       -0.20663582 0.94318182
-#> RP3-395M20.12  0.03391993 0.36363636
-#> ID3            0.09088435 0.18181818
-#> JUN            0.19175235 0.09090909
-#> DEPDC1         0.15176841 0.09090909
-#> CHI3L2         0.52477223 0.00000000
-```
-
-For simplicity we return by default a `data.frame` containing the ones
-with `pvalue < 0.05`
-
-``` r
-head(rang_importances[[3]])
+head(rang_importances)
 #>         importance pvalue    gene
 #> ASNS      6.350801      0    ASNS
 #> CD3D      4.477459      0    CD3D
@@ -187,8 +133,7 @@ head(rang_importances[[3]])
 #> MZB1      3.222495      0    MZB1
 ```
 
-Therefore, in this case we can say that the expression of the following
-genes would be usefull to form the clusters.
+# Seurat Interface
 
 As an analogous function to Seurat’s `FindAllMarkers`, we offer
 `FindAllMarkers_ranger.Seurat`
@@ -206,27 +151,78 @@ head(markers)
 #> ADA       3.722655      0     ADA       0
 #> CD3D      3.471757      0    CD3D       0
 #> MZB1      3.033289      0    MZB1       0
+
+plot.markers <- do.call(rbind, lapply(split(markers, markers$cluster), head, 3))
+
+FeaturePlot(small_5050_mix, unique(plot.markers$gene))
+```
+
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+Note how variable importances can be high if a marker is either
+preferentially present of preferentially absent. Therefore as a
+pre-filtering step we implemented a modified version of seurat’s
+“FindMarkers”
+
+``` r
+library(Seurat)
+library(sctree)
+
+head(
+    sctree::FindMarkers(
+        small_5050_mix,
+        features = rownames(small_5050_mix@assays$RNA@data),
+        ident.1 = 0, test.use = "RangerDE"))
+#>         importance p_val    gene avg_logFC pct.1 pct.2 p_val_adj
+#> MZB1     0.9541864     0    MZB1  2.004299 0.828 0.227         0
+#> CD3G     1.3476929     0    CD3G  1.849551 0.744 0.107         0
+#> CD3D     3.3641836     0    CD3D  1.842246 0.872 0.373         0
+#> ARHGDIB  2.4117600     0 ARHGDIB  1.787994 0.856 0.320         0
+#> AIF1     0.4373623     0    AIF1  1.759311 0.756 0.173         0
+#> FYB      0.8624308     0     FYB  1.750418 0.739 0.107         0
+```
+
+``` r
+
+markers <- sctree::FindAllMarkers(
+        small_5050_mix,
+        features = rownames(small_5050_mix@assays$RNA@data),
+        test.use = "RangerDE")
+#> Calculating cluster 0
+#> Calculating cluster 1
+
+# Here we just extract the top 3 markers for each cluster
+plot.markers <- do.call(rbind, lapply(split(markers, markers$cluster), head, 3))
+
+
+plot.markers
+#>          importance p_val gene avg_logFC pct.1 pct.2 p_val_adj cluster
+#> 0.MZB1    0.9541864     0 MZB1  2.004299 0.828 0.227         0       0
+#> 0.CD3G    1.3476929     0 CD3G  1.849551 0.744 0.107         0       0
+#> 0.CD3D    3.3641836     0 CD3D  1.842246 0.872 0.373         0       0
+#> 1.ASNS.1  3.6927040     0 ASNS  1.428501 0.787 0.217         0       1
+#> 1.CA2.1   0.4594520     0  CA2  1.297591 0.933 0.494         0       1
+#> 1.HEY1.1  1.0658782     0 HEY1  1.295811 0.893 0.389         0       1
 ```
 
 ## Visualizing the expected outcome of a flow cytometry experiment
 
-Lets say we choose the top 5 markers from the former list and we did a
+Lets say we choose the top n markers from the former list and we did a
 flow experiment … HYPOTHETICALLY the marker distribution would resemble
 the rna expression profile for which we have the function
 `plot_flowstyle`
 
 ``` r
-top_markers <- head(rang_importances[[3]]$gene)
 top_markers
-#> [1] "ASNS"    "CD3D"    "ARHGDIB" "TMSB4X"  "ADA"     "MZB1"
+#> [1] "MZB1" "CD3G" "CD3D" "ASNS" "CA2"  "HEY1"
+```
+
+``` r
 g <- plot_flowstyle(small_5050_mix, markernames = top_markers)
 g
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
-
-Based on this, we can see that the red cluster in this plot is
-predominantly CD3+ ADA+ and ARHGDIB+, as well as ASNS-
+![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 We can also focus in one of the pannels (and check the color
 conventions)
@@ -235,18 +231,20 @@ conventions)
 g[1,2]
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
 ## Suggesting a gating strategy for the markers
 
 A general strategy to get separate all clusters
 
 ``` r
+top_markers
+#> [1] "MZB1" "CD3G" "CD3D" "ASNS" "CA2"  "HEY1"
+```
 
-top_markers <- head(rang_importances[[3]]$gene)
-
+``` r
 tree_fit <- fit_ctree(small_5050_mix,
-                      genes_use = top_markers, 
+                      genes_use = top_markers,
                       cluster = "ALL")
 ```
 
@@ -265,7 +263,7 @@ as part of it.
 plot(tree_fit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
 
 When inspecting the tree\_fit, we can see a more detailed text
 representation of this tree.
@@ -274,21 +272,19 @@ representation of this tree.
 print(tree_fit)
 #> 
 #> Model formula:
-#> ident ~ ASNS + CD3D + ARHGDIB + TMSB4X + ADA + MZB1
+#> ident ~ MZB1 + CD3G + CD3D + ASNS + CA2 + HEY1
 #> 
 #> Fitted party:
 #> [1] root
-#> |   [2] ADA <= 2.83724
-#> |   |   [3] ASNS <= 1.43241: 0 (n = 40, err = 35.0%)
-#> |   |   [4] ASNS > 1.43241
-#> |   |   |   [5] ARHGDIB <= 1.90619: 1 (n = 55, err = 10.9%)
-#> |   |   |   [6] ARHGDIB > 1.90619: 0 (n = 7, err = 28.6%)
-#> |   [7] ADA > 2.83724
-#> |   |   [8] ASNS <= 2.10406: 0 (n = 146, err = 3.4%)
-#> |   |   [9] ASNS > 2.10406: 1 (n = 7, err = 28.6%)
+#> |   [2] CD3D <= 2.30877
+#> |   |   [3] ASNS <= 1.43241: 0 (n = 37, err = 37.8%)
+#> |   |   [4] ASNS > 1.43241: 1 (n = 61, err = 16.4%)
+#> |   [5] CD3D > 2.30877
+#> |   |   [6] ASNS <= 2.10406: 0 (n = 150, err = 3.3%)
+#> |   |   [7] ASNS > 2.10406: 1 (n = 7, err = 28.6%)
 #> 
-#> Number of inner nodes:    4
-#> Number of terminal nodes: 5
+#> Number of inner nodes:    3
+#> Number of terminal nodes: 4
 ```
 
 Sometimes one might think that the proposed strategy is too complicated
@@ -299,20 +295,20 @@ questions per cell)
 
 ``` r
 tree_fit <- fit_ctree(
-  small_5050_mix, genes_use = top_markers, 
-  cluster = "ALL", maxdepth = 2)
+    small_5050_mix, genes_use = top_markers,
+    cluster = "ALL", maxdepth = 2)
 print(tree_fit)
 #> 
 #> Model formula:
-#> ident ~ ASNS + CD3D + ARHGDIB + TMSB4X + ADA + MZB1
+#> ident ~ MZB1 + CD3G + CD3D + ASNS + CA2 + HEY1
 #> 
 #> Fitted party:
 #> [1] root
-#> |   [2] ADA <= 2.83724
-#> |   |   [3] ASNS <= 1.43241: 0 (n = 40, err = 35.0%)
-#> |   |   [4] ASNS > 1.43241: 1 (n = 62, err = 17.7%)
-#> |   [5] ADA > 2.83724
-#> |   |   [6] ASNS <= 2.10406: 0 (n = 146, err = 3.4%)
+#> |   [2] CD3D <= 2.30877
+#> |   |   [3] ASNS <= 1.43241: 0 (n = 37, err = 37.8%)
+#> |   |   [4] ASNS > 1.43241: 1 (n = 61, err = 16.4%)
+#> |   [5] CD3D > 2.30877
+#> |   |   [6] ASNS <= 2.10406: 0 (n = 150, err = 3.3%)
 #> |   |   [7] ASNS > 2.10406: 1 (n = 7, err = 28.6%)
 #> 
 #> Number of inner nodes:    3
@@ -320,19 +316,19 @@ print(tree_fit)
 plot(tree_fit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 Since not all variables are ultimately used in our classifier, one can
 acces the ones that were by using `varimp(tree_fit)`
 
 ``` r
 partykit::varimp(tree_fit)
-#>       ADA      ASNS 
-#> 0.2231765 0.2185317
+#>      CD3D      ASNS 
+#> 0.2849840 0.1505534
 plot_flowstyle(small_5050_mix, names(partykit::varimp(tree_fit)))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
 One can also request the package to suggest a specific strategy only for
 a given cluster. This function is not expected to give drastically
@@ -345,138 +341,52 @@ tree_fit <- fit_ctree(small_5050_mix, genes_use = top_markers, cluster = "0")
 print(tree_fit)
 #> 
 #> Model formula:
-#> ident ~ ASNS + CD3D + ARHGDIB + TMSB4X + ADA + MZB1
+#> ident ~ MZB1 + CD3G + CD3D + ASNS + CA2 + HEY1
 #> 
 #> Fitted party:
 #> [1] root
-#> |   [2] ADA <= 2.83724
-#> |   |   [3] ASNS <= 1.43241: clus 0 (n = 40, err = 35.0%)
-#> |   |   [4] ASNS > 1.43241
-#> |   |   |   [5] ARHGDIB <= 1.90619: not clus 0 (n = 55, err = 10.9%)
-#> |   |   |   [6] ARHGDIB > 1.90619: clus 0 (n = 7, err = 28.6%)
-#> |   [7] ADA > 2.83724
-#> |   |   [8] ASNS <= 2.10406: clus 0 (n = 146, err = 3.4%)
-#> |   |   [9] ASNS > 2.10406: not clus 0 (n = 7, err = 28.6%)
+#> |   [2] CD3D <= 2.30877
+#> |   |   [3] ASNS <= 1.43241: clus 0 (n = 37, err = 37.8%)
+#> |   |   [4] ASNS > 1.43241: not clus 0 (n = 61, err = 16.4%)
+#> |   [5] CD3D > 2.30877
+#> |   |   [6] ASNS <= 2.10406: clus 0 (n = 150, err = 3.3%)
+#> |   |   [7] ASNS > 2.10406: not clus 0 (n = 7, err = 28.6%)
 #> 
-#> Number of inner nodes:    4
-#> Number of terminal nodes: 5
+#> Number of inner nodes:    3
+#> Number of terminal nodes: 4
 ```
 
-## Finding equivalent clusters in two datasets
+Sometimes it is useful to visualize directly the subset of cells that
+will be “gated” out in each rule, this can be easily achieved by using
+our implementation of `plot_gates`
 
 ``` r
-data(small_9901_mix)
-small_9901_mix
-#> An object of class Seurat 
-#> 840 features across 384 samples within 1 assay 
-#> Active assay: RNA (840 features)
-#>  2 dimensional reductions calculated: pca, tsne
+plot_gates(small_5050_mix, tree_fit, "6")
 ```
 
-``` r
-validation_results <- cross_validate(
-    small_5050_mix, small_9901_mix, 
-    cluster = "ALL",
-    warn.imp.method = FALSE)
-#> Warning in cross_validate(small_5050_mix, small_9901_mix, cluster = "ALL", : Some important genes were removed because they are not present in the test dataset. 
-#> Removed genes: ASNS, CD3D, ADA, HEY1, RPL26, CA2, XIST, CDKN2A, TSC22D3, AIF1, GAL, PSMB9, FAM127B, MAP1A, PSMB8, TSTD1, MDK, CSRP2, DMKN, HOXA9, RNF138, ZNF503, CTC1, C21orf90, HSPA1B, PYGL, SPRED2, ZFAT
+![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
 
-validation_results[[1]]
+We have also implemented a way to export these rules as a `garnett`
+classifier. for more detail on how the calssifier is implemented please
+refer to [the garnett
+documentation](https://cole-trapnell-lab.github.io/garnett/docs/#constructing-a-marker-file)
+
+``` r
+as.garnett(tree_fit)
+#> > clus 0_node_3  (n = 37)
+#> expressed below: ASNS 1.432, CD3D 2.309
 #> 
-#> Model formula:
-#> ident ~ ARHGDIB + TMSB4X + MZB1 + SOX4 + FYB + UBE2C + HIST1H1E + 
-#>     CD1E + ITGA4 + ITM2A + HIST1H4C + CXCR4 + CDK1 + C12orf57 + 
-#>     HIST1H2BK + ARPP21 + HIST1H1C + CCNB1 + IGLL1 + CHI3L2 + 
-#>     JUN
+#> > clus 0_node_6  (n = 150)
+#> expressed above: CD3D 2.309
+#> expressed below: ASNS 2.104
 #> 
-#> Fitted party:
-#> [1] root
-#> |   [2] ARHGDIB <= 2.29381
-#> |   |   [3] SOX4 <= 2.74241: 1 (n = 90, err = 27.8%)
-#> |   |   [4] SOX4 > 2.74241: 0 (n = 8, err = 0.0%)
-#> |   [5] ARHGDIB > 2.29381: 0 (n = 157, err = 6.4%)
+#> > not clus 0_node_4  (n = 61)
+#> expressed above: ASNS 1.432
+#> expressed below: CD3D 2.309
 #> 
-#> Number of inner nodes:    2
-#> Number of terminal nodes: 3
+#> > not clus 0_node_7  (n = 7)
+#> expressed above: ASNS 2.104, CD3D 2.309
 ```
-
-``` r
-validation_results$confusion_matrix
-#>          cluster
-#> predicted   0   1   2
-#>         0 263  98   8
-#>         1   0   0  15
-```
-
-``` r
-freq_matrix <- as.frequency.matrix(validation_results$confusion_matrix)
-freq_matrix
-#>          cluster
-#> predicted         0         1         2
-#>         0 100.00000 100.00000  34.78261
-#>         1   0.00000   0.00000  65.21739
-```
-
-This would mean that cells in cluster 0 in the `small_9901_mix` dataset
-are classified 100 % of the time as bleonging to cluster 0 of the
-`small_5050_mix`
-
-These frequencies can be visualized by plotting them in a heatmap
-
-``` r
-
-autoplot(freq_matrix,
-         min_color = 50,
-         show_number = TRUE)
-#> Warning: Removed 3 rows containing missing values (geom_text).
-```
-
-![](README_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
-
-Here we can see that in the *9901* dataset (predicted), both clusters 0
-and 1 are classified mostrly as cluster 0 in the *5050* dataset, while
-the cluster 2 is mainly classified as 1.
-
-(remember that the numbers are arbitrary and only mean something within
-each dataset)
-
-``` r
-print(validation_results[[3]])
-#> Cluster-0: 
-#>  all elements:
-#>      ARHGDIB +
-#> Cluster-1: 
-#>  all elements:
-#>      ARHGDIB -
-#>      SOX4 -
-```
-
-``` r
-gating_genes <- validation_results$gating_genes
-gating_genes
-#> [1] "ARHGDIB" "SOX4"
-```
-
-``` r
-g1 <- plot_flowstyle(small_5050_mix, markernames = gating_genes)
-g2 <- plot_flowstyle(small_9901_mix, markernames = gating_genes)
- 
-g1
-```
-
-![](README_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
-
-``` r
-g2
-```
-
-![](README_files/figure-gfm/unnamed-chunk-22-2.png)<!-- -->
-
-``` r
-g2[1,2]
-```
-
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
 
 ## Finding antibodies for the experiment
 
@@ -493,15 +403,15 @@ head(query_biocompare_antibodies("CD11b"))
 #>                                  title            vendor
 #> 1        Anti-CD11b antibody [EPR1344]             Abcam
 #> 2         Anti-CD11b/c antibody [OX42]             Abcam
-#> 3     InVivoMab anti-mouse/human CD11b        Bio X Cell
-#> 4     InVivoMab anti-mouse/human CD11b        Bio X Cell
+#> 3            Anti-CD11b/ITGAM Antibody         BosterBio
+#> 4   Anti-CD11b/ITGAM Picoband Antibody         BosterBio
 #> 5 Monoclonal Antibody to CD11b (human)   MyBioSource.com
 #> 6               Anti-CD11b (Mouse) mAb MBL International
 #>                                                                                                               specification
 #> 1    Applications: WB, IHC-p; Reactivity: Hu, Ms, Rt, Pg, RhMk; Conjugate/Tag: Unconjugated; Quantity: 10 µl, 40 µl, 100 µl
 #> 2 Applications: ELISA, FCM, ICC, IF, IHC-fr, IP; Reactivity: Rat (Rt); Conjugate/Tag: Unconjugated; Quantity: 10 µg, 100 µg
-#> 3                             Applications: FCM, AfP, Neut; Reactivity: Hu, Ms; Conjugate/Tag: Unconjugated; Quantity: 1 mg
-#> 4                            Applications: FCM, AfP, Neut; Reactivity: Hu, Ms; Conjugate/Tag: Unconjugated; Quantity: 50 mg
+#> 3                Applications: Western Blot (WB); Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
+#> 4      Applications: WB, FCM, ICC, IHC-fr, IHC-p; Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
 #> 5                 Applications: Flow Cytometry (FCM); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 0.1 mg
 #> 6                 Applications: Flow Cytometry (FCM); Reactivity: Mouse (Ms); Conjugate/Tag: Unconjugated; Quantity: 100 ug
 ```
@@ -510,7 +420,7 @@ head(query_biocompare_antibodies("CD11b"))
 sessionInfo()
 #> R version 3.6.0 (2019-04-26)
 #> Platform: x86_64-w64-mingw32/x64 (64-bit)
-#> Running under: Windows 10 x64 (build 18356)
+#> Running under: Windows 10 x64 (build 18875)
 #> 
 #> Matrix products: default
 #> 
@@ -525,79 +435,50 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] Seurat_3.0.0      sctree_0.0.2.0001
+#> [1] sctree_0.0.4.0000 Seurat_3.0.1.9020
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] Rtsne_0.15           colorspace_1.4-1     selectr_0.4-1       
 #>   [4] ggridges_0.5.1       listenv_0.7.0        npsurv_0.4-0        
-#>   [7] ggrepel_0.8.1        DT_0.6               bit64_0.9-7         
-#>  [10] AnnotationDbi_1.46.0 mvtnorm_1.0-10       ranger_0.11.2       
-#>  [13] xml2_1.2.0           codetools_0.2-16     splines_3.6.0       
-#>  [16] R.methodsS3_1.7.1    lsei_1.2-0           libcoin_1.0-4       
-#>  [19] knitr_1.22           Formula_1.2-3        jsonlite_1.6        
-#>  [22] ica_1.0-2            cluster_2.0.8        png_0.1-7           
-#>  [25] R.oo_1.22.0          shiny_1.3.2          sctransform_0.2.0   
-#>  [28] compiler_3.6.0       httr_1.4.0           assertthat_0.2.1    
-#>  [31] Matrix_1.2-17        lazyeval_0.2.2       later_0.8.0         
-#>  [34] htmltools_0.3.6      tools_3.6.0          rsvd_1.0.0          
-#>  [37] igraph_1.2.4.1       partykit_1.2-3       gtable_0.3.0        
-#>  [40] glue_1.3.1           RANN_2.6.1           reshape2_1.4.3      
-#>  [43] dplyr_0.8.0.1        Rcpp_1.0.1           Biobase_2.44.0      
-#>  [46] gdata_2.18.0         ape_5.3              nlme_3.1-139        
-#>  [49] gbRd_0.4-11          lmtest_0.9-37        inum_1.0-1          
-#>  [52] xfun_0.6             stringr_1.4.0        globals_0.12.4      
-#>  [55] rvest_0.3.3          mime_0.6             irlba_2.3.3         
-#>  [58] gtools_3.8.1         future_1.13.0        MASS_7.3-51.4       
-#>  [61] zoo_1.8-5            scales_1.0.0         promises_1.0.1      
-#>  [64] parallel_3.6.0       RColorBrewer_1.1-2   curl_3.3            
-#>  [67] yaml_2.2.0           memoise_1.1.0        reticulate_1.12     
-#>  [70] pbapply_1.4-0        gridExtra_2.3        ggplot2_3.1.1       
-#>  [73] rpart_4.1-15         reshape_0.8.8        stringi_1.4.3       
-#>  [76] RSQLite_2.1.1        S4Vectors_0.22.0     caTools_1.17.1.2    
-#>  [79] BiocGenerics_0.30.0  bibtex_0.4.2         Rdpack_0.11-0       
-#>  [82] SDMTools_1.1-221.1   rlang_0.3.4          pkgconfig_2.0.2     
-#>  [85] bitops_1.0-6         evaluate_0.13        lattice_0.20-38     
-#>  [88] ROCR_1.0-7           purrr_0.3.2          labeling_0.3        
-#>  [91] htmlwidgets_1.3      cowplot_0.9.4        bit_1.1-14          
-#>  [94] tidyselect_0.2.5     GGally_1.4.0         wrapr_1.8.6         
-#>  [97] plyr_1.8.4           magrittr_1.5         R6_2.4.0            
-#> [100] IRanges_2.18.0       gplots_3.0.1.1       DBI_1.0.0           
-#> [103] pillar_1.4.0         fitdistrplus_1.0-14  survival_2.44-1.1   
-#> [106] tibble_2.1.1         future.apply_1.2.0   tsne_0.1-3          
-#> [109] crayon_1.3.4         KernSmooth_2.23-15   plotly_4.9.0        
-#> [112] rmarkdown_1.12       viridis_0.5.1        grid_3.6.0          
-#> [115] data.table_1.12.2    blob_1.1.1           metap_1.1           
-#> [118] digest_0.6.18        xtable_1.8-4         httpuv_1.5.1        
-#> [121] tidyr_0.8.3          R.utils_2.8.0        stats4_3.6.0        
-#> [124] munsell_0.5.0        viridisLite_0.3.0
+#>   [7] ggrepel_0.8.1        bit64_0.9-7          AnnotationDbi_1.46.0
+#>  [10] mvtnorm_1.0-10       ranger_0.11.2        xml2_1.2.0          
+#>  [13] codetools_0.2-16     splines_3.6.0        R.methodsS3_1.7.1   
+#>  [16] lsei_1.2-0           libcoin_1.0-4        knitr_1.23          
+#>  [19] Formula_1.2-3        jsonlite_1.6         ica_1.0-2           
+#>  [22] cluster_2.0.9        png_0.1-7            R.oo_1.22.0         
+#>  [25] sctransform_0.2.0    compiler_3.6.0       httr_1.4.0          
+#>  [28] assertthat_0.2.1     Matrix_1.2-17        lazyeval_0.2.2      
+#>  [31] htmltools_0.3.6      tools_3.6.0          rsvd_1.0.1          
+#>  [34] igraph_1.2.4.1       partykit_1.2-4       gtable_0.3.0        
+#>  [37] glue_1.3.1           RANN_2.6.1           reshape2_1.4.3      
+#>  [40] dplyr_0.8.1          Rcpp_1.0.1           Biobase_2.44.0      
+#>  [43] gdata_2.18.0         ape_5.3              nlme_3.1-140        
+#>  [46] gbRd_0.4-11          lmtest_0.9-37        inum_1.0-1          
+#>  [49] xfun_0.7             stringr_1.4.0        globals_0.12.4      
+#>  [52] rvest_0.3.4          irlba_2.3.3          gtools_3.8.1        
+#>  [55] future_1.13.0        MASS_7.3-51.4        zoo_1.8-5           
+#>  [58] scales_1.0.0         parallel_3.6.0       RColorBrewer_1.1-2  
+#>  [61] curl_3.3             yaml_2.2.0           memoise_1.1.0       
+#>  [64] reticulate_1.12      pbapply_1.4-0        gridExtra_2.3       
+#>  [67] ggplot2_3.1.1        rpart_4.1-15         reshape_0.8.8       
+#>  [70] stringi_1.4.3        RSQLite_2.1.1        S4Vectors_0.22.0    
+#>  [73] caTools_1.17.1.2     BiocGenerics_0.30.0  bibtex_0.4.2        
+#>  [76] Rdpack_0.11-0        SDMTools_1.1-221.1   rlang_0.3.4         
+#>  [79] pkgconfig_2.0.2      bitops_1.0-6         evaluate_0.13       
+#>  [82] lattice_0.20-38      ROCR_1.0-7           purrr_0.3.2         
+#>  [85] labeling_0.3         htmlwidgets_1.3      cowplot_0.9.4       
+#>  [88] bit_1.1-14           tidyselect_0.2.5     GGally_1.4.0        
+#>  [91] wrapr_1.8.7          plyr_1.8.4           magrittr_1.5        
+#>  [94] R6_2.4.0             IRanges_2.18.0       gplots_3.0.1.1      
+#>  [97] DBI_1.0.0            pillar_1.4.1         fitdistrplus_1.0-14 
+#> [100] survival_2.44-1.1    tibble_2.1.3         future.apply_1.2.0  
+#> [103] tsne_0.1-3           crayon_1.3.4         KernSmooth_2.23-15  
+#> [106] plotly_4.9.0         rmarkdown_1.13       viridis_0.5.1       
+#> [109] grid_3.6.0           data.table_1.12.2    blob_1.1.1          
+#> [112] metap_1.1            digest_0.6.19        tidyr_0.8.3         
+#> [115] R.utils_2.8.0        stats4_3.6.0         munsell_0.5.0       
+#> [118] viridisLite_0.3.0
 ```
-
-# Reproducing the runs in the purdue cluster
-
-To reproduce the runs in the purdue cluster run as follows …
-
-1.  We get the data from the temporary directory
-
-<!-- end list -->
-
-    git clone https://github.rcac.purdue.edu/jpaezpae/data_sctree data
-    cd data
-    bash untar_data.bash
-
-2.  We run the standard seurat workflow.
-
-This will output a report and generate an .RDS file for each of the
-final seurat objects
-
-    bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_5050/hg19/ mix5050
-    bash ./bash/build_jobs_seurat_workflow.bash ./data/filtered_matrices_mex_9901/hg19/ mix9901 
-
-3.  Whenever those are done, run this …
-
-This will run the benchmarks for the datasets. Will also generate 2 .RDS
-files containing a list with a lot of stuff in it.
-
-    for i in seurat*.RDS ; do bash ./bash/build_jobs_acc_benchmark.bash $i ; done
 
 # Steps down the road
 
@@ -608,3 +489,4 @@ files containing a list with a lot of stuff in it.
 6.  Implement plot that actually illustrates the progressive gating in
     the decision tree
 7.  Implement a way to find markers for clusters exclusively upregulated
+8.  Refctor the code to make the coding nomenclature same as seurat

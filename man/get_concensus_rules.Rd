@@ -22,36 +22,19 @@ level 2 is either "all" or "majority".
 each element is a character vector.
 }
 \examples{
-iris_tree <- partykit::ctree(Species ~ ., data = iris)
-str(get_concensus_rules(iris_tree))
-diamonds_tree <- partykit::ctree(cut ~ ., data = ggplot2::diamonds)
-str(get_concensus_rules(diamonds_tree))
+
+    iris_tree <- partykit::ctree(Species ~ ., data = iris)
+    str(get_concensus_rules(iris_tree))
+    
+# List of 3
+#  $ setosa    :List of 2
+#   ..$ all     : chr "Petal.Length <= 1.9"
+#   ..$ majority: chr(0) 
+#  $ versicolor:List of 2
+#   ..$ all     : chr [1:2] "Petal.Length > 1.9" "Petal.Width <= 1.7"
+#   ..$ majority: chr "Petal.Length <= 4.8"
+#  $ virginica :List of 2
+#   ..$ all     : chr [1:2] "Petal.Length > 1.9" "Petal.Width > 1.7"
+#   ..$ majority: chr(0) 
+#  - attr(*, "class")= chr [1:2] "list" "concensus.rules"
 }
-#  List of 3
-#   $ setosa    :List of 2
-#    ..$ all     : chr "Petal.Length <= 1.9"
-#    ..$ majority: chr(0) 
-#   $ versicolor:List of 2
-#    ..$ all     : chr [1:2] "Petal.Length > 1.9" "Petal.Width <= 1.7"
-#    ..$ majority: chr "Petal.Length <= 4.8"
-#   $ virginica :List of 2
-#    ..$ all     : chr [1:2] "Petal.Length > 1.9" "Petal.Width > 1.7"
-#    ..$ majority: chr(0) 
-#   - attr(*, "class")= chr [1:2] "list" "concensus.rules"
-#  List of 5
-#   $ Fair     :List of 2
-#    ..$ all     : chr [1:2] "depth > 63" "depth > 64.3"
-#    ..$ majority: chr [1:3] "table <= 57" "table > 57" "table <= 62"
-#   $ Good     :List of 2
-#    ..$ all     : chr [1:2] "depth > 63" "depth <= 64.3"
-#    ..$ majority: chr [1:4] "table <= 57" "depth > 63.5" "table > 57" "table <= 62"
-#   $ Very Good:List of 2
-#    ..$ all     : chr [1:3] "depth > 63" "depth <= 64.3" "depth <= 63.5"
-#    ..$ majority: chr [1:3] "table <= 57" "table > 57" "table <= 62"
-#   $ Premium  :List of 2
-#    ..$ all     : chr [1:3] "table > 57" "table <= 62" "depth <= 63"
-#    ..$ majority: chr [1:3] "table <= 60" "depth > 58" "color %in% c(\"E\", \"G\", \"I\")"
-#   $ Ideal    :List of 2
-#    ..$ all     : chr [1:2] "table <= 57" "depth <= 63"
-#    ..$ majority: chr [1:2] "table <= 56.4" "z > 2.64"
-#   - attr(*, "class")= chr [1:2] "list" "concensus.rules"

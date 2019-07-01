@@ -13,6 +13,7 @@
 #' @param example_string the string to be interpreted as R code
 #'
 #' @return a string that can be interpreted literally as a roxygen comment
+#' @importFrom utils capture.output
 include_roxygen_example <- function(example_string) {
 
     run_output <- capture.output(eval(parse(text = example_string)))

@@ -29,12 +29,10 @@
 #'     but this behavior can be modified by the
 #' @export
 #'
-#' @examples
-#' head(ranger_importances.Seurat(Seurat::pbmc_small, cluster = "ALL", warn.imp.method = FALSE))
-#' @evalRd paste( "# ", capture.output(
-#'     ranger_importances.Seurat(Seurat::pbmc_small, cluster = "ALL",
-#'             warn.imp.method = FALSE)
-#'     ))
+
+#' @evalRd include_roxygen_example("
+#'     head(ranger_importances.Seurat(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
+#'     ")
 #'
 #' @importFrom ranger ranger importance_pvalues
 ranger_importances.df <- function(object, cluster = NULL,
@@ -232,11 +230,10 @@ FindAllMarkers_ranger.Seurat <- function(object,
 #' @param verbose logical indicating wether the run should be verbose
 #' @param ... additional arguments passed to sctree::ranger_importances.df
 #'
-#' @examples
-#' library(Seurat)
-#' library(sctree)
 #' @evalRd include_roxygen_example({
-#'     "head(FindMarkers(object = Seurat::pbmc_small,
+#'     "library(Seurat)
+#'     library(sctree)
+#'     head(FindMarkers(object = Seurat::pbmc_small,
 #'     ident.1 = 0, test.use = 'RangerDE', warn.imp.method = FALSE))"
 #'     })
 #' @importFrom Matrix t

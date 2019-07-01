@@ -1,0 +1,29 @@
+
+
+# Usage
+
+I am assuming you have already done your clustering and dimensional reduction
+using seurat and we have our seurat object.
+
+For this examples we will use a dummy dataset that come bundled with the package
+
+`small_5050_mix`, this dataset comes originally from the 1:1 mixture of Jurkat 
+and 293T cells provided by 10x.
+
+Original data can be found here:
+
+1. [1:1 mixture](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/jurkat:293t_50:50)
+2. [99:1 mixture](https://support.10xgenomics.com/single-cell-gene-expression/datasets/1.1.0/jurkat_293t_99_1)
+
+
+```{r}
+require(sctree)
+require(Seurat)
+
+set.seed(6)
+
+data(small_5050_mix)
+small_5050_mix
+
+DimPlot(small_5050_mix, reduction = "tsne")
+```
