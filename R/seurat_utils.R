@@ -238,7 +238,9 @@ FindAllMarkers <- function(
         }
     }
     if ((only.pos) && nrow(x = gde.all) > 0) {
-        return(subset(x = gde.all, subset = gde.all[, 2] > 0))
+        diff.col <- ifelse(test = slot == "scale.data" || test.use ==
+                               "roc", yes = "avg_diff", no = "avg_logFC")
+        return(subset(x = gde.all, subset = gde.all[, diff.col] > 0))
     }
     rownames(x = gde.all) <- make.unique(names = as.character(x = gde.all$gene))
     if (nrow(x = gde.all) == 0) {
