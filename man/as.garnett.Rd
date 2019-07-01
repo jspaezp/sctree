@@ -13,6 +13,9 @@ as.garnett(tree, digits = 3, rules_keep = ".*")
 \item{tree}{a fitted constparty/party object}
 
 \item{digits}{an integer stating how many decimal places should be conserved}
+
+\item{rules_keep}{a regular expression stating which rules should be kept,
+defaults to all rules (".*")}
 }
 \value{
 a complex list that prints as a garnett file

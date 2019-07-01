@@ -41,6 +41,8 @@ get_cluster_mapping <- function(tree) {
 #'
 #' @param tree a fitted constparty/party object
 #' @param digits an integer stating how many decimal places should be conserved
+#' @param rules_keep a regular expression stating which rules should be kept,
+#'     defaults to all rules (".*")
 #'
 #' @return a complex list that prints as a garnett file
 #' @export
@@ -204,15 +206,10 @@ print.garnett.list <- function(x) {
 #' @return a nested list
 #' @export
 #'
-#' @examples
-#' iris_tree <- partykit::ctree(Species ~ ., data = iris)
-#' str(get_concensus_rules(iris_tree))
-#' @evalRd paste("# ", capture.output(str(get_concensus_rules(partykit::ctree(Species ~ ., data = iris)))))
-#'
-#' @examples
-#' diamonds_tree <- partykit::ctree(cut ~ ., data = ggplot2::diamonds)
-#' str(get_concensus_rules(diamonds_tree))
-#' @evalRd paste("# ", capture.output(str(get_concensus_rules(partykit::ctree(cut ~ ., data = ggplot2::diamonds)))))
+#' @evalRd include_roxygen_example("
+#'     iris_tree <- partykit::ctree(Species ~ ., data = iris)
+#'     str(get_concensus_rules(iris_tree))
+#'     ")
 #'
 #' @importFrom partykit as.simpleparty nodeids info_node
 #' @importFrom purrr map2_dbl
@@ -307,13 +304,12 @@ get_concensus_rules <-  function(tree) {
 #' @return returns silently the same object but prints the rules to the console.
 #' @export
 #'
-#' @examples
-#' iris_tree <- partykit::ctree(Species ~ ., data = iris)
-#' my_rules <- get_concensus_rules(iris_tree)
-#' print(my_rules)
-#' @evalRd paste("# ", capture.output(
-#'     print(get_concensus_rules(partykit::ctree(Species ~ ., data = iris)))
-#'     ))
+#' @evalRd include_roxygen_example("
+#'     iris_tree <- partykit::ctree(Species ~ ., data = iris)
+#'     my_rules <- get_concensus_rules(iris_tree)
+#'     print(iris_tree)
+#'     ")
+#'
 print.concensus.rules <- function(x) {
   verbose_rules <- rapply(
     x,
@@ -348,18 +344,11 @@ print.concensus.rules <- function(x) {
 #' @return a ctree fit
 #' @export
 #'
-#' @examples
-#' fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "ALL")
-#' fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0")
-#' @evalRd paste("# ", capture.output(
-#'     fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0")
-#'     ))
+#' @evalRd include_roxygen_example("
+#'    fit_ctree(small_9901_mix, c('CCNB1', 'PLK1', 'AURKA'), cluster = 'ALL')
+#'    fit_ctree(small_9901_mix, c('CCNB1', 'PLK1', 'AURKA'), cluster = '0')
+#'    ")
 #'
-#' @examples
-#' fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0", maxdepth = 2)
-#' @evalRd paste("# ", capture.output(
-#'     fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0", maxdepth = 2)
-#'     ))
 #' @importFrom Seurat VariableFeatures
 #' @importFrom partykit ctree_control ctree
 fit_ctree <- function(object,
@@ -408,6 +397,7 @@ fit_ctree <- function(object,
 #' @importFrom ggplot2 geom_point ggplot aes_string
 #' @importFrom partykit varimp
 #' @importFrom cowplot plot_grid
+#' @importFrom grDevices colorRampPalette
 plot_gates <- function(object, tree, terminal_node) {
 
   plot_gate_subset <- function(data_subset,
@@ -478,6 +468,23 @@ plot_gates <- function(object, tree, terminal_node) {
     next_cutoff_var = c(last_var_names[-1], last_var_names[length(last_var_names) - 1]),
     SIMPLIFY = FALSE
   )
+
+  unique_idents <- unique(as.character(whole_data$ident))
+  colourCount <- length(unique_idents)
+
+  # This creates a function that will generate a character vector of colours
+  # given a number of colour to generate
+  getPalette <- colorRampPalette(RColorBrewer::brewer.pal(8, "Set2"))
+
+  Palette <- getPalette(colourCount)
+
+  # This generates a named vector with values equal to the colours and names corresponding
+  # To the identities that will have that colour
+  names(Palette) <- unique_idents
+
+
+  g <- lapply(g, function(g) {
+    g + ggplot2::scale_colour_manual(values = Palette)} )
 
   g <- cowplot::plot_grid(
     plotlist = g,

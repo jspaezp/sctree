@@ -1,0 +1,12 @@
+
+## Finding antibodies for the experiment
+
+Since we acknowledge most experimental workflows need antibodies. We have 
+implemented several functions to look for antibodies in vendor websites, as well
+as some helper functions to find the other posible aliases a gene might have.
+
+Here is a simple example for a gene widely know to have an antibody available
+
+```{r}
+head(query_biocompare_antibodies("CD11b"))
+```

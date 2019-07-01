@@ -15,5 +15,4 @@ plot_flowstyle(small_5050_mix, names(partykit::varimp(tree_fit)))
 ```{r fig.height=3, fig.width=8}
 plot_gates(small_5050_mix, tree_fit, "6")
 plot_gates(small_5050_mix, tree_fit, "4")
-
 ```

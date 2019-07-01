@@ -22,10 +22,8 @@ A Helper function that interfaces with Seurat::FindMarkers
 }
 \examples{
 library(Seurat)
-library(sctree)
-}
-\examples{
-head(FindMarkers(object = Seurat::pbmc_small,
+    library(sctree)
+    head(FindMarkers(object = Seurat::pbmc_small,
     ident.1 = 0, test.use = 'RangerDE', warn.imp.method = FALSE))
 #        importance p_val   gene avg_logFC pct.1 pct.2 p_val_adj
 # GNLY   0.42979254     0   GNLY  4.784185 0.444 0.068         0

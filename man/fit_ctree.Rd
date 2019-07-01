@@ -26,41 +26,27 @@ a ctree fit
 Fits a classification tree on a Seurat object
 }
 \examples{
-fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "ALL")
-fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0")
-fit_ctree(small_9901_mix, c("CCNB1", "PLK1", "AURKA"), cluster = "0", maxdepth = 2)
+
+   fit_ctree(small_9901_mix, c('CCNB1', 'PLK1', 'AURKA'), cluster = 'ALL')
+   fit_ctree(small_9901_mix, c('CCNB1', 'PLK1', 'AURKA'), cluster = '0')
+   
+# 
+# Model formula:
+# ident ~ CCNB1 + PLK1 + AURKA
+# 
+# Fitted party:
+# [1] root
+# |   [2] PLK1 <= 2.31327
+# |   |   [3] CCNB1 <= 3.01197
+# |   |   |   [4] PLK1 <= 1.75363: clus 0 (n = 202, err = 4.0%)
+# |   |   |   [5] PLK1 > 1.75363: clus 0 (n = 45, err = 20.0%)
+# |   |   [6] CCNB1 > 3.01197
+# |   |   |   [7] PLK1 <= 1.67634: clus 0 (n = 26, err = 38.5%)
+# |   |   |   [8] PLK1 > 1.67634: not clus 0 (n = 23, err = 17.4%)
+# |   [9] PLK1 > 2.31327
+# |   |   [10] AURKA <= 2.02766: not clus 0 (n = 21, err = 47.6%)
+# |   |   [11] AURKA > 2.02766: not clus 0 (n = 67, err = 4.5%)
+# 
+# Number of inner nodes:    5
+# Number of terminal nodes: 6
 }
-#  
-#  Model formula:
-#  ident ~ CCNB1 + PLK1 + AURKA
-#  
-#  Fitted party:
-#  [1] root
-#  |   [2] PLK1 <= 2.31327
-#  |   |   [3] CCNB1 <= 3.01197
-#  |   |   |   [4] PLK1 <= 1.75363: clus 0 (n = 202, err = 4.0%)
-#  |   |   |   [5] PLK1 > 1.75363: clus 0 (n = 45, err = 20.0%)
-#  |   |   [6] CCNB1 > 3.01197
-#  |   |   |   [7] PLK1 <= 1.67634: clus 0 (n = 26, err = 38.5%)
-#  |   |   |   [8] PLK1 > 1.67634: not clus 0 (n = 23, err = 17.4%)
-#  |   [9] PLK1 > 2.31327
-#  |   |   [10] AURKA <= 2.02766: not clus 0 (n = 21, err = 47.6%)
-#  |   |   [11] AURKA > 2.02766: not clus 0 (n = 67, err = 4.5%)
-#  
-#  Number of inner nodes:    5
-#  Number of terminal nodes: 6
-#  
-#  Model formula:
-#  ident ~ CCNB1 + PLK1 + AURKA
-#  
-#  Fitted party:
-#  [1] root
-#  |   [2] PLK1 <= 2.31327
-#  |   |   [3] CCNB1 <= 3.01197: clus 0 (n = 247, err = 6.9%)
-#  |   |   [4] CCNB1 > 3.01197: not clus 0 (n = 49, err = 40.8%)
-#  |   [5] PLK1 > 2.31327
-#  |   |   [6] AURKA <= 2.02766: not clus 0 (n = 21, err = 47.6%)
-#  |   |   [7] AURKA > 2.02766: not clus 0 (n = 67, err = 4.5%)
-#  
-#  Number of inner nodes:    3
-#  Number of terminal nodes: 4

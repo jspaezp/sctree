@@ -1,0 +1,103 @@
+
+
+```{r include=FALSE}
+library(Seurat)
+library(sctree)
+
+markers <- sctree::FindAllMarkers(
+        small_5050_mix,
+        features = rownames(small_5050_mix@assays$RNA@data),
+        test.use = "RangerDE")
+
+# Here we just extract the top 3 markers for each cluster
+top_markers <- do.call(rbind, lapply(split(markers, markers$cluster), head, 3))
+top_markers <- top_markers$gene
+```
+
+
+## Suggesting a gating strategy for the markers
+
+A general strategy to get separate all clusters
+
+```{r}
+top_markers
+```
+
+
+```{r}
+tree_fit <- fit_ctree(small_5050_mix,
+                      genes_use = top_markers,
+                      cluster = "ALL")
+```
+
+Visualizing the tree as ... a tree ... we can see how our model is a simple
+series of yes/no questions.
+
+If we wanted to classifiy a random cell: in the first `node`, we check if the
+expression of that gene is higher or lower than a given value, if it is lower,
+we proceed to the left, if not we go right. We keep doing that until we have no
+more `branches`. This final node will have a predicted cluster, in this plot we
+can also see how pure can we expect this group to be and how many of the cells
+in our training set clasify as part of it.
+
+```{r fig.height=5, fig.width=12}
+plot(tree_fit)
+```
+
+When inspecting the tree_fit, we can see a more detailed text representation
+of this tree.
+
+```{r}
+print(tree_fit)
+```
+
+Sometimes one might think that the proposed strategy is too complicated or not
+implementable in the experimental settings, in order to add constrians to the fit
+one can give additional arguments that will be passed to
+`partykit::ctree_control`, such as `maxdepth = 2` (maximum 2 questions per cell)
+
+```{r fig.height=5, fig.width=12}
+tree_fit <- fit_ctree(
+    small_5050_mix, genes_use = top_markers,
+    cluster = "ALL", maxdepth = 2)
+print(tree_fit)
+plot(tree_fit)
+```
+
+Since not all variables are ultimately used in our classifier, one can acces the
+ones that were by using `varimp(tree_fit)`
+
+```{r}
+partykit::varimp(tree_fit)
+plot_flowstyle(small_5050_mix, names(partykit::varimp(tree_fit)))
+```
+
+
+One can also request the package to suggest a specific strategy only for a given
+cluster. This function is not expected to give drastically different results in
+datasets with few clusters, but it can definitely come usefull when many clusters
+are present and one is interested in a specific one.
+
+```{r}
+tree_fit <- fit_ctree(small_5050_mix, genes_use = top_markers, cluster = "0")
+print(tree_fit)
+```
+
+Sometimes it is useful to visualize directly the subset of cells that will be 
+"gated" out in each rule, this can be easily achieved by using our implementation
+of `plot_gates`
+
+
+```{r}
+plot_gates(small_5050_mix, tree_fit, "6")
+```
+
+
+We have also implemented a way to export these rules as a `garnett` classifier.
+for more detail on how the calssifier is implemented please refer to [the garnett
+documentation](https://cole-trapnell-lab.github.io/garnett/docs/#constructing-a-marker-file)
+
+```{r}
+as.garnett(tree_fit)
+```
+
