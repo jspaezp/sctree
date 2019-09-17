@@ -29,22 +29,22 @@ Features suggesting pseudo-gating strategies to purify found populations via
 flow-cytometry, antibody querying and cross validations between datasets.
 
 
-```{r child="rmdchunks/installation.Rmd"}
+```{r child="rmdchunks/_installation.Rmd"}
 ```
 
-```{r child="rmdchunks/usage_intro.Rmd"}
+```{r child="rmdchunks/_usage_intro.Rmd"}
 ```
 
-```{r child="rmdchunks/finding_markers.Rmd"}
+```{r child="rmdchunks/_finding_markers.Rmd"}
 ```
 
-```{r child="rmdchunks/visualizing_markers.Rmd"}
+```{r child="rmdchunks/_visualizing_markers.Rmd"}
 ```
 
-```{r child="rmdchunks/suggesting_strategies.Rmd"}
+```{r child="rmdchunks/_suggesting_strategies.Rmd"}
 ```
 
-```{r child="rmdchunks/antibodies.Rmd"}
+```{r child="rmdchunks/_antibodies.Rmd"}
 ```
 
 ```{r}

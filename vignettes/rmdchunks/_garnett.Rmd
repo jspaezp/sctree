@@ -7,6 +7,7 @@ https://cole-trapnell-lab.github.io/garnett/docs/#submitting-a-classifier
 
 
 ```{r}
+library(sctree)
 data("small_5050_mix")
 DimPlot(small_5050_mix)
 ```

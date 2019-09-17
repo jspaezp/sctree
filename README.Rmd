@@ -33,22 +33,22 @@ Number of lines in R code:
 `r system2("bash", "-c \"grep -RP '^[^#]' ./R | grep -vP '^$' | wc -l \"", stdout = TRUE)`
 
 
-```{r child="vignettes/rmdchunks/installation.Rmd"}
+```{r child="vignettes/rmdchunks/_installation.Rmd"}
 ```
 
-```{r child="vignettes/rmdchunks/usage_intro.Rmd"}
+```{r child="vignettes/rmdchunks/_usage_intro.Rmd"}
 ```
 
-```{r child="vignettes/rmdchunks/finding_markers.Rmd"}
+```{r child="vignettes/rmdchunks/_finding_markers.Rmd"}
 ```
 
-```{r child="vignettes/rmdchunks/visualizing_markers.Rmd"}
+```{r child="vignettes/rmdchunks/_visualizing_markers.Rmd"}
 ```
 
-```{r child="vignettes/rmdchunks/suggesting_strategies.Rmd"}
+```{r child="vignettes/rmdchunks/_suggesting_strategies.Rmd"}
 ```
 
-```{r child="vignettes/rmdchunks/antibodies.Rmd"}
+```{r child="vignettes/rmdchunks/_antibodies.Rmd"}
 ```
 
 ```{r}

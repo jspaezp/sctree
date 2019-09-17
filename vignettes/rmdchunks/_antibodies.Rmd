@@ -8,5 +8,6 @@ as some helper functions to find the other posible aliases a gene might have.
 Here is a simple example for a gene widely know to have an antibody available
 
 ```{r}
+require(sctree)
 head(query_biocompare_antibodies("CD11b"))
 ```

@@ -1,0 +1,10 @@
+
+# News
+
+- Aug/18/2019
+
+    - Made public and added Travis
+
+- Sept/17/2019
+
+    - Added pkgdown documentation
