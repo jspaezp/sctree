@@ -78,7 +78,7 @@ small_5050_mix
 DimPlot(small_5050_mix, reduction = "tsne")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/unnamed-chunk-8-1.png)<!-- -->
 
 ## Finding important variables to classify clusters
 
@@ -143,7 +143,7 @@ plot.markers <- do.call(rbind, lapply(split(markers, markers$cluster), head, 3))
 FeaturePlot(small_5050_mix, unique(plot.markers$gene))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](man/figures/unnamed-chunk-11-1.png)<!-- -->
 
 Note how variable importances can be high if a marker is either
 preferentially present of preferentially absent. Therefore as a
@@ -210,7 +210,7 @@ g <- plot_flowstyle(small_5050_mix, markernames = top_markers)
 g
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](man/figures/unnamed-chunk-16-1.png)<!-- -->
 
 We can also focus in one of the pannels (and check the color
 conventions)
@@ -219,7 +219,7 @@ conventions)
 g[1,2]
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](man/figures/unnamed-chunk-17-1.png)<!-- -->
 
 ## Suggesting a gating strategy for the markers
 
@@ -253,7 +253,7 @@ as part of it.
 plot(tree_fit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](man/figures/unnamed-chunk-21-1.png)<!-- -->
 
 When inspecting the tree\_fit, we can see a more detailed text
 representation of this tree.
@@ -308,7 +308,7 @@ print(tree_fit)
 plot(tree_fit)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](man/figures/unnamed-chunk-23-1.png)<!-- -->
 
 Since not all variables are ultimately used in our classifier, one can
 acces the ones that were by using `varimp(tree_fit)`
@@ -322,7 +322,7 @@ plot_flowstyle(small_5050_mix, names(partykit::varimp(tree_fit)))
 #> Suggested parameter: cells instead of cells.use
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+![](man/figures/unnamed-chunk-24-1.png)<!-- -->
 
 One can also request the package to suggest a specific strategy only for
 a given cluster. This function is not expected to give drastically
@@ -363,7 +363,7 @@ plot_gates(small_5050_mix, tree_fit, "6")
 #> Suggested parameter: cells instead of cells.use
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-26-1.png)<!-- -->
+![](man/figures/unnamed-chunk-26-1.png)<!-- -->
 
 We have also implemented a way to export these rules as a `garnett`
 classifier. for more detail on how the calssifier is implemented please
