@@ -52,7 +52,7 @@ print(tree_fit)
 ```
 
 Sometimes one might think that the proposed strategy is too complicated or not
-implementable in the experimental settings, in order to add constrians to the fit
+implementable in the experimental settings, in order to add constraints to the fit
 one can give additional arguments that will be passed to
 `partykit::ctree_control`, such as `maxdepth = 2` (maximum 2 questions per cell)
 
@@ -94,7 +94,7 @@ plot_gates(small_5050_mix, tree_fit, "6")
 
 
 We have also implemented a way to export these rules as a `garnett` classifier.
-for more detail on how the calssifier is implemented please refer to [the garnett
+for more detail on how the classifier is implemented please refer to [the garnett
 documentation](https://cole-trapnell-lab.github.io/garnett/docs/#constructing-a-marker-file)
 
 ```{r}
