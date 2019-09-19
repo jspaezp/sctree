@@ -54,7 +54,7 @@ as.data.frame.Seurat <- function(x, genes, fix_names = FALSE, ...) {
     tmp <- Seurat::FetchData(x, vars = genes, ...)
     tmp <-  as.data.frame(tmp, stringsAsFactors = FALSE)
 
-    tmp$ident <- Seurat::Idents(x, uniq = FALSE, cells.use = rownames(tmp))
+    tmp$ident <- Seurat::Idents(x)[rownames(tmp)]
 
     if (fix_names) {
         colnames(tmp) <- make.names(colnames(tmp))

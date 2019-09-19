@@ -14,6 +14,7 @@ Please reffer to the  of the `importance_pvalues` section in the
 when addressing this issue and for more details.
 
 ```{r}
+library(sctree)
 rang_importances <- ranger_importances.Seurat(
     small_5050_mix,
     cluster = "ALL",

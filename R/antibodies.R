@@ -119,7 +119,7 @@ query_sc_antibodies <- function(search_term) {
 
     antibody_df <- rvest::html_nodes(
         xml2::read_html(url),
-        xpath='/html/body/div[1]/div/div/div/div[6]/table')
+        xpath="/html/body/div[1]/div/div/div/div[4]/table")
 
     antibody_df <- rvest::html_table(antibody_df, fill = TRUE)
     # The former will be a list of length 0 if no results are found
