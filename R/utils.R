@@ -159,7 +159,7 @@ get_aliases <- function(gene_symbols,
             columns = c("ALIAS", "SYMBOL"),
             keytype = "SYMBOL")
 
-        alias_df <- tidyr::nest(alias_df, "ALIAS")
+        alias_df <- tidyr::nest(alias_df, data = "ALIAS")
         alias_vector <- wrapr::named_map_builder(
             names = alias_df[["SYMBOL"]],
             values = lapply(alias_df[["data"]], function(x) x[["ALIAS"]]))
