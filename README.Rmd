@@ -65,7 +65,6 @@ sessionInfo()
 3. Address some of the TODO's in this repository
 4. Reduce dependecies by replacing functions to base equivalents.
 5. Add links to the documentation to make nicer to explore the package from inside R
-6. Implement plot that actually illustrates the progressive gating in the decision tree
 8. Implement a way to find markers for clusters exclusively upregulated
 9. Refctor the code to make the coding nomenclature same as seurat
 
