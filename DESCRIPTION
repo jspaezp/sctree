@@ -1,6 +1,6 @@
 Package: sctree
 Title: Tree based analysis of single rna-seq clusters
-Version: 0.0.4.0003
+Version: 0.0.5.0001
 Authors@R: 
     person(given = "J. Sebastian",
            family = "Paez",
