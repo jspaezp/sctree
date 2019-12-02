@@ -103,13 +103,13 @@ were able to shown in **Figures 1 and 2** that regardless of the final classific
 model, the features selected by using scTree provide a comparable accuracy, precision
 and recall to the ones acquired with differential expression methods.
 
-![alt text](./Final_Figures/accuracy_5050_boxplot.png "Figure 1")
-![alt text](./Final_Figures/precision_5050_boxplot.png "Figure 1")
-![alt text](./Final_Figures/recall_5050_boxplot.png "Figure 1")
+![alt text](./paper_figures/accuracy_5050_boxplot.png "Figure 1")
+![alt text](./paper_figures/precision_5050_boxplot.png "Figure 1")
+![alt text](./paper_figures/recall_5050_boxplot.png "Figure 1")
 
 Figure 1. Depiction of the quality metrics for the Jurkat:293 mixture dataset.
 
-![alt text](./Final_Figures/pbmc_3k_prediction_UMAP.png "Figure 2")
+![alt text](./paper_figures/pbmc_3k_prediction_UMAP.png "Figure 2")
 
 Figure 2. Depiction of the predicted identities in the PBMC 3k dataset dataset.
 
@@ -139,7 +139,7 @@ Figure 4. Suggested classification scheme for cluster 6 in the PBMC dataset.
 Depicting how it can be identified predominantly as GNLY high and GZMB High,
 nonetheless a minority can also be classified as GZMB low FGFBP2 High.
 
-![alt text](./Final_Figures/gating_clus_6.png "Figure 5")
+![alt text](./paper_figures/gating_clus_6.png "Figure 5")
 
 Figure 5
 
