@@ -8,13 +8,13 @@ tags:
 authors:
   - name: J. Sebastian Paez
     orcid: 0000-0002-0065-1474
-    affiliation: [1, 2]
+    affiliation: "1, 2"
   - name: Michael K. Wendt
     orcid: 0000-0002-3665-7413
-    affiliation: [1, 2]
+    affiliation: "1, 2"
   - name: Nadia Atallah Lanman
     orcid: 0000-0002-1819-7070
-    affiliation: [1, 3]
+    affiliation: "1, 3"
 affiliations:
   - name: Purdue University, Center for Cancer Research
     index: 1
@@ -22,8 +22,8 @@ affiliations:
     index: 2
   - name: Purdue University, Department of Comparative Pathobiology
     index: 3
-bibliography: bibliography.bib
 date: 14 January 2020 
+bibliography: bibliography.bib
 ---
 
 # Summary
