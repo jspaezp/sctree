@@ -1,5 +1,5 @@
 ---
-title: "scTree: An R package to generate antibody-compatible classifiers from single-cell-sequencing data"
+title: "scTree: An R package to generate antibody-compatible classifiers from single-cell sequencing data"
 authors:
   - name: J. Sebastian Paez
     orcid: 0000-0002-0065-1474
