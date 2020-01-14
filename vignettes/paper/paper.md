@@ -5,11 +5,11 @@ authors:
     orcid: 0000-0002-0065-1474
     affiliation: [1, 2]
   - name: Michael K. Wendt
-    orcid: 0000-0002-1819-7070
-    affiliation: [1, 3]
+    orcid: 0000-0002-3665-7413
+    affiliation: [1, 2]
   - name: Nadia Atallah Lanman
     orcid: 0000-0002-1819-7070
-    affiliation: [2, 3]
+    affiliation: [1, 3]
 affiliations:
   - name: Purdue University, Center for Cancer Research
     index: 1
@@ -57,7 +57,8 @@ usually rely on high dimensional methods that despite showing high classificatio
 accuracy, make it difficult to extract from the model any information which could be used
 to separate cells and test subpopulations in an experimental setting.
 
-We present scTree, a tool in which addresses the unfulfilled need for [TODO], where the
+We present scTree, a tool in which addresses the unfulfilled need for identifying markers
+that would exrapolate to methodologies applicable in a wet-lab setting, where the
 identification of markers is considered as a classification problem modeled with
 shallow decision trees. This former approach produces classification models for cell
 clusters that are immediately applicable to experimental settings, without
@@ -80,7 +81,7 @@ use only relative levels of marker expression, using terms such as "High" and "L
 In a similar manner, scTree produces accurate, biologically relevant, and easily
 interpretable results, which can be used for subsequent subpopulation sorting and
 biological validation by fitting shallow decision trees analogous to FACS sorting
-strategies and is able to output this calssifiers in a format easily interpretable
+strategies and is able to output this classifiers in a format easily interpretable
 in a wet-lab setting.
 
 The method to calculate variable importances based on random forests
@@ -98,12 +99,11 @@ cluster by either scTree (Altman method), t-tests or wilcoxon-tests
 
 These classifiers were then used to predict the identity of the testing
 set and the quality was assesed by comparing the recall, accuracy and precision
-of the prediction. We were concerned that the forest-based markers
-would artifially favor scTree, We utilized several classifiers for the markers derived
-from either scTree, t-tests or wilcoxon-tests. As shown in **Figures 1 and 2**,
-bias was not observed, and regardless of the final classification model, the features
-selected by using scTree provide a comparable accuracy, precision and recall to those
-acquired using traditional differential expression methods.
+of the prediction. We were concerned that the forest-based markers would artificially
+favor scTree, therefore we utilized several classifiers for the markers derived from
+either scTree, t-tests or wilcoxon-tests.
+As shown in **Figures 1 and 2**, bias was not observed, and regardless of the final
+classification model, the features selected by using scTree provide a comparable accuracy, precision and recall to those acquired using traditional differential expression methods.
 
 ![Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset](./paper_figures/benchmarks_5050_boxplot.png "Figure 1")
 
@@ -210,5 +210,11 @@ $$
 accuracy = \frac{True\ Positives +  True\ Negatives}{Total}
 $$
 
+
+# Acknowledgments
+
+This study was supported by the Computational Genomics Shared Resource at the Purdue
+University Center for Cancer Research (NIH grant P30 433 CA023168), IU Simon Cancer
+Center (NIH grant P30 CA082709), and the Walther Cancer Foundation.
 
 # References
