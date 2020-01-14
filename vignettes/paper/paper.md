@@ -63,7 +63,7 @@ accuracy, make it difficult to extract from the model any information which coul
 to separate cells and test subpopulations in an experimental setting.
 
 We present scTree, a tool in which addresses the unfulfilled need for identifying markers
-that would exrapolate to methodologies applicable in a wet-lab setting, where the
+that would extrapolate to methodologies applicable in a wet-lab setting, where the
 identification of markers is considered as a classification problem modeled with
 shallow decision trees. This former approach produces classification models for cell
 clusters that are immediately applicable to experimental settings, without
