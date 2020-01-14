@@ -3,7 +3,7 @@ title: "scTree: An R package to generate antibody-compatible classifiers from si
 tags:
   - R
   - Bioinformatics
-  - Single-cell
+  - Single cell
   - Flow Cytometry
 authors:
   - name: J. Sebastian Paez
@@ -23,7 +23,7 @@ affiliations:
   - name: Purdue University, Department of Comparative Pathobiology
     index: 3
 bibliography: bibliography.bib
-date: January 14, 2020 
+date: 14 January 2020 
 ---
 
 # Summary
