@@ -125,7 +125,7 @@ Finds markers (differentially expressed genes) for each of the identity classes 
 }
 \examples{
 # Find markers for all clusters
-all.markers <- FindAllMarkers(object = pbmc_small)
+suppressWarnings(all.markers <- FindAllMarkers(object = pbmc_small))
 head(x = all.markers)
 \dontrun{
 # Pass a value to node as a replacement for FindAllMarkersNode

@@ -4,10 +4,7 @@
 \alias{ranger_importances.df}
 \alias{ranger_importances.Seurat}
 \alias{FindAllMarkers_ranger.Seurat}
-\title{ranger_importances
-
-Calculates ranger-based variable importances for data frames and
-Seurat objects}
+\title{ranger_importances}
 \usage{
 ranger_importances.df(
   object,
@@ -70,14 +67,14 @@ by default returns a data frame with the importances and p values
     but this behavior can be modified by the
 }
 \description{
-ranger_importances
+Calculates ranger-based variable importances for data frames and
+Seurat objects
 }
 \section{Functions}{
 \itemize{
 \item \code{ranger_importances.Seurat}: Calculate variable importances to calssify a Seurat object
 
-\item \code{FindAllMarkers_ranger.Seurat}: Calculate variable importances
-to each cluster in a Seurat object
+\item \code{FindAllMarkers_ranger.Seurat}: Calculate variable importances to each cluster in a Seurat object
 }}
 
 \examples{
@@ -85,10 +82,10 @@ to each cluster in a Seurat object
     head(ranger_importances.Seurat(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
     
 #          importance pvalue     gene
-# HLA-DPB1  8.2475481      0 HLA-DPB1
-# S100A9    6.4892269      0   S100A9
-# S100A8    6.2531492      0   S100A8
-# HLA-DQA1  3.4253326      0 HLA-DQA1
-# GNLY      1.7618549      0     GNLY
-# AKR1C3    0.4241908      0   AKR1C3
+# HLA-DPB1  7.7450251      0 HLA-DPB1
+# S100A8    6.8548703      0   S100A8
+# S100A9    6.3483212      0   S100A9
+# HLA-DQA1  2.9561073      0 HLA-DQA1
+# GNLY      2.0354203      0     GNLY
+# VDAC3     0.6537556      0    VDAC3
 }

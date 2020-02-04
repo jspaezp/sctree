@@ -191,7 +191,7 @@ head(x = markers)
 
 # Take all cells in cluster 2, and find markers that separate cells in the 'g1' group (metadata
 # variable 'group')
-markers <- FindMarkers(pbmc_small, ident.1 = "g1", group.by = 'groups', subset.ident = "2")
+suppressWarnings(markers <- FindMarkers(pbmc_small, ident.1 = "g1", group.by = 'groups', subset.ident = "2"))
 head(x = markers)
 
 # Pass 'clustertree' or an object of class phylo to ident.1 and

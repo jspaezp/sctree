@@ -3,9 +3,9 @@
 # TODO: add argument to whitelist, blacklist or filter the genes to use
 # TODO: restructure the function to get method dispatchment (optional)
 
-#' ranger_importances
 #' @title ranger_importances
 #'
+#' @description
 #' Calculates ranger-based variable importances for data frames and
 #' Seurat objects
 #'
@@ -189,8 +189,7 @@ ranger_importances.Seurat <- function(object, cluster = NULL,
 
 
 # TODO, make functions have the same interface as Seurat ...
-#' @describeIn ranger_importances.df Calculate variable importances
-#'     to each cluster in a Seurat object
+#' @describeIn ranger_importances.df Calculate variable importances to each cluster in a Seurat object
 #' @export
 FindAllMarkers_ranger.Seurat <- function(object,
                                          genes_use = Seurat::VariableFeatures(object),
