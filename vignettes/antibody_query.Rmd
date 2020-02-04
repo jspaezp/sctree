@@ -26,9 +26,6 @@ require(sctree)
 query_cc_antibodies("CD11c")
 query_cc_antibodies("CD3")
 
-query_sc_antibodies("CD11C")
-query_sc_antibodies("CD3")
-
 query_biolegend_antibodies("CD11C")
 query_biolegend_antibodies("CD3")
 
@@ -40,7 +37,6 @@ query_biocompare_antibodies("CD3")
 
 ```{r}
 query_cc_antibodies("SUPERFAKEMARKER")
-query_sc_antibodies("SUPERFAKEMARKER")
 query_biolegend_antibodies("SUPERFAKEMARKER")
 query_biocompare_antibodies("SUPERFAKEMARKER")
 ```
