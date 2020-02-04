@@ -64,20 +64,20 @@ query_cc_antibodies("CD11c")
 query_sc_antibodies("CD11bfakename")
 NULL
 head(query_sc_antibodies("CD11C"))
-Product_Name  Cat_num Citations Rating     Epitope
-1   Integrin alpha X Antibody (B-6) sc-46676         3    (8) Integrin αX
-2   Integrin alpha X Antibody (3.9)  sc-1185         2    (2) Integrin αX
-3 Integrin alpha X Antibody (B-Iy6) sc-19989         1    (1) Integrin αX
-4  Integrin alpha X Antibody (N418) sc-23951         3    (2) Integrin αX
-6 Integrin alpha X Antibody (2Q865) sc-71455       NEW    (1) Integrin αX
-7 Integrin alpha X Antibody (3H986) sc-71456       NEW    (1) Integrin αX
-Species                       Method
-1   human WB, IP, IF, IHC(P) and ELISA
-2   human               IP, IF and FCM
-3   human                   IF and FCM
-4   mouse                   IF and FCM
-6   human                   IP and FCM
-7   mouse                   IF and FCM
+# Product_Name  Cat_num Citations Rating     Epitope
+# 1   Integrin alpha X Antibody (B-6) sc-46676         3    (8) Integrin αX
+# 2   Integrin alpha X Antibody (3.9)  sc-1185         2    (2) Integrin αX
+# 3 Integrin alpha X Antibody (B-Iy6) sc-19989         1    (1) Integrin αX
+# 4  Integrin alpha X Antibody (N418) sc-23951         3    (2) Integrin αX
+# 6 Integrin alpha X Antibody (2Q865) sc-71455       NEW    (1) Integrin αX
+# 7 Integrin alpha X Antibody (3H986) sc-71456       NEW    (1) Integrin αX
+# Species                       Method
+# 1   human WB, IP, IF, IHC(P) and ELISA
+# 2   human               IP, IF and FCM
+# 3   human                   IF and FCM
+# 4   mouse                   IF and FCM
+# 6   human                   IP and FCM
+# 7   mouse                   IF and FCM
 
 #' query_biocompare_antibodies("CD11bfakename")
 # NULL

@@ -53,22 +53,22 @@
 #' # 8 Antibody Conjugates
 #'
 #' query_sc_antibodies("CD11bfakename")
-#' NULL
+#' # NULL
 #' head(query_sc_antibodies("CD11C"))
-#' Product_Name  Cat_num Citations Rating     Epitope
-#' 1   Integrin alpha X Antibody (B-6) sc-46676         3    (8) Integrin αX
-#' 2   Integrin alpha X Antibody (3.9)  sc-1185         2    (2) Integrin αX
-#' 3 Integrin alpha X Antibody (B-Iy6) sc-19989         1    (1) Integrin αX
-#' 4  Integrin alpha X Antibody (N418) sc-23951         3    (2) Integrin αX
-#' 6 Integrin alpha X Antibody (2Q865) sc-71455       NEW    (1) Integrin αX
-#' 7 Integrin alpha X Antibody (3H986) sc-71456       NEW    (1) Integrin αX
-#' Species                       Method
-#' 1   human WB, IP, IF, IHC(P) and ELISA
-#' 2   human               IP, IF and FCM
-#' 3   human                   IF and FCM
-#' 4   mouse                   IF and FCM
-#' 6   human                   IP and FCM
-#' 7   mouse                   IF and FCM
+#' # Product_Name  Cat_num Citations Rating     Epitope
+#' # 1   Integrin alpha X Antibody (B-6) sc-46676         3    (8) Integrin αX
+#' # 2   Integrin alpha X Antibody (3.9)  sc-1185         2    (2) Integrin αX
+#' # 3 Integrin alpha X Antibody (B-Iy6) sc-19989         1    (1) Integrin αX
+#' # 4  Integrin alpha X Antibody (N418) sc-23951         3    (2) Integrin αX
+#' # 6 Integrin alpha X Antibody (2Q865) sc-71455       NEW    (1) Integrin αX
+#' # 7 Integrin alpha X Antibody (3H986) sc-71456       NEW    (1) Integrin αX
+#' # Species                       Method
+#' # 1   human WB, IP, IF, IHC(P) and ELISA
+#' # 2   human               IP, IF and FCM
+#' # 3   human                   IF and FCM
+#' # 4   mouse                   IF and FCM
+#' # 6   human                   IP and FCM
+#' # 7   mouse                   IF and FCM
 #'
 #' #' query_biocompare_antibodies("CD11bfakename")
 #' # NULL
@@ -103,9 +103,11 @@ query_cc_antibodies <- function(search_term, sleep = 1) {
                    # ^^^ This filters for antibodies for IFC, IHC, and FLOW
                    "&No={offset}&Nrpp=1000") # and this one forces to show the top 1000
 
+    url <- url(url, "rb")
     antibody_df <- rvest::html_nodes(
         xml2::read_html(url),
         xpath='//*[@id="product-list"]')
+    close(url)
 
     antibody_df <- rvest::html_table(antibody_df, fill = TRUE)
     # The former will be a list of length 0 if no results are found
@@ -133,13 +135,15 @@ query_cc_antibodies <- function(search_term, sleep = 1) {
 #' @export
 query_sc_antibodies <- function(search_term, sleep = 1) {
     Sys.sleep(sleep)
-    url <- paste0("https://www.scbt.com/search?Ntt=",
-                  search_term,
-                  "&N=1354381666&Nrpp=50")
+    url <- paste0(
+        "https://www.scbt.com/search?",
+        "No=0&Nrpp=30&Ntt=", search_term)
 
+    url <- url(url, "rb")
     antibody_df <- rvest::html_nodes(
         xml2::read_html(url),
         xpath="/html/body/div[1]/div/div/div/div[4]/table")
+    close(url)
 
     antibody_df <- rvest::html_table(antibody_df, fill = TRUE)
     # The former will be a list of length 0 if no results are found
@@ -230,9 +234,11 @@ query_biocompare_antibodies <- function(search_term, sleep = 1) {
     url <- paste0("https://www.biocompare.com/Search-Antibodies/?search=",
                   search_term, "&said=0&vcmpv=true")
 
+    url <- url(url, "rb")
     product_nodes <- rvest::html_nodes(
         xml2::read_html(url),
         "[class=product]")
+    close(url)
 
     if (length(product_nodes) == 0) {return(NULL)}
 
@@ -283,9 +289,11 @@ query_biolegend_antibodies <- function(search_term, sleep = 1) {
     url <- paste0("https://www.biolegend.com/en-us/search-results?Applications=FC&Keywords=",
                   search_term)
 
+    url <- url(url, "rb")
     antibody_list <- rvest::html_nodes(
         xml2::read_html(url),
         xpath='/html/body/div[1]/section/div/div/div/div/section/div/article/div[3]/ul[2]/li[*]/ul/li/h2/a')
+    close(url)
 
     antibody_list <- rvest::html_text(antibody_list, trim = TRUE)
     # The former will be a list of length 0 if no results are found
