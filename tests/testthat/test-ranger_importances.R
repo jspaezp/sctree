@@ -120,15 +120,15 @@ test_that("FindAllMarkers_ranger from Seurat objects work", {
 })
 
 
-test_that("FindMarkers interface with work", {
+test_that("FindMarkers interface with RangerDE works", {
     expect_warning({
-        Seurat::FindMarkers(
+        sctree::FindMarkers(
             object = Seurat::pbmc_small, ident.1 = 0, ident.2 = 1,
             test.use = "RangerDE", verbose = FALSE)
     })
 
     expect_s3_class(
-        Seurat::FindMarkers(
+        sctree::FindMarkers(
             object = Seurat::pbmc_small, ident.1 = 0, ident.2 = 1,
             test.use = "RangerDE", verbose = FALSE,
             imp_method = "altmann",
