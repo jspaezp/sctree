@@ -32,6 +32,5 @@ Heatmap with ggplot from table objects
 }}
 
 \examples{
-require(ggplot2)
 autoplot(table(1:10, 1:10), show_number = TRUE)
 }

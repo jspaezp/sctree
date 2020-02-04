@@ -64,8 +64,8 @@ print(tree_fit)
 plot(tree_fit)
 ```
 
-Since not all variables are ultimately used in our classifier, one can acces the
-ones that were by using `varimp(tree_fit)`
+Since not all variables are ultimately used in our classifier, one can access
+the ones that were by using `varimp(tree_fit)`
 
 ```{r}
 partykit::varimp(tree_fit)
