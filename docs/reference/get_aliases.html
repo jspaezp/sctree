@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
       </span>
     </div>
 
@@ -127,7 +127,7 @@
     <p>gets the aliases for a series of gene names</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_aliases</span>(<span class='no'>gene_symbols</span>, <span class='kw'>db</span> <span class='kw'>=</span> <span class='kw pkg'>org.Hs.eg.db</span><span class='kw ns'>::</span><span class='no'>org.Hs.eg.db</span>)</pre>
+    <pre class="usage"><span class='fu'>get_aliases</span>(<span class='no'>gene_symbols</span>, <span class='kw'>db</span> <span class='kw'>=</span> <span class='kw pkg'>org.Hs.eg.db</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/org.Hs.eg.db/man/org.Hs.egBASE.html'>org.Hs.eg.db</a></span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,7 +149,14 @@ defaults to org.Hs.eg.db</p></td>
     the character vectors with the aliases</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>get_aliases</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MAPK1"</span>, <span class='st'>"CD4"</span>))</div><div class='output co'>#&gt; <span class='error'>Error in loadNamespace(name): there is no package called ‘org.Hs.eg.db’</span></div><div class='input'># $MAPK1
+    <pre class="examples"><div class='input'><span class='fu'>get_aliases</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"MAPK1"</span>, <span class='st'>"CD4"</span>))</div><div class='output co'>#&gt; $MAPK1
+#&gt;  [1] "ERK"      "ERK-2"    "ERK2"     "ERT1"     "MAPK2"    "P42MAPK" 
+#&gt;  [7] "PRKM1"    "PRKM2"    "p38"      "p40"      "p41"      "p41mapk" 
+#&gt; [13] "p42-MAPK" "MAPK1"   
+#&gt; 
+#&gt; $CD4
+#&gt; [1] "CD4mut" "CD4"   
+#&gt; </div><div class='input'># $MAPK1
 # [1] "ERK"      "ERK-2"    "ERK2"     "ERT1"     "MAPK2"    "P42MAPK"
 # [7] "PRKM1"    "PRKM2"    "p38"      "p40"      "p41"      "p41mapk"
 # [13] "p42-MAPK" "MAPK1"

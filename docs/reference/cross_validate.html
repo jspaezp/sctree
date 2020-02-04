@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
       </span>
     </div>
 
@@ -127,9 +127,14 @@
     <p>Fits a decision tree in one data set and tests the performance in another</p>
     </div>
 
-    <pre class="usage"><span class='fu'>cross_validate</span>(<span class='no'>train</span>, <span class='no'>test</span>, <span class='no'>cluster</span>,
+    <pre class="usage"><span class='fu'>cross_validate</span>(
+  <span class='no'>train</span>,
+  <span class='no'>test</span>,
+  <span class='no'>cluster</span>,
   <span class='kw'>genes_use</span> <span class='kw'>=</span> <span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Seurat/man/VariableFeatures.html'>VariableFeatures</a></span>(<span class='no'>train</span>),
-  <span class='kw'>warn.gene.removal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>warn.gene.removal</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,10 +178,10 @@ defults to TRUE</p></td>
     (5) the suggested genes for the gating</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>cross_validate</span>(<span class='no'>small_5050_mix</span>, <span class='no'>small_9901_mix</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='st'>"0"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: uniq, cells.use</span></div><div class='output co'>#&gt; <span class='message'>Suggested parameter: cells instead of cells.use</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Only few negative importance values found, inaccurate p-values. Consider the 'altmann' approach.</span>
+    <pre class="examples"><div class='input'><span class='fu'>cross_validate</span>(<span class='no'>small_5050_mix</span>, <span class='no'>small_9901_mix</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='st'>"0"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Only few negative importance values found, inaccurate p-values. Consider the 'altmann' approach.</span>
 #&gt; <span class='warning'>This can be done by setting the argument 'imp_method' to 'altmann', note that this method is extremely computationally intensive.</span>
 #&gt; <span class='warning'>For more information please refer to ?ranger::ranger</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Some important genes were removed because they are not present in the test dataset. </span>
-#&gt; <span class='warning'>Removed genes: ASNS, CD3D, HEY1, ADA, XIST, CDKN2A, RPL26, TSC22D3, CA2, AIF1, GAL, MDK, MAP1A, PSMB9, TSTD1, FAM127B, ID2, DMKN, PSMB8, KRT18, HOXA9, ZNF503, MAP1B, PYGL, HSPA1B, CSRP2</span></div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: uniq, cells.use</span></div><div class='output co'>#&gt; <span class='message'>Suggested parameter: cells instead of cells.use</span></div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: uniq, cells.use</span></div><div class='output co'>#&gt; <span class='message'>Suggested parameter: cells instead of cells.use</span></div><div class='output co'>#&gt; $party_fit
+#&gt; <span class='warning'>Removed genes: ASNS, CD3D, HEY1, ADA, XIST, CDKN2A, RPL26, TSC22D3, CA2, AIF1, GAL, MDK, MAP1A, PSMB9, TSTD1, FAM127B, ID2, DMKN, PSMB8, KRT18, HOXA9, ZNF503, MAP1B, PYGL, HSPA1B, CSRP2</span></div><div class='output co'>#&gt; $party_fit
 #&gt; 
 #&gt; Model formula:
 #&gt; ident ~ ARHGDIB + TMSB4X + MZB1 + SOX4 + FYB + CD1E + UBE2C + 
@@ -261,10 +266,10 @@ defults to TRUE</p></td>
 #&gt; 
 #&gt; $gating_genes
 #&gt; [1] "ARHGDIB" "SOX4"    "DDIT4"  
-#&gt; </div><div class='input'><span class='fu'>cross_validate</span>(<span class='no'>small_5050_mix</span>, <span class='no'>small_9901_mix</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: uniq, cells.use</span></div><div class='output co'>#&gt; <span class='message'>Suggested parameter: cells instead of cells.use</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Only few negative importance values found, inaccurate p-values. Consider the 'altmann' approach.</span>
+#&gt; </div><div class='input'><span class='fu'>cross_validate</span>(<span class='no'>small_5050_mix</span>, <span class='no'>small_9901_mix</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Only few negative importance values found, inaccurate p-values. Consider the 'altmann' approach.</span>
 #&gt; <span class='warning'>This can be done by setting the argument 'imp_method' to 'altmann', note that this method is extremely computationally intensive.</span>
 #&gt; <span class='warning'>For more information please refer to ?ranger::ranger</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Some important genes were removed because they are not present in the test dataset. </span>
-#&gt; <span class='warning'>Removed genes: ASNS, CD3D, ADA, HEY1, TSC22D3, XIST, MAP1A, RPL26, CA2, AIF1, CDKN2A, FAM127B, GAL, CSRP2, PSMB8, TSTD1, MDK, HOXA9, ZNF503, DMKN, ID2, CTC1, IFI16, KRT18, PYGL, PSMB9, MAP1B, SPRED2, RNF138, LNP1</span></div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: uniq, cells.use</span></div><div class='output co'>#&gt; <span class='message'>Suggested parameter: cells instead of cells.use</span></div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: uniq, cells.use</span></div><div class='output co'>#&gt; <span class='message'>Suggested parameter: cells instead of cells.use</span></div><div class='output co'>#&gt; $party_fit
+#&gt; <span class='warning'>Removed genes: ASNS, CD3D, ADA, HEY1, TSC22D3, XIST, MAP1A, RPL26, CA2, AIF1, CDKN2A, FAM127B, GAL, CSRP2, PSMB8, TSTD1, MDK, HOXA9, ZNF503, DMKN, ID2, CTC1, IFI16, KRT18, PYGL, PSMB9, MAP1B, SPRED2, RNF138, LNP1</span></div><div class='output co'>#&gt; $party_fit
 #&gt; 
 #&gt; Model formula:
 #&gt; ident ~ TMSB4X + ARHGDIB + MZB1 + SOX4 + FYB + UBE2C + CD1E + 

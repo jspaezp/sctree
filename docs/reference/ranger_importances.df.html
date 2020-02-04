@@ -6,10 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ranger_importances
-
-Calculates ranger-based variable importances for data frames and
-Seurat objects — ranger_importances.df • sctree</title>
+<title>ranger_importances — ranger_importances.df • sctree</title>
 
 
 <!-- jquery -->
@@ -38,11 +35,9 @@ Seurat objects — ranger_importances.df • sctree</title>
 
 
 
-<meta property="og:title" content="ranger_importances
-
-Calculates ranger-based variable importances for data frames and
-Seurat objects — ranger_importances.df" />
-<meta property="og:description" content="ranger_importances" />
+<meta property="og:title" content="ranger_importances — ranger_importances.df" />
+<meta property="og:description" content="Calculates ranger-based variable importances for data frames and
+Seurat objects" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -75,7 +70,7 @@ Seurat objects — ranger_importances.df" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
       </span>
     </div>
 
@@ -124,30 +119,45 @@ Seurat objects — ranger_importances.df" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>ranger_importances
-
-Calculates ranger-based variable importances for data frames and
-Seurat objects</h1>
+    <h1>ranger_importances</h1>
     
     <div class="hidden name"><code>ranger_importances.df.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>ranger_importances</p>
+    <p>Calculates ranger-based variable importances for data frames and
+Seurat objects</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ranger_importances.df</span>(<span class='no'>object</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pval_cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>imp_method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"janitza"</span>, <span class='st'>"altmann"</span>), <span class='kw'>num.trees</span> <span class='kw'>=</span> <span class='fl'>500</span>,
-  <span class='kw'>warn.imp.method</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>identity_col_name</span> <span class='kw'>=</span> <span class='st'>"ident"</span>,
-  <span class='kw'>return_what</span> <span class='kw'>=</span> <span class='st'>"signif_importances_ranger"</span>, <span class='kw'>sort_results</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>ranger_importances.df</span>(
+  <span class='no'>object</span>,
+  <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>pval_cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>imp_method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"janitza"</span>, <span class='st'>"altmann"</span>),
+  <span class='kw'>num.trees</span> <span class='kw'>=</span> <span class='fl'>500</span>,
+  <span class='kw'>warn.imp.method</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>identity_col_name</span> <span class='kw'>=</span> <span class='st'>"ident"</span>,
+  <span class='kw'>return_what</span> <span class='kw'>=</span> <span class='st'>"signif_importances_ranger"</span>,
+  <span class='kw'>sort_results</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>...</span>
+)
 
-<span class='fu'>ranger_importances.Seurat</span>(<span class='no'>object</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pval_cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>imp_method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"janitza"</span>, <span class='st'>"altmann"</span>), <span class='kw'>num.trees</span> <span class='kw'>=</span> <span class='fl'>500</span>,
-  <span class='kw'>genes_use</span> <span class='kw'>=</span> <span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Seurat/man/VariableFeatures.html'>VariableFeatures</a></span>(<span class='no'>object</span>), <span class='kw'>warn.imp.method</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='no'>...</span>)
+<span class='fu'>ranger_importances.Seurat</span>(
+  <span class='no'>object</span>,
+  <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>pval_cutoff</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>imp_method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"janitza"</span>, <span class='st'>"altmann"</span>),
+  <span class='kw'>num.trees</span> <span class='kw'>=</span> <span class='fl'>500</span>,
+  <span class='kw'>genes_use</span> <span class='kw'>=</span> <span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Seurat/man/VariableFeatures.html'>VariableFeatures</a></span>(<span class='no'>object</span>),
+  <span class='kw'>warn.imp.method</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='no'>...</span>
+)
 
-<span class='fu'>FindAllMarkers_ranger.Seurat</span>(<span class='no'>object</span>,
-  <span class='kw'>genes_use</span> <span class='kw'>=</span> <span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Seurat/man/VariableFeatures.html'>VariableFeatures</a></span>(<span class='no'>object</span>), <span class='no'>...</span>)</pre>
+<span class='fu'>FindAllMarkers_ranger.Seurat</span>(
+  <span class='no'>object</span>,
+  <span class='kw'>genes_use</span> <span class='kw'>=</span> <span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Seurat/man/VariableFeatures.html'>VariableFeatures</a></span>(<span class='no'>object</span>),
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -208,13 +218,12 @@ the classification. currently implemented only for Seurat objects.
     
 <ul>
 <li><p><code>ranger_importances.Seurat</code>: Calculate variable importances to calssify a Seurat object</p></li>
-<li><p><code>FindAllMarkers_ranger.Seurat</code>: Calculate variable importances
-to each cluster in a Seurat object</p></li>
+<li><p><code>FindAllMarkers_ranger.Seurat</code>: Calculate variable importances to each cluster in a Seurat object</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-    <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ranger_importances.Seurat</span>(<span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/Seurat/man/pbmc_small.html'>pbmc_small</a></span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='st'>'ALL'</span>, <span class='kw'>warn.imp.method</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt; <span class='warning'>Warning: The following arguments are not used: uniq, cells.use</span></div><div class='output co'>#&gt; <span class='message'>Suggested parameter: cells instead of cells.use</span></div><div class='output co'>#&gt;          importance pvalue     gene
+    <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'>ranger_importances.Seurat</span>(<span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/Seurat/man/pbmc_small.html'>pbmc_small</a></span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='st'>'ALL'</span>, <span class='kw'>warn.imp.method</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;          importance pvalue     gene
 #&gt; HLA-DPB1  8.2824862      0 HLA-DPB1
 #&gt; S100A8    7.4094517      0   S100A8
 #&gt; S100A9    6.1534456      0   S100A9
@@ -222,12 +231,12 @@ to each cluster in a Seurat object</p></li>
 #&gt; GNLY      1.6808031      0     GNLY
 #&gt; VDAC3     0.4500117      0    VDAC3</div><div class='input'>    
 #          importance pvalue     gene
-# HLA-DPB1  7.5145476      0 HLA-DPB1
-# S100A8    7.2494808      0   S100A8
-# S100A9    5.6408359      0   S100A9
-# HLA-DQA1  2.7659832      0 HLA-DQA1
-# GNLY      1.9888445      0     GNLY
-# PPBP      0.4038793      0     PPBP
+# HLA-DPB1  7.7450251      0 HLA-DPB1
+# S100A8    6.8548703      0   S100A8
+# S100A9    6.3483212      0   S100A9
+# HLA-DQA1  2.9561073      0 HLA-DQA1
+# GNLY      2.0354203      0     GNLY
+# VDAC3     0.6537556      0    VDAC3
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
