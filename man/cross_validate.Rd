@@ -4,9 +4,14 @@
 \alias{cross_validate}
 \title{Fits a decision tree in one data set and tests the performance in another}
 \usage{
-cross_validate(train, test, cluster,
+cross_validate(
+  train,
+  test,
+  cluster,
   genes_use = Seurat::VariableFeatures(train),
-  warn.gene.removal = TRUE, ...)
+  warn.gene.removal = TRUE,
+  ...
+)
 }
 \arguments{
 \item{train}{a Seurat object to be used for trainning.}

@@ -9,18 +9,35 @@
 Calculates ranger-based variable importances for data frames and
 Seurat objects}
 \usage{
-ranger_importances.df(object, cluster = NULL, pval_cutoff = 0.05,
-  imp_method = c("janitza", "altmann"), num.trees = 500,
-  warn.imp.method = TRUE, identity_col_name = "ident",
-  return_what = "signif_importances_ranger", sort_results = TRUE, ...)
+ranger_importances.df(
+  object,
+  cluster = NULL,
+  pval_cutoff = 0.05,
+  imp_method = c("janitza", "altmann"),
+  num.trees = 500,
+  warn.imp.method = TRUE,
+  identity_col_name = "ident",
+  return_what = "signif_importances_ranger",
+  sort_results = TRUE,
+  ...
+)
 
-ranger_importances.Seurat(object, cluster = NULL, pval_cutoff = 0.05,
-  imp_method = c("janitza", "altmann"), num.trees = 500,
-  genes_use = Seurat::VariableFeatures(object), warn.imp.method = TRUE,
-  ...)
+ranger_importances.Seurat(
+  object,
+  cluster = NULL,
+  pval_cutoff = 0.05,
+  imp_method = c("janitza", "altmann"),
+  num.trees = 500,
+  genes_use = Seurat::VariableFeatures(object),
+  warn.imp.method = TRUE,
+  ...
+)
 
-FindAllMarkers_ranger.Seurat(object,
-  genes_use = Seurat::VariableFeatures(object), ...)
+FindAllMarkers_ranger.Seurat(
+  object,
+  genes_use = Seurat::VariableFeatures(object),
+  ...
+)
 }
 \arguments{
 \item{object}{a Seurat or data frame object}
@@ -68,10 +85,10 @@ to each cluster in a Seurat object
     head(ranger_importances.Seurat(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
     
 #          importance pvalue     gene
-# HLA-DPB1  7.5145476      0 HLA-DPB1
-# S100A8    7.2494808      0   S100A8
-# S100A9    5.6408359      0   S100A9
-# HLA-DQA1  2.7659832      0 HLA-DQA1
-# GNLY      1.9888445      0     GNLY
-# PPBP      0.4038793      0     PPBP
+# HLA-DPB1  8.7497788      0 HLA-DPB1
+# S100A8    7.0962697      0   S100A8
+# S100A9    5.3328646      0   S100A9
+# HLA-DQA1  2.9259094      0 HLA-DQA1
+# GNLY      1.8699680      0     GNLY
+# IGLL5     0.4589801      0    IGLL5
 }

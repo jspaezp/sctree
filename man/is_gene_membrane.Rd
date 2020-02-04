@@ -4,8 +4,11 @@
 \alias{is_gene_membrane}
 \title{is_gene_membrane}
 \usage{
-is_gene_membrane(gene_symbols, db = org.Hs.eg.db::org.Hs.eg.db,
-  evidence_codes = c("EXP", "IDA", "IPI", "IMP", "IGI"))
+is_gene_membrane(
+  gene_symbols,
+  db = org.Hs.eg.db::org.Hs.eg.db,
+  evidence_codes = c("EXP", "IDA", "IPI", "IMP", "IGI")
+)
 }
 \arguments{
 \item{gene_symbols}{a character vector of gene symbols. zb: CD1A}

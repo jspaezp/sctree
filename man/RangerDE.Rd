@@ -25,11 +25,11 @@ library(Seurat)
     library(sctree)
     head(FindMarkers(object = Seurat::pbmc_small,
     ident.1 = 0, test.use = 'RangerDE', warn.imp.method = FALSE))
-#        importance p_val   gene avg_logFC pct.1 pct.2 p_val_adj
-# GNLY   0.42979254     0   GNLY  4.784185 0.444 0.068         0
-# PGRMC1 0.09705335     0 PGRMC1  3.264396 0.222 0.000         0
-# GZMB   0.10398463     0   GZMB  2.994887 0.333 0.091         0
-# LAMP1  0.17364336     0  LAMP1  2.658571 0.444 0.068         0
-# CD7    0.36348563     0    CD7  2.555973 0.528 0.091         0
-# NCOA4  0.10846263     0  NCOA4  2.304732 0.306 0.159         0
+#        importance p_val   gene  avg_logFC pct.1 pct.2 p_val_adj
+# GNLY    0.4337917     0   GNLY  4.7841852 0.444 0.068         0
+# CD7     0.3529089     0    CD7  2.5559735 0.528 0.091         0
+# IL7R    0.1816056     0   IL7R  2.0708996 0.389 0.295         0
+# NOSIP   0.2407237     0  NOSIP  2.0604084 0.444 0.250         0
+# CCL5    0.5225574     0   CCL5  1.4914821 0.667 0.273         0
+# LGALS1  0.3361842     0 LGALS1 -0.9457555 0.500 0.727         0
 }

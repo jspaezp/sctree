@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 
 [![Travis build status](https://travis-ci.org/jspaezp/sctree.svg?branch=master)](https://travis-ci.org/jspaezp/sctree)
 [![Coverage status](https://codecov.io/gh/jspaezp/sctree/branch/master/graph/badge.svg)](https://codecov.io/github/jspaezp/sctree?branch=master)
+[![status](https://joss.theoj.org/papers/4316d75e1e458003f7acfee08fd3922b/status.svg)](https://joss.theoj.org/papers/4316d75e1e458003f7acfee08fd3922b)
 
 # sctree
 

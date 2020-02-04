@@ -8,11 +8,9 @@
 \usage{
 plot_flowstyle(object, markernames, classif_col = "ident", ...)
 
-\method{plot_flowstyle}{data.frame}(object, markernames,
-  classif_col = "ident", ...)
+\method{plot_flowstyle}{data.frame}(object, markernames, classif_col = "ident", ...)
 
-\method{plot_flowstyle}{Seurat}(object, markernames,
-  classif_col = "ident", ...)
+\method{plot_flowstyle}{Seurat}(object, markernames, classif_col = "ident", ...)
 }
 \arguments{
 \item{object}{data, either a Seurat of a data frame object}

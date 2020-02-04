@@ -1,5 +1,7 @@
 context("test-antibodies")
 
+skip_on_travis()
+
 test_that("functions work on known markers", {
     expect_gt(nrow(query_cc_antibodies("CD11c")), 1)
     expect_gt(nrow(query_cc_antibodies("CD3")),1)

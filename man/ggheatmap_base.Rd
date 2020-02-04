@@ -4,8 +4,13 @@
 \alias{ggheatmap_base}
 \title{Basic heatmap using ggplot}
 \usage{
-ggheatmap_base(df, x = "cluster", y = "predicted", value = "Freq",
-  show_number = FALSE)
+ggheatmap_base(
+  df,
+  x = "cluster",
+  y = "predicted",
+  value = "Freq",
+  show_number = FALSE
+)
 }
 \arguments{
 \item{df}{data.frame}

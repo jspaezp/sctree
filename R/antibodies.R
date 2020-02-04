@@ -7,18 +7,27 @@
 # TODO: implement an automated way to search as well for the aliases of the gene
 # names provided
 
-#' Query cell signaling for Single cell antibodies
+#' Query Antibodies from multiple vendors
 #'
-#' Queries Cell Signaling Technologies and
+#' Queries the respective antibody for each vendor and when posible
 #' filters for antibodies for IFC, IHC, and FLOW.
 #'
-#' Note that it is just a wrapper arround the web search of the site, so please
-#' be nice on them and dont get your IP banned ...
 #'
-#' @param search_term The term used to query the cell signaling webpage
+#' @param search_term The term used to query the antibodies
+#' @param sleep an ammount of time to wait before submitting the query.
+#'              Check details for more information
 #'
 #' @return NULL when no results are found or a DF with information
-#' @export
+#'
+#' @details
+#' Most of these functions have been implemented as queries to the
+#' vendor website, therefore if many queries are done in quick
+#' succession, it is posible that the vendor considers the queries as
+#' an attack to their website. Therefore we have the sleep argument set
+#' to 1 by default, the function will wait 1 second before doing the
+#' query. If many queries will be done, feel free to modify the
+#' parameter but be aware that some requests might be denied.
+#'
 #'
 #' @examples
 #' query_cc_antibodies("CD11bfakename")
@@ -42,10 +51,52 @@
 #' # 6 Antibody Conjugates
 #' # 7 Antibody Conjugates
 #' # 8 Antibody Conjugates
+#'
+#' query_sc_antibodies("CD11bfakename")
+#' NULL
+#' head(query_sc_antibodies("CD11C"))
+#' Product_Name  Cat_num Citations Rating     Epitope
+#' 1   Integrin alpha X Antibody (B-6) sc-46676         3    (8) Integrin αX
+#' 2   Integrin alpha X Antibody (3.9)  sc-1185         2    (2) Integrin αX
+#' 3 Integrin alpha X Antibody (B-Iy6) sc-19989         1    (1) Integrin αX
+#' 4  Integrin alpha X Antibody (N418) sc-23951         3    (2) Integrin αX
+#' 6 Integrin alpha X Antibody (2Q865) sc-71455       NEW    (1) Integrin αX
+#' 7 Integrin alpha X Antibody (3H986) sc-71456       NEW    (1) Integrin αX
+#' Species                       Method
+#' 1   human WB, IP, IF, IHC(P) and ELISA
+#' 2   human               IP, IF and FCM
+#' 3   human                   IF and FCM
+#' 4   mouse                   IF and FCM
+#' 6   human                   IP and FCM
+#' 7   mouse                   IF and FCM
+#'
+#' #' query_biocompare_antibodies("CD11bfakename")
+#' # NULL
+#' head(query_biocompare_antibodies("CD11C"),3)
+#'
+#'
+#' query_biolegend_antibodies("CD11bfakename")
+#' # NULL
+#' head(query_biolegend_antibodies("CD11C"))
+#' # [1] "MojoSortâ\u0084¢ Mouse CD11c Nanobeads"
+#' # [2] "APC anti-human CD11c Antibody"
+#' # [3] "Biotin anti-human CD11c Antibody"
+#' # [4] "FITC anti-human CD11c Antibody"
+#' # [5] "PE anti-human CD11c Antibody"
+#' # [6] "PE/Cy5 anti-human CD11c Antibody"
+#'
+#'
 #' @importFrom rvest html_nodes html_table
 #' @importFrom xml2 read_html
-query_cc_antibodies <- function(search_term) {
-    Sys.sleep(1)
+#'
+#' @name antibodies
+NULL
+#> NULL
+
+#' @rdname antibodies
+#' @export
+query_cc_antibodies <- function(search_term, sleep = 1) {
+    Sys.sleep(sleep)
     url <- paste0( "https://www.cellsignal.com/browse/?Ntt=",
                    search_term,
                    "&N=4294960091+4294960086+4294960087+4294964832+4294956287",
@@ -78,42 +129,11 @@ query_cc_antibodies <- function(search_term) {
 
 
 
-#' Query Santa Cruz for antibodies
-#'
-#' Queries Santa Cruz for antibodies and
-#' filters for antibodies for IFC, IHC, and FCM
-#'
-#' Note that it is just a wrapper arround the web search of the site, so please
-#' be nice on them and dont get your IP banned ...
-#'
-#' @param search_term The term used to query the webpage
-#'
-#' @return NULL when no results are found or a DF with information
+#' @rdname antibodies
 #' @export
-#'
-#' @examples
-#' query_sc_antibodies("CD11bfakename")
-#' NULL
-#' head(query_sc_antibodies("CD11C"))
-#' # Product_Name  Cat_num     Epitope    Species
-#' # 1 Integrin alpha X Antibody (2Q862) sc-71454 Integrin aX  and human
-#' # 2 Integrin alpha X Antibody (2Q865) sc-71455 Integrin aX      human
-#' # 3   Integrin alpha X Antibody (3.9)  sc-1185 Integrin aX      human
-#' # 4 Integrin alpha X Antibody (3H986) sc-71456 Integrin aX      mouse
-#' # 5   Integrin alpha X Antibody (B-6) sc-46676 Integrin aX      human
-#' # 6 Integrin alpha X Antibody (B-Iy6) sc-19989 Integrin aX      human
-#' # Method
-#' # 1                   IF and FCM
-#' # 2                   IP and FCM
-#' # 3               IP, IF and FCM
-#' # 4                   IF and FCM
-#' # 5 WB, IP, IF, IHC(P) and ELISA
-#' # 6                   IF and FCM
-#' @importFrom rvest html_nodes html_table
-#' @importFrom xml2 read_html
-query_sc_antibodies <- function(search_term) {
-    Sys.sleep(1)
-    url <- paste0("https://www.scbt.com/scbt/search?Ntt=",
+query_sc_antibodies <- function(search_term, sleep = 1) {
+    Sys.sleep(sleep)
+    url <- paste0("https://www.scbt.com/search?Ntt=",
                   search_term,
                   "&N=1354381666&Nrpp=50")
 
@@ -203,29 +223,10 @@ query_sc_antibodies <- function(search_term) {
 #}
 
 
-#' Query Biocompare for antibodies
-#'
-#' Queries Biocompare for antibodies.
-#' https://www.biocompare.com/
-#'
-#' Note that it is just a wrapper arround the web search of the site, so please
-#' be nice on them and dont get your IP banned ...
-#'
-#'
-#'
-#' @param search_term The term used to query the webpage
-#'
-#' @return NULL when no results are found or a DF with information
+#' @rdname antibodies
 #' @export
-#'
-#' @examples
-#' query_biocompare_antibodies("CD11bfakename")
-#' # NULL
-#' head(query_biocompare_antibodies("CD11C"),3)
-#' @importFrom rvest html_nodes html_table html_text
-#' @importFrom xml2 read_html
-query_biocompare_antibodies <- function(search_term) {
-    Sys.sleep(1)
+query_biocompare_antibodies <- function(search_term, sleep = 1) {
+    Sys.sleep(sleep)
     url <- paste0("https://www.biocompare.com/Search-Antibodies/?search=",
                   search_term, "&said=0&vcmpv=true")
 
@@ -275,33 +276,10 @@ query_biocompare_antibodies <- function(search_term) {
 }
 
 
-#' Query Biolegend for antibodies
-#'
-#' Queries Biolegend for antibodies and
-#' filters for antibodies for Flow Cytometry
-#'
-#' Note that it is just a wrapper arround the web search of the site, so please
-#' be nice on them and dont get your IP banned ...
-#'
-#' @param search_term The term used to query the webpage
-#'
-#' @return a length 0 character when no results are found or a character vector with the product names
+#' @rdname antibodies
 #' @export
-#'
-#' @examples
-#' query_biolegend_antibodies("CD11bfakename")
-#' # NULL
-#' head(query_biolegend_antibodies("CD11C"))
-#' # [1] "MojoSortâ\u0084¢ Mouse CD11c Nanobeads"
-#' # [2] "APC anti-human CD11c Antibody"
-#' # [3] "Biotin anti-human CD11c Antibody"
-#' # [4] "FITC anti-human CD11c Antibody"
-#' # [5] "PE anti-human CD11c Antibody"
-#' # [6] "PE/Cy5 anti-human CD11c Antibody"
-#' @importFrom rvest html_nodes html_table
-#' @importFrom xml2 read_html
-query_biolegend_antibodies <- function(search_term) {
-    Sys.sleep(1)
+query_biolegend_antibodies <- function(search_term, sleep = 1) {
+    Sys.sleep(sleep)
     url <- paste0("https://www.biolegend.com/en-us/search-results?Applications=FC&Keywords=",
                   search_term)
 

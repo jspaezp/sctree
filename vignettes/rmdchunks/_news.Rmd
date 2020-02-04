@@ -1,6 +1,10 @@
 
 # News
 
+- Jan/2020
+
+    - Submitted for review at JOSS
+
 - Aug/18/2019
 
     - Made public and added Travis

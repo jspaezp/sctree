@@ -1,6 +1,6 @@
 Package: sctree
 Title: Tree based analysis of single rna-seq clusters
-Version: 0.0.5.0001
+Version: 0.0.5.0002
 Authors@R: 
     person(given = "J. Sebastian",
            family = "Paez",
@@ -49,7 +49,7 @@ Imports:
     methods,
     pbapply,
     rlang
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 biocViews:
 Depends: 
     Seurat

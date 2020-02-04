@@ -4,8 +4,12 @@
 \alias{fit_ctree}
 \title{Fits a classification tree on a Seurat object}
 \usage{
-fit_ctree(object, genes_use = Seurat::VariableFeatures(object),
-  cluster = "ALL", ...)
+fit_ctree(
+  object,
+  genes_use = Seurat::VariableFeatures(object),
+  cluster = "ALL",
+  ...
+)
 }
 \arguments{
 \item{object}{a Seurat object}

@@ -7,6 +7,7 @@ sctree: a package to connect single cell rna-seq to biology using trees
 status](https://travis-ci.org/jspaezp/sctree.svg?branch=master)](https://travis-ci.org/jspaezp/sctree)
 [![Coverage
 status](https://codecov.io/gh/jspaezp/sctree/branch/master/graph/badge.svg)](https://codecov.io/github/jspaezp/sctree?branch=master)
+[![status](https://joss.theoj.org/papers/4316d75e1e458003f7acfee08fd3922b/status.svg)](https://joss.theoj.org/papers/4316d75e1e458003f7acfee08fd3922b)
 
 # sctree
 
@@ -18,9 +19,9 @@ Features suggesting pseudo-gating strategies to purify found populations
 via flow-cytometry, antibody querying and cross validations between
 datasets.
 
-Number of lines in roxygen comments: 1050
+Number of lines in roxygen comments: 1026
 
-Number of lines in R code: 1924
+Number of lines in R code: 1925
 
 # Installation
 
@@ -53,9 +54,6 @@ Original data can be found here:
 require(sctree)
 #> Loading required package: sctree
 #> Loading required package: Seurat
-#> Registered S3 method overwritten by 'R.oo':
-#>   method        from       
-#>   throw.default R.methodsS3
 #> Registered S3 method overwritten by 'GGally':
 #>   method from   
 #>   +.gg   ggplot2
@@ -99,8 +97,6 @@ rang_importances <- ranger_importances.Seurat(
     small_5050_mix,
     cluster = "ALL",
     warn.imp.method = FALSE)
-#> Warning: The following arguments are not used: uniq, cells.use
-#> Suggested parameter: cells instead of cells.use
 ```
 
 By default, we obtain a data frame containing only importances with
@@ -126,8 +122,6 @@ As an analogous function to Seurat’s `FindAllMarkers`, we offer
 markers <- FindAllMarkers_ranger.Seurat(
   small_5050_mix,
   warn.imp.method = FALSE)
-#> Warning: The following arguments are not used: uniq, cells.use
-#> Suggested parameter: cells instead of cells.use
 
 head(markers)
 #>         importance pvalue    gene cluster
@@ -205,8 +199,6 @@ top_markers
 
 ``` r
 g <- plot_flowstyle(small_5050_mix, markernames = top_markers)
-#> Warning: The following arguments are not used: uniq, cells.use
-#> Suggested parameter: cells instead of cells.use
 g
 ```
 
@@ -234,8 +226,6 @@ top_markers
 tree_fit <- fit_ctree(small_5050_mix,
                       genes_use = top_markers,
                       cluster = "ALL")
-#> Warning: The following arguments are not used: uniq, cells.use
-#> Suggested parameter: cells instead of cells.use
 ```
 
 Visualizing the tree as … a tree … we can see how our model is a simple
@@ -279,7 +269,7 @@ print(tree_fit)
 
 Sometimes one might think that the proposed strategy is too complicated
 or not implementable in the experimental settings, in order to add
-constrians to the fit one can give additional arguments that will be
+constraints to the fit one can give additional arguments that will be
 passed to `partykit::ctree_control`, such as `maxdepth = 2` (maximum 2
 questions per cell)
 
@@ -287,8 +277,6 @@ questions per cell)
 tree_fit <- fit_ctree(
     small_5050_mix, genes_use = top_markers,
     cluster = "ALL", maxdepth = 2)
-#> Warning: The following arguments are not used: uniq, cells.use
-#> Suggested parameter: cells instead of cells.use
 print(tree_fit)
 #> 
 #> Model formula:
@@ -318,8 +306,6 @@ partykit::varimp(tree_fit)
 #>      CD3D      ASNS 
 #> 0.2849840 0.1505534
 plot_flowstyle(small_5050_mix, names(partykit::varimp(tree_fit)))
-#> Warning: The following arguments are not used: uniq, cells.use
-#> Suggested parameter: cells instead of cells.use
 ```
 
 ![](man/figures/unnamed-chunk-24-1.png)<!-- -->
@@ -333,8 +319,6 @@ one.
 
 ``` r
 tree_fit <- fit_ctree(small_5050_mix, genes_use = top_markers, cluster = "0")
-#> Warning: The following arguments are not used: uniq, cells.use
-#> Suggested parameter: cells instead of cells.use
 print(tree_fit)
 #> 
 #> Model formula:
@@ -359,14 +343,12 @@ our implementation of `plot_gates`
 
 ``` r
 plot_gates(small_5050_mix, tree_fit, "6")
-#> Warning: The following arguments are not used: uniq, cells.use
-#> Suggested parameter: cells instead of cells.use
 ```
 
 ![](man/figures/unnamed-chunk-26-1.png)<!-- -->
 
 We have also implemented a way to export these rules as a `garnett`
-classifier. for more detail on how the calssifier is implemented please
+classifier. for more detail on how the classifier is implemented please
 refer to [the garnett
 documentation](https://cole-trapnell-lab.github.io/garnett/docs/#constructing-a-marker-file)
 
@@ -400,25 +382,32 @@ available
 ``` r
 require(sctree)
 head(query_biocompare_antibodies("CD11b"))
-#>                                   title            vendor
-#> 1         Anti-CD11b antibody [EPR1344]             Abcam
-#> 2             Anti-CD11b/ITGAM Antibody         BosterBio
-#> 3    Anti-CD11b/ITGAM Picoband Antibody         BosterBio
-#> 4 Anti-CD11b Rabbit Monoclonal Antibody         BosterBio
-#> 5  Monoclonal Antibody to CD11b (human)   MyBioSource.com
-#> 6                Anti-CD11b (Mouse) mAb MBL International
-#>                                                                                                            specification
-#> 1 Applications: WB, IHC-p; Reactivity: Hu, Ms, Rt, Pg, RhMk; Conjugate/Tag: Unconjugated; Quantity: 10 µl, 40 µl, 100 µl
-#> 2             Applications: Western Blot (WB); Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
-#> 3   Applications: WB, FCM, ICC, IHC-fr, IHC-p; Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
-#> 4                       Applications: WB, IF, IHC; Reactivity: Hu, Ms; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
-#> 5              Applications: Flow Cytometry (FCM); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 0.1 mg
-#> 6              Applications: Flow Cytometry (FCM); Reactivity: Mouse (Ms); Conjugate/Tag: Unconjugated; Quantity: 100 ug
+#>                                                                   title
+#> 1 Anti-CD11b (integrin alpha-M) Rabbit Monoclonal Antibody, Clone#RM290
+#> 2                                 Anti-CD11b Rabbit Monoclonal Antibody
+#> 3                                    Anti-CD11b/ITGAM Picoband Antibody
+#> 4                      Anti-Human CD11b DyLight 488 conjugated Antibody
+#> 5                                  Monoclonal Antibody to CD11b (human)
+#> 6                                                 CD11b antibody (FITC)
+#>            vendor
+#> 1       BosterBio
+#> 2       BosterBio
+#> 3       BosterBio
+#> 4       BosterBio
+#> 5 MyBioSource.com
+#> 6 MyBioSource.com
+#>                                                                                                       specification
+#> 1                       Applications: WB, IHC; Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 100uL
+#> 2                  Applications: WB, IF, IHC; Reactivity: Hu, Ms; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
+#> 3 Applications: WB, ELISA, FCM, ICC, IHC; Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
+#> 4      Applications: Flow Cytometry (FCM); Reactivity: Human (Hu); Conjugate/Tag: DyLight®488; Quantity: 100ug/vial
+#> 5         Applications: Flow Cytometry (FCM); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 0.1 mg
+#> 6                                                                     Conjugate/Tag: Unconjugated; Quantity: 0.5 mg
 ```
 
 ``` r
 sessionInfo()
-#> R version 3.6.0 (2019-04-26)
+#> R version 3.6.2 (2019-12-12)
 #> Platform: x86_64-redhat-linux-gnu (64-bit)
 #> Running under: Fedora 30 (Workstation Edition)
 #> 
@@ -437,51 +426,52 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] sctree_0.0.4.0002 Seurat_3.1.0     
+#> [1] sctree_0.0.5.0002 Seurat_3.1.1     
 #> 
 #> loaded via a namespace (and not attached):
-#>   [1] Rtsne_0.15           colorspace_1.4-1     selectr_0.4-1       
-#>   [4] ggridges_0.5.1       leiden_0.3.1         listenv_0.7.0       
-#>   [7] npsurv_0.4-0         ggrepel_0.8.1        bit64_0.9-7         
-#>  [10] AnnotationDbi_1.46.1 mvtnorm_1.0-11       xml2_1.2.2          
-#>  [13] ranger_0.11.2        codetools_0.2-16     splines_3.6.0       
-#>  [16] R.methodsS3_1.7.1    lsei_1.2-0           libcoin_1.0-5       
-#>  [19] knitr_1.24           zeallot_0.1.0        Formula_1.2-3       
-#>  [22] jsonlite_1.6         ica_1.0-2            cluster_2.0.8       
-#>  [25] png_0.1-7            R.oo_1.22.0          uwot_0.1.3          
-#>  [28] sctransform_0.2.0    compiler_3.6.0       httr_1.4.1          
-#>  [31] backports_1.1.4      assertthat_0.2.1     Matrix_1.2-17       
-#>  [34] lazyeval_0.2.2       htmltools_0.3.6      tools_3.6.0         
-#>  [37] rsvd_1.0.2           igraph_1.2.4.1       partykit_1.2-5      
-#>  [40] gtable_0.3.0         glue_1.3.1           RANN_2.6.1          
-#>  [43] reshape2_1.4.3       dplyr_0.8.3          Rcpp_1.0.2          
-#>  [46] Biobase_2.44.0       vctrs_0.2.0          gdata_2.18.0        
-#>  [49] ape_5.3              nlme_3.1-139         gbRd_0.4-11         
-#>  [52] lmtest_0.9-37        inum_1.0-1           xfun_0.9            
-#>  [55] stringr_1.4.0        globals_0.12.4       rvest_0.3.4         
-#>  [58] irlba_2.3.3          gtools_3.8.1         future_1.14.0       
-#>  [61] MASS_7.3-51.4        zoo_1.8-6            scales_1.0.0        
-#>  [64] parallel_3.6.0       RColorBrewer_1.1-2   curl_4.0            
-#>  [67] yaml_2.2.0           memoise_1.1.0        reticulate_1.13     
-#>  [70] pbapply_1.4-2        gridExtra_2.3        ggplot2_3.2.1       
-#>  [73] rpart_4.1-15         reshape_0.8.8        stringi_1.4.3       
-#>  [76] RSQLite_2.1.2        S4Vectors_0.22.1     caTools_1.17.1.2    
-#>  [79] BiocGenerics_0.30.0  bibtex_0.4.2         Rdpack_0.11-0       
-#>  [82] SDMTools_1.1-221.1   rlang_0.4.0          pkgconfig_2.0.2     
-#>  [85] bitops_1.0-6         evaluate_0.14        lattice_0.20-38     
-#>  [88] ROCR_1.0-7           purrr_0.3.2          labeling_0.3        
-#>  [91] htmlwidgets_1.3      cowplot_1.0.0        bit_1.1-14          
-#>  [94] tidyselect_0.2.5     GGally_1.4.0         RcppAnnoy_0.0.12    
-#>  [97] wrapr_1.8.9          plyr_1.8.4           magrittr_1.5        
-#> [100] R6_2.4.0             IRanges_2.18.2       gplots_3.0.1.1      
-#> [103] DBI_1.0.0            pillar_1.4.2         fitdistrplus_1.0-14 
-#> [106] survival_2.44-1.1    tibble_2.1.3         future.apply_1.3.0  
-#> [109] tsne_0.1-3           crayon_1.3.4         KernSmooth_2.23-15  
-#> [112] plotly_4.9.0         rmarkdown_1.15       viridis_0.5.1       
-#> [115] grid_3.6.0           data.table_1.12.2    blob_1.2.0          
-#> [118] metap_1.1            digest_0.6.20        tidyr_0.8.3         
-#> [121] R.utils_2.9.0        RcppParallel_4.4.3   stats4_3.6.0        
-#> [124] munsell_0.5.0        viridisLite_0.3.0
+#>   [1] Rtsne_0.15           colorspace_1.4-1     selectr_0.4-2       
+#>   [4] ggridges_0.5.1       farver_2.0.1         leiden_0.3.1        
+#>   [7] listenv_0.8.0        npsurv_0.4-0         ggrepel_0.8.1       
+#>  [10] bit64_0.9-7          mvtnorm_1.0-11       AnnotationDbi_1.46.1
+#>  [13] xml2_1.2.2           ranger_0.11.2        codetools_0.2-16    
+#>  [16] splines_3.6.2        R.methodsS3_1.7.1    lsei_1.2-0          
+#>  [19] libcoin_1.0-5        knitr_1.26           zeallot_0.1.0       
+#>  [22] Formula_1.2-3        jsonlite_1.6         ica_1.0-2           
+#>  [25] cluster_2.1.0        png_0.1-7            R.oo_1.23.0         
+#>  [28] uwot_0.1.5           sctransform_0.2.0    compiler_3.6.2      
+#>  [31] httr_1.4.1           backports_1.1.5      assertthat_0.2.1    
+#>  [34] Matrix_1.2-18        lazyeval_0.2.2       htmltools_0.4.0     
+#>  [37] tools_3.6.2          rsvd_1.0.2           igraph_1.2.4.2      
+#>  [40] partykit_1.2-5       gtable_0.3.0         glue_1.3.1          
+#>  [43] RANN_2.6.1           reshape2_1.4.3       dplyr_0.8.3         
+#>  [46] Rcpp_1.0.3           Biobase_2.44.0       vctrs_0.2.0         
+#>  [49] gdata_2.18.0         ape_5.3              nlme_3.1-142        
+#>  [52] gbRd_0.4-11          lmtest_0.9-37        inum_1.0-1          
+#>  [55] xfun_0.11            stringr_1.4.0        globals_0.12.4      
+#>  [58] rvest_0.3.5          lifecycle_0.1.0      irlba_2.3.3         
+#>  [61] gtools_3.8.1         future_1.15.1        MASS_7.3-51.4       
+#>  [64] zoo_1.8-6            scales_1.1.0         parallel_3.6.2      
+#>  [67] RColorBrewer_1.1-2   curl_4.3             yaml_2.2.0          
+#>  [70] memoise_1.1.0        reticulate_1.13      pbapply_1.4-2       
+#>  [73] gridExtra_2.3        ggplot2_3.2.1        rpart_4.1-15        
+#>  [76] reshape_0.8.8        stringi_1.4.3        RSQLite_2.1.4       
+#>  [79] S4Vectors_0.22.1     caTools_1.17.1.3     BiocGenerics_0.30.0 
+#>  [82] bibtex_0.4.2         Rdpack_0.11-0        SDMTools_1.1-221.2  
+#>  [85] rlang_0.4.2          pkgconfig_2.0.3      bitops_1.0-6        
+#>  [88] evaluate_0.14        lattice_0.20-38      ROCR_1.0-7          
+#>  [91] purrr_0.3.3          labeling_0.3         htmlwidgets_1.5.1   
+#>  [94] cowplot_1.0.0        bit_1.1-14           tidyselect_0.2.5    
+#>  [97] GGally_1.4.0         RcppAnnoy_0.0.14     wrapr_1.9.3         
+#> [100] plyr_1.8.4           magrittr_1.5         R6_2.4.1            
+#> [103] IRanges_2.18.3       gplots_3.0.1.1       DBI_1.0.0           
+#> [106] pillar_1.4.2         fitdistrplus_1.0-14  survival_3.1-8      
+#> [109] tibble_2.1.3         future.apply_1.3.0   tsne_0.1-3          
+#> [112] crayon_1.3.4         KernSmooth_2.23-16   plotly_4.9.1        
+#> [115] rmarkdown_1.18       viridis_0.5.1        grid_3.6.2          
+#> [118] data.table_1.12.6    blob_1.2.0           metap_1.1           
+#> [121] digest_0.6.23        tidyr_1.0.0          R.utils_2.9.1       
+#> [124] RcppParallel_4.4.4   stats4_3.6.2         munsell_0.5.0       
+#> [127] viridisLite_0.3.0
 ```
 
 # Steps down the road
@@ -490,7 +480,5 @@ sessionInfo()
 4.  Reduce dependecies by replacing functions to base equivalents.
 5.  Add links to the documentation to make nicer to explore the package
     from inside R
-6.  Implement plot that actually illustrates the progressive gating in
-    the decision tree
-7.  Implement a way to find markers for clusters exclusively upregulated
-8.  Refctor the code to make the coding nomenclature same as seurat
+6.  Implement a way to find markers for clusters exclusively upregulated
+7.  Refctor the code to make the coding nomenclature same as seurat
