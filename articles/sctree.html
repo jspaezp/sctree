@@ -281,7 +281,7 @@ R -e "devtools::install('.')"</code></pre>
 <a class="sourceLine" id="cb16-19" data-line-number="19"><span class="co">#&gt; Number of terminal nodes: 4</span></a>
 <a class="sourceLine" id="cb16-20" data-line-number="20"><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(tree_fit)</a></code></pre></div>
 <p><img src="sctree_files/figure-html/unnamed-chunk-24-1.png" width="1152"></p>
-<p>Since not all variables are ultimately used in our classifier, one can acces the ones that were by using <code>varimp(tree_fit)</code></p>
+<p>Since not all variables are ultimately used in our classifier, one can access the ones that were by using <code>varimp(tree_fit)</code></p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">partykit<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/partykit/man/varimp.html">varimp</a></span>(tree_fit)</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co">#&gt;      CD3D      ASNS </span></a>
 <a class="sourceLine" id="cb17-3" data-line-number="3"><span class="co">#&gt; 0.2849840 0.1505534</span></a>
