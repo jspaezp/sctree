@@ -19,11 +19,20 @@ Features suggesting pseudo-gating strategies to purify found populations
 via flow-cytometry, antibody querying and cross validations between
 datasets.
 
-Number of lines in roxygen comments: 1026
+Number of lines in roxygen comments: 1024
 
-Number of lines in R code: 1925
+Number of lines in R code: 1946
 
 # Installation
+
+Currently we are not hosted in CRAN but the package can be installed by
+using the following function in R
+
+``` r
+remotes::install_github("jspaezp/sctree")
+```
+
+Alternatively, one can clone the git repository to test changes.
 
     git clone https://github.rcac.purdue.edu/jpaezpae/sctree sctree
     cd sctree
@@ -299,7 +308,7 @@ plot(tree_fit)
 ![](man/figures/unnamed-chunk-23-1.png)<!-- -->
 
 Since not all variables are ultimately used in our classifier, one can
-acces the ones that were by using `varimp(tree_fit)`
+access the ones that were by using `varimp(tree_fit)`
 
 ``` r
 partykit::varimp(tree_fit)
@@ -426,7 +435,7 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] sctree_0.0.5.0002 Seurat_3.1.1     
+#> [1] sctree_0.0.5.0003 Seurat_3.1.1     
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] Rtsne_0.15           colorspace_1.4-1     selectr_0.4-2       
@@ -451,27 +460,26 @@ sessionInfo()
 #>  [58] rvest_0.3.5          lifecycle_0.1.0      irlba_2.3.3         
 #>  [61] gtools_3.8.1         future_1.15.1        MASS_7.3-51.4       
 #>  [64] zoo_1.8-6            scales_1.1.0         parallel_3.6.2      
-#>  [67] RColorBrewer_1.1-2   curl_4.3             yaml_2.2.0          
-#>  [70] memoise_1.1.0        reticulate_1.13      pbapply_1.4-2       
-#>  [73] gridExtra_2.3        ggplot2_3.2.1        rpart_4.1-15        
-#>  [76] reshape_0.8.8        stringi_1.4.3        RSQLite_2.1.4       
-#>  [79] S4Vectors_0.22.1     caTools_1.17.1.3     BiocGenerics_0.30.0 
-#>  [82] bibtex_0.4.2         Rdpack_0.11-0        SDMTools_1.1-221.2  
-#>  [85] rlang_0.4.2          pkgconfig_2.0.3      bitops_1.0-6        
-#>  [88] evaluate_0.14        lattice_0.20-38      ROCR_1.0-7          
-#>  [91] purrr_0.3.3          labeling_0.3         htmlwidgets_1.5.1   
-#>  [94] cowplot_1.0.0        bit_1.1-14           tidyselect_0.2.5    
-#>  [97] GGally_1.4.0         RcppAnnoy_0.0.14     wrapr_1.9.3         
-#> [100] plyr_1.8.4           magrittr_1.5         R6_2.4.1            
-#> [103] IRanges_2.18.3       gplots_3.0.1.1       DBI_1.0.0           
-#> [106] pillar_1.4.2         fitdistrplus_1.0-14  survival_3.1-8      
-#> [109] tibble_2.1.3         future.apply_1.3.0   tsne_0.1-3          
-#> [112] crayon_1.3.4         KernSmooth_2.23-16   plotly_4.9.1        
-#> [115] rmarkdown_1.18       viridis_0.5.1        grid_3.6.2          
-#> [118] data.table_1.12.6    blob_1.2.0           metap_1.1           
-#> [121] digest_0.6.23        tidyr_1.0.0          R.utils_2.9.1       
-#> [124] RcppParallel_4.4.4   stats4_3.6.2         munsell_0.5.0       
-#> [127] viridisLite_0.3.0
+#>  [67] RColorBrewer_1.1-2   yaml_2.2.0           memoise_1.1.0       
+#>  [70] reticulate_1.13      pbapply_1.4-2        gridExtra_2.3       
+#>  [73] ggplot2_3.2.1        rpart_4.1-15         reshape_0.8.8       
+#>  [76] stringi_1.4.3        RSQLite_2.1.4        S4Vectors_0.22.1    
+#>  [79] caTools_1.17.1.3     BiocGenerics_0.30.0  bibtex_0.4.2        
+#>  [82] Rdpack_0.11-0        SDMTools_1.1-221.2   rlang_0.4.2         
+#>  [85] pkgconfig_2.0.3      bitops_1.0-6         evaluate_0.14       
+#>  [88] lattice_0.20-38      ROCR_1.0-7           purrr_0.3.3         
+#>  [91] labeling_0.3         htmlwidgets_1.5.1    cowplot_1.0.0       
+#>  [94] bit_1.1-14           tidyselect_0.2.5     GGally_1.4.0        
+#>  [97] RcppAnnoy_0.0.14     wrapr_1.9.3          plyr_1.8.4          
+#> [100] magrittr_1.5         R6_2.4.1             IRanges_2.18.3      
+#> [103] gplots_3.0.1.1       DBI_1.0.0            pillar_1.4.2        
+#> [106] fitdistrplus_1.0-14  survival_3.1-8       tibble_2.1.3        
+#> [109] future.apply_1.3.0   tsne_0.1-3           crayon_1.3.4        
+#> [112] KernSmooth_2.23-16   plotly_4.9.1         rmarkdown_1.18      
+#> [115] viridis_0.5.1        grid_3.6.2           data.table_1.12.6   
+#> [118] blob_1.2.0           metap_1.1            digest_0.6.23       
+#> [121] tidyr_1.0.0          R.utils_2.9.1        RcppParallel_4.4.4  
+#> [124] stats4_3.6.2         munsell_0.5.0        viridisLite_0.3.0
 ```
 
 # Steps down the road

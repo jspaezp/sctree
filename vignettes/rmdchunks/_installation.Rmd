@@ -2,6 +2,16 @@
 
 # Installation
 
+Currently we are not hosted in CRAN but the package can be
+installed by using the following function in R
+
+```r
+remotes::install_github("jspaezp/sctree")
+```
+
+
+Alternatively, one can clone the git repository to test changes.
+
 ```
 git clone https://github.rcac.purdue.edu/jpaezpae/sctree sctree
 cd sctree
