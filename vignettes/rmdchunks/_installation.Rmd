@@ -13,7 +13,7 @@ remotes::install_github("jspaezp/sctree")
 Alternatively, one can clone the git repository to test changes.
 
 ```
-git clone https://github.rcac.purdue.edu/jpaezpae/sctree sctree
+git clone https://github.com/jspaezp/sctree sctree
 cd sctree
 
 R -e "devtools::install('.')"
