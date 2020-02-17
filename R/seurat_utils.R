@@ -976,7 +976,7 @@ DESeq2DETest <- function(
     verbose = TRUE,
     ...
 ) {
-    if (!PackageCheck('DESeq2', error = FALSE)) {
+    if (!Seurat:::PackageCheck('DESeq2', error = FALSE)) {
         stop("Please install DESeq2 - learn more at https://bioconductor.org/packages/release/bioc/html/DESeq2.html")
     }
     group.info <- data.frame(row.names = c(cells.1, cells.2))
@@ -1383,7 +1383,7 @@ MASTDETest <- function(
     ...
 ) {
     # Check for MAST
-    if (!PackageCheck('MAST', error = FALSE)) {
+    if (!Seurat:::PackageCheck('MAST', error = FALSE)) {
         stop("Please install MAST - learn more at https://github.com/RGLab/MAST")
     }
     if (length(x = latent.vars) > 0) {
