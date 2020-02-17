@@ -19,11 +19,15 @@ Suggests:
     pkgdown,
     devtools,
     usethis,
-    covr
+    covr,
+    DESeq2,
+    MAST,
+    SummarizedExperiment
 VignetteBuilder: knitr
 Imports: 
     AnnotationDbi,
     DT,
+    RColorBrewer,
     ggplot2,
     GGally,
     memoise,
