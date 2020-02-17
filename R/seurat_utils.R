@@ -310,7 +310,7 @@ FindConservedMarkers <- function(
         stop("meta.method should be a function from the metap package. Please see https://cran.r-project.org/web/packages/metap/metap.pdf for a detailed description of the available functions.")
     }
     object.var <- FetchData(object = object, vars = grouping.var)
-    object <- SetIdent(
+    object <- Seurat::SetIdent(
         object = object,
         cells = colnames(x = object),
         value = paste(Idents(object = object), object.var[, 1], sep = "_")
