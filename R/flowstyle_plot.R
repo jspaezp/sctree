@@ -12,6 +12,8 @@
 #' @param markernames names of the markers to be used for the plot
 #' @param classif_col name of the classification column to be used for
 #'     the grouping, defaults to "ident"
+#' @param warn logical indicating if warninf should be shown, defaults to TRUE
+#' @param highlight_class a character indicating a class if it wants to be highlighted. ie "1"
 #' @param ... additional argumetns to be passed to GGally::ggpairs
 #'
 #' @return a ggplot grid with the plots
@@ -32,7 +34,10 @@ plot_flowstyle <- function(object, markernames, classif_col = "ident", ...) {
 #' @export
 plot_flowstyle.data.frame <- function(object,
                                       markernames,
-                                      classif_col = "ident", ...) {
+                                      classif_col = "ident",
+                                      warn = TRUE,
+                                      highlight_class = NULL,
+                                      ...) {
 
     tmp_ident <- object[[classif_col]]
     object <- object[,markernames]
@@ -41,16 +46,29 @@ plot_flowstyle.data.frame <- function(object,
     object[object == 0] <- abs(stats::rnorm(sum(object == 0),mean = 0, sd = 0.2))
     object$ident <- tmp_ident
 
+    if (warn & length(unique(object$ident)) > 5 & is.null(highlight_class)) {
+        warning("There are more than 5 different identities, ",
+                "telling them appart might be hard based on color only. ",
+                "Consider using the 'highlight_class' argument")
+    }
+
+    columns_plot <-  1:(ncol(object) - 1)
+    aes <- ggplot2::aes_string(colour = "ident")
+
+    if (!is.null(highlight_class)) {
+        object$highlight <- object$ident %in% highlight_class
+        aes <- ggplot2::aes_string(colour = "ident", alpha = "highlight")
+    }
+
 
     g <- GGally::ggpairs(
         as.data.frame(object),
-        columns = 1:(ncol(object) - 1),
-        ggplot2::aes_string(colour = "ident"),
+        columns = columns_plot,
+        aes,
         progress = FALSE,
         lower = list(
             continuous = GGally::wrap(
-                "dot_no_facet",
-                alpha = 0.2)),
+                "dot_no_facet")),
         diag = list(
             continuous = GGally::wrap(
                 'densityDiag',
