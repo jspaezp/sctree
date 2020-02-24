@@ -1,6 +1,4 @@
 context("test-ranger_importances")
-library(Seurat)
-library(sctree)
 
 
 test_that("ranger importances from Seurat objects work", {

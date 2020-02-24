@@ -70,7 +70,7 @@ and the values being the classification it corresponds to" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.0</span>
       </span>
     </div>
 
@@ -145,10 +145,10 @@ and the values being the classification it corresponds to</p>
     <p>a named vector</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>iris_tree</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>partykit</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/partykit/man/ctree.html'>ctree</a></span>(<span class='no'>Species</span> ~ <span class='no'>.</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>iris</span>)
-<span class='fu'>get_cluster_mapping</span>(<span class='no'>iris_tree</span>)</div><div class='output co'>#&gt;          2          5          6          7 
-#&gt;     setosa versicolor versicolor  virginica 
-#&gt; Levels: setosa versicolor virginica</div><div class='input'>
+    <pre class="examples"><div class='input'><span class='no'>my_tree</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fit_ctree.html'>fit_ctree</a></span>(<span class='no'>small_5050_mix</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'CKB'</span>, <span class='st'>'ADA'</span>, <span class='st'>'ASNS'</span>, <span class='st'>'PRDX6'</span>, <span class='st'>'MZB1'</span>))
+<span class='fu'>get_cluster_mapping</span>(<span class='no'>my_tree</span>)</div><div class='output co'>#&gt; 3 5 6 8 9 
+#&gt; 0 0 1 0 1 
+#&gt; Levels: 0 1</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

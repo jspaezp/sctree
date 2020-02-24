@@ -17,10 +17,10 @@ returns a named vector, the names being the terminal node id in the tree
 and the values being the classification it corresponds to
 }
 \examples{
-iris_tree <- partykit::ctree(Species ~ ., data = iris)
-get_cluster_mapping(iris_tree)
+my_tree <- fit_ctree(small_5050_mix, c('CKB', 'ADA', 'ASNS', 'PRDX6', 'MZB1'))
+get_cluster_mapping(my_tree)
 
 }
-#           2          5          6          7 
-#      setosa versicolor versicolor  virginica 
-#  Levels: setosa versicolor virginica
+#  3 5 6 8 9 
+#  0 0 1 0 1 
+#  Levels: 0 1

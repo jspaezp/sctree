@@ -1,6 +1,6 @@
 Package: sctree
 Title: Tree based analysis of single rna-seq clusters
-Version: 0.0.5.0003
+Version: 0.0.7.0000
 Authors@R: 
     person(given = "J. Sebastian",
            family = "Paez",
@@ -19,11 +19,15 @@ Suggests:
     pkgdown,
     devtools,
     usethis,
-    covr
+    covr,
+    DESeq2,
+    MAST,
+    SummarizedExperiment
 VignetteBuilder: knitr
 Imports: 
     AnnotationDbi,
     DT,
+    RColorBrewer,
     ggplot2,
     GGally,
     memoise,

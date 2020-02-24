@@ -5,9 +5,9 @@
 \alias{autoplot.matrix}
 \title{autoplot.table}
 \usage{
-autoplot.table(object, min_color = NULL, show_number = FALSE, ...)
+\method{autoplot}{table}(object, min_color = NULL, show_number = FALSE, ...)
 
-autoplot.matrix(object, ...)
+\method{autoplot}{matrix}(object, ...)
 }
 \arguments{
 \item{object}{a table object}
@@ -26,9 +26,9 @@ ggpplot object
 \description{
 Heatmap with ggplot from table objects
 }
-\section{Functions}{
+\section{Methods (by generic)}{
 \itemize{
-\item \code{autoplot.matrix}: plot a matrix object as a heatmap using ggplot2
+\item \code{autoplot}: plot a matrix object as a heatmap using ggplot2
 }}
 
 \examples{

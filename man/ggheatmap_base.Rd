@@ -35,3 +35,4 @@ my_df <- data.frame(x = 1:2, y = 1:2, z = 1:2)
 ggheatmap_base(my_df, x = "x", y = "y", value = "z", show_number = TRUE)
 ggheatmap_base(my_df, x = "x", y = "y", value = "z", show_number = FALSE)
 }
+\keyword{internal}

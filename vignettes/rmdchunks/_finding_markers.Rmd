@@ -15,7 +15,7 @@ when addressing this issue and for more details.
 
 ```{r}
 library(sctree)
-rang_importances <- ranger_importances.Seurat(
+rang_importances <- ranger_importances(
     small_5050_mix,
     cluster = "ALL",
     warn.imp.method = FALSE)
@@ -33,12 +33,13 @@ head(rang_importances)
 # Seurat Interface
 
 As an analogous function to Seurat's `FindAllMarkers`, we offer
-`FindAllMarkers_ranger.Seurat`
+`ranger_importances` or the `RangerDE` option for `FindAllMarkers`
 
 ```{r}
-markers <- FindAllMarkers_ranger.Seurat(
+markers <- FindAllMarkers(
   small_5050_mix,
-  warn.imp.method = FALSE)
+  warn.imp.method = FALSE, 
+  test.use = "RangerDE")
 
 head(markers)
 

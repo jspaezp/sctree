@@ -31,6 +31,9 @@ single cell rna-sequencing to calidation and new sub-population discovery.
 Features suggesting pseudo-gating strategies to purify found populations via
 flow-cytometry, antibody querying and cross validations between datasets.
 
+Please check our companion documentation website hosted at
+[jspaezp.github.io/sctree](https://jspaezp.github.io/sctree/).
+
 Number of lines in roxygen comments:
 `r system2("bash", "-c \"grep -RP '^#' ./R | wc -l\"", stdout = TRUE)`
 

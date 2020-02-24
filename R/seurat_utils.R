@@ -3,9 +3,11 @@
 # This is a bundled copy of
 # https://github.com/satijalab/seurat/blob/master/R/differential_expression.R
 # only to over-write the behaviour of FindMarkers and derivatives ...
+# this addition is intended to preserve compatibility in the output given
+# by our function and
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#' @importFrom Seurat FindMarkers DefaultAssay GetAssayData
+#' @importFrom Seurat FindMarkers DefaultAssay GetAssayData WhichCells
 NULL
 
 #' Gene expression markers of identity classes
@@ -144,11 +146,11 @@ FindAllMarkers <- function(
     if (is.null(x = node)) {
         idents.all <- sort(x = unique(x = Idents(object = object)))
     } else {
-        tree <- Tool(object = object, slot = 'BuildClusterTree')
+        tree <- Seurat:::Tool(object = object, slot = 'BuildClusterTree')
         if (is.null(x = tree)) {
             stop("Please run 'BuildClusterTree' before finding markers on nodes")
         }
-        descendants <- DFT(tree = tree, node = node, include.children = TRUE)
+        descendants <- Seurat:::DFT(tree = tree, node = node, include.children = TRUE)
         all.children <- sort(x = tree$edge[, 2][!tree$edge[, 2] %in% tree$edge[, 1]])
         descendants <- MapVals(
             vec = descendants,
@@ -310,7 +312,7 @@ FindConservedMarkers <- function(
         stop("meta.method should be a function from the metap package. Please see https://cran.r-project.org/web/packages/metap/metap.pdf for a detailed description of the available functions.")
     }
     object.var <- FetchData(object = object, vars = grouping.var)
-    object <- SetIdent(
+    object <- Seurat::SetIdent(
         object = object,
         cells = colnames(x = object),
         value = paste(Idents(object = object), object.var[, 1], sep = "_")
@@ -343,7 +345,7 @@ FindConservedMarkers <- function(
             )
             next
         }
-        cells.1 <- WhichCells(object = object, idents = ident.use.1)
+        cells.1 <- Seurat::WhichCells(object = object, idents = ident.use.1)
         if (is.null(x = ident.2)) {
             cells.2 <- setdiff(x = cells[[i]], y = cells.1)
             ident.use.2 <- names(x = which(x = table(Idents(object = object)[cells.2]) > 0))
@@ -688,16 +690,18 @@ FindMarkers.default <- function(
                        c(std.arguments,
                          latent.vars = latent.vars)),
         {
-            de.results <- try({do.call(test.use, c(std.arguments, ...), envir = parent.frame(2))}, silent = TRUE)
+            # If no test is matched, tries to call a function with the name
+            # of the provided test
+            found_functions <- findFunction(test.use)
 
-            # This section makes sure that the correct error is raised, the
-            if (class(de.results) == "try-error") {
-                if (grepl(paste0("could not find function.*", test.use), de.results)) {
-                    stop("Unknown test: ", test.use)
-                } else {
-                    stop(de.results)
-                }
+            if (length(found_functions) == 0) {
+                stop("Unknown test: ", test.use, "\n",
+                     "This might be casued because the function that provides ",
+                     "that test hast not been loaded. Make sure to load the ",
+                     "package that would contain it.")
             }
+
+            de.results <- do.call(test.use, c(std.arguments, ...), envir = found_functions[[1]])
 
             de.results
         }
@@ -820,7 +824,7 @@ FindMarkers.Seurat <- function(
             stop(paste0("The following cell names provided to ident.1 are not present in the object: ", paste(bad.cells, collapse = ", ")))
         }
     } else {
-        ident.1 <- WhichCells(object = object, idents = ident.1)
+        ident.1 <- Seurat::WhichCells(object = object, idents = ident.1)
     }
     # if NULL for ident.2, use all other cells
     if (length(x = as.vector(x = ident.2)) > 1 &&
@@ -833,7 +837,7 @@ FindMarkers.Seurat <- function(
         if (is.null(x = ident.2)) {
             ident.2 <- setdiff(x = colnames(x = data.use), y = ident.1)
         } else {
-            ident.2 <- WhichCells(object = object, idents = ident.2)
+            ident.2 <- Seurat::WhichCells(object = object, idents = ident.2)
         }
     }
     if (!is.null(x = latent.vars)) {
@@ -972,7 +976,7 @@ DESeq2DETest <- function(
     verbose = TRUE,
     ...
 ) {
-    if (!PackageCheck('DESeq2', error = FALSE)) {
+    if (!Seurat:::PackageCheck('DESeq2', error = FALSE)) {
         stop("Please install DESeq2 - learn more at https://bioconductor.org/packages/release/bioc/html/DESeq2.html")
     }
     group.info <- data.frame(row.names = c(cells.1, cells.2))
@@ -1379,7 +1383,7 @@ MASTDETest <- function(
     ...
 ) {
     # Check for MAST
-    if (!PackageCheck('MAST', error = FALSE)) {
+    if (!Seurat:::PackageCheck('MAST', error = FALSE)) {
         stop("Please install MAST - learn more at https://github.com/RGLab/MAST")
     }
     if (length(x = latent.vars) > 0) {

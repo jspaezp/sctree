@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.0</span>
       </span>
     </div>
 
@@ -130,7 +130,14 @@
     <pre class="usage"><span class='fu'>plot_flowstyle</span>(<span class='no'>object</span>, <span class='no'>markernames</span>, <span class='kw'>classif_col</span> <span class='kw'>=</span> <span class='st'>"ident"</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>plot_flowstyle</span>(<span class='no'>object</span>, <span class='no'>markernames</span>, <span class='kw'>classif_col</span> <span class='kw'>=</span> <span class='st'>"ident"</span>, <span class='no'>...</span>)
+<span class='fu'>plot_flowstyle</span>(
+  <span class='no'>object</span>,
+  <span class='no'>markernames</span>,
+  <span class='kw'>classif_col</span> <span class='kw'>=</span> <span class='st'>"ident"</span>,
+  <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>highlight_class</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)
 
 <span class='co'># S3 method for Seurat</span>
 <span class='fu'>plot_flowstyle</span>(<span class='no'>object</span>, <span class='no'>markernames</span>, <span class='kw'>classif_col</span> <span class='kw'>=</span> <span class='st'>"ident"</span>, <span class='no'>...</span>)</pre>
@@ -154,6 +161,14 @@ the grouping, defaults to "ident"</p></td>
     <tr>
       <th>...</th>
       <td><p>additional argumetns to be passed to GGally::ggpairs</p></td>
+    </tr>
+    <tr>
+      <th>warn</th>
+      <td><p>logical indicating if warninf should be shown, defaults to TRUE</p></td>
+    </tr>
+    <tr>
+      <th>highlight_class</th>
+      <td><p>a character indicating a class if it wants to be highlighted. ie "1"</p></td>
     </tr>
     </table>
 

@@ -70,7 +70,7 @@ of `sctree::get_concensus_rules`" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.0</span>
       </span>
     </div>
 
@@ -144,41 +144,32 @@ of `sctree::get_concensus_rules`</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>returns silently the same object but prints the rules to the console.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>get_concensus_rules</p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-    <span class='no'>iris_tree</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>partykit</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/partykit/man/ctree.html'>ctree</a></span>(<span class='no'>Species</span> ~ <span class='no'>.</span>, <span class='kw'>data</span> <span class='kw'>=</span> <span class='no'>iris</span>)
-    <span class='no'>my_rules</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_concensus_rules.html'>get_concensus_rules</a></span>(<span class='no'>iris_tree</span>)
-    <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>iris_tree</span>)</div><div class='output co'>#&gt; 
-#&gt; Model formula:
-#&gt; Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
-#&gt; 
-#&gt; Fitted party:
-#&gt; [1] root
-#&gt; |   [2] Petal.Length &lt;= 1.9: setosa (n = 50, err = 0.0%)
-#&gt; |   [3] Petal.Length &gt; 1.9
-#&gt; |   |   [4] Petal.Width &lt;= 1.7
-#&gt; |   |   |   [5] Petal.Length &lt;= 4.8: versicolor (n = 46, err = 2.2%)
-#&gt; |   |   |   [6] Petal.Length &gt; 4.8: versicolor (n = 8, err = 50.0%)
-#&gt; |   |   [7] Petal.Width &gt; 1.7: virginica (n = 46, err = 2.2%)
-#&gt; 
-#&gt; Number of inner nodes:    3
-#&gt; Number of terminal nodes: 4</div><div class='input'>    
-# 
-# Model formula:
-# Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
-# 
-# Fitted party:
-# [1] root
-# |   [2] Petal.Length <= 1.9: setosa (n = 50, err = 0.0%)
-# |   [3] Petal.Length > 1.9
-# |   |   [4] Petal.Width <= 1.7
-# |   |   |   [5] Petal.Length <= 4.8: versicolor (n = 46, err = 2.2%)
-# |   |   |   [6] Petal.Length > 4.8: versicolor (n = 8, err = 50.0%)
-# |   |   [7] Petal.Width > 1.7: virginica (n = 46, err = 2.2%)
-# 
-# Number of inner nodes:    3
-# Number of terminal nodes: 4
+    <span class='no'>my_tree</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='fit_ctree.html'>fit_ctree</a></span>(<span class='no'>small_5050_mix</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>'CKB'</span>, <span class='st'>'ADA'</span>, <span class='st'>'ASNS'</span>, <span class='st'>'PRDX6'</span>, <span class='st'>'MZB1'</span>))
+    <span class='no'>my_rules</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_concensus_rules.html'>get_concensus_rules</a></span>(<span class='no'>my_tree</span>)
+    <span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span>(<span class='no'>my_rules</span>)</div><div class='output co'>#&gt; Cluster-0: 
+#&gt; 	all elements:
+#&gt; 		ADA +
+#&gt; 		ASNS -
+#&gt; Cluster-1: 
+#&gt; 	all elements:
+#&gt; 		ADA -
+#&gt; 		ASNS +
+#&gt; 		CKB +</div><div class='input'>    
+# Cluster-0: 
+# 	all elements:
+# 		ADA +
+# 		ASNS -
+# Cluster-1: 
+# 	all elements:
+# 		ADA -
+# 		ASNS +
+# 		CKB +
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -186,6 +177,7 @@ of `sctree::get_concensus_rules`</p>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#see-also">See also</a></li>
       <li><a href="#examples">Examples</a></li>
     </ul>
 

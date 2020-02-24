@@ -67,7 +67,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.0</span>
       </span>
     </div>
 
@@ -130,8 +130,72 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-plotting-functions" class="hasAnchor"><a href="#section-plotting-functions" class="anchor"></a>Plotting Functions</h2>
+          <p class="section-desc"><p>Functions used to plot the results of the data analysis</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="plot_gates.html">plot_gates()</a></code> </p>
+        </td>
+        <td><p>Plot Decision trees as gates</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_flowstyle.html">plot_flowstyle()</a></code> </p>
+        </td>
+        <td><p>plot_flowstyle</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-functions-to-handle-tree-models" class="hasAnchor"><a href="#section-functions-to-handle-tree-models" class="anchor"></a>Functions to handle tree models</h2>
+          <p class="section-desc"><p>Different functions that fit, visualize, output and print tree based models</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="get_concensus_rules.html">get_concensus_rules()</a></code> </p>
+        </td>
+        <td><p>get_concensus_rules</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="print.concensus.rules.html">print(<i>&lt;concensus.rules&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Prints concensus rules</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_cluster_mapping.html">get_cluster_mapping()</a></code> </p>
+        </td>
+        <td><p>get_cluster_mapping</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fit_ctree.html">fit_ctree()</a></code> </p>
+        </td>
+        <td><p>Fits a classification tree on a Seurat object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="as.garnett.html">as.garnett()</a></code> <code><a href="as.garnett.html">print(<i>&lt;garnett.list&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>as.garnett</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="cross_validate.html">cross_validate()</a></code> </p>
+        </td>
+        <td><p>Fits a decision tree in one data set and tests the performance in another</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-marker-finding-functions" class="hasAnchor"><a href="#section-marker-finding-functions" class="anchor"></a>Marker Finding functions</h2>
+          <p class="section-desc"><p>Functions with output consistent with Seurat equivalents, but allow using other classifiers (such as RangerDE).</p></p>
         </th>
       </tr>
       <tr>
@@ -152,19 +216,75 @@
           <p><code><a href="FindMarkers.html">FindMarkers()</a></code> </p>
         </td>
         <td><p>Gene expression markers of identity classes</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-handle-gene-names" class="hasAnchor"><a href="#section-handle-gene-names" class="anchor"></a>Handle Gene names</h2>
+          <p class="section-desc"><p>Utility functions to find gene names and their common aliases (ie. ITGAX &lt;&gt; CD11c)</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="get_genesymbols.html">get_genesymbols()</a></code> </p>
+        </td>
+        <td><p>get_genesymbols</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="RangerDE.html">RangerDE()</a></code> </p>
+          <p><code><a href="get_aliases.html">get_aliases()</a></code> </p>
         </td>
-        <td><p>RangerDE</p></td>
+        <td><p>get_aliases</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="is_gene_membrane.html">is_gene_membrane()</a></code> </p>
+        </td>
+        <td><p>is_gene_membrane</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-antibodies" class="hasAnchor"><a href="#section-antibodies" class="anchor"></a>Antibodies</h2>
+          <p class="section-desc"><p>Query antibody vendors for products that match your gene of interest.</p></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="antibodies.html">query_cc_antibodies()</a></code> <code><a href="antibodies.html">query_sc_antibodies()</a></code> <code><a href="antibodies.html">query_biocompare_antibodies()</a></code> <code><a href="antibodies.html">query_biolegend_antibodies()</a></code> </p>
         </td>
         <td><p>Query Antibodies from multiple vendors</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-datasets" class="hasAnchor"><a href="#section-datasets" class="anchor"></a>Datasets</h2>
+          <p class="section-desc"><p>Small versions of sample datasets, they are commonly used to test the package functionality and have reproducible examples.</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="small_5050_mix.html">small_5050_mix</a></code> </p>
+        </td>
+        <td><p>A random subset of genes and cells from a 50:50 mixture of 293T:Jurkat cells</p></td>
       </tr><tr>
+        
+        <td>
+          <p><code><a href="small_9901_mix.html">small_9901_mix</a></code> </p>
+        </td>
+        <td><p>A random subset of genes and cells from a 99:1 mixture of 293T:Jurkat cells</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-rest" class="hasAnchor"><a href="#section-rest" class="anchor"></a>Rest</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      <tr>
         
         <td>
           <p><code><a href="as.data.frame.Seurat.html">as.data.frame(<i>&lt;Seurat&gt;</i>)</a></code> </p>
@@ -179,118 +299,15 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="as.garnett.html">as.garnett()</a></code> <code><a href="as.garnett.html">print(<i>&lt;garnett.list&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>as.garnett</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="autoplot.html">autoplot()</a></code> </p>
-        </td>
-        <td><p>autoplot
-wrapper arround ggplot2 autoplot generic</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="autoplot.table.html">autoplot.table()</a></code> <code><a href="autoplot.table.html">autoplot.matrix()</a></code> </p>
+          <p><code><a href="autoplot.table.html">autoplot(<i>&lt;table&gt;</i>)</a></code> <code><a href="autoplot.table.html">autoplot(<i>&lt;matrix&gt;</i>)</a></code> </p>
         </td>
         <td><p>autoplot.table</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="cross_validate.html">cross_validate()</a></code> </p>
-        </td>
-        <td><p>Fits a decision tree in one data set and tests the performance in another</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_ctree.html">fit_ctree()</a></code> </p>
-        </td>
-        <td><p>Fits a classification tree on a Seurat object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_aliases.html">get_aliases()</a></code> </p>
-        </td>
-        <td><p>get_aliases</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_cluster_mapping.html">get_cluster_mapping()</a></code> </p>
-        </td>
-        <td><p>get_cluster_mapping</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_concensus_rules.html">get_concensus_rules()</a></code> </p>
-        </td>
-        <td><p>get_concensus_rules</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="get_genesymbols.html">get_genesymbols()</a></code> </p>
-        </td>
-        <td><p>get_genesymbols</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ggheatmap_base.html">ggheatmap_base()</a></code> </p>
-        </td>
-        <td><p>Basic heatmap using ggplot</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="include_roxygen_example.html">include_roxygen_example()</a></code> </p>
-        </td>
-        <td><p>include_roxygen_example</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is.confusion.matrix.html">is.confusion.matrix()</a></code> </p>
-        </td>
-        <td><p>Check if the element has the structure of a confusion matrix</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_gene_membrane.html">is_gene_membrane()</a></code> </p>
-        </td>
-        <td><p>is_gene_membrane</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_flowstyle.html">plot_flowstyle()</a></code> </p>
-        </td>
-        <td><p>plot_flowstyle</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plot_gates.html">plot_gates()</a></code> </p>
-        </td>
-        <td><p>Plot Decision trees as gates</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.concensus.rules.html">print(<i>&lt;concensus.rules&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Prints concensus rules</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ranger_importances.df.html">ranger_importances.df()</a></code> <code><a href="ranger_importances.df.html">ranger_importances.Seurat()</a></code> <code><a href="ranger_importances.df.html">FindAllMarkers_ranger.Seurat()</a></code> </p>
+          <p><code><a href="ranger_importances.html">ranger_importances()</a></code> <code><a href="ranger_importances.html">FindAllMarkers_ranger.Seurat()</a></code> </p>
         </td>
         <td><p>ranger_importances</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="small_5050_mix.html">small_5050_mix</a></code> </p>
-        </td>
-        <td><p>A random subset of genes and cells from a 50:50 mixture of 293T:Jurkat cells</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="small_9901_mix.html">small_9901_mix</a></code> </p>
-        </td>
-        <td><p>A random subset of genes and cells from a 99:1 mixture of 293T:Jurkat cells</p></td>
       </tr>
     </tbody>
     </table>
@@ -299,7 +316,13 @@ wrapper arround ggplot2 autoplot generic</p></td>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#section-plotting-functions">Plotting Functions</a></li>
+      <li><a href="#section-functions-to-handle-tree-models">Functions to handle tree models</a></li>
+      <li><a href="#section-marker-finding-functions">Marker Finding functions</a></li>
+      <li><a href="#section-handle-gene-names">Handle Gene names</a></li>
+      <li><a href="#section-antibodies">Antibodies</a></li>
+      <li><a href="#section-datasets">Datasets</a></li>
+      <li><a href="#section-rest">Rest</a></li>
     </ul>
   </div>
 </div>

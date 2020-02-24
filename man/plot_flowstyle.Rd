@@ -8,7 +8,14 @@
 \usage{
 plot_flowstyle(object, markernames, classif_col = "ident", ...)
 
-\method{plot_flowstyle}{data.frame}(object, markernames, classif_col = "ident", ...)
+\method{plot_flowstyle}{data.frame}(
+  object,
+  markernames,
+  classif_col = "ident",
+  warn = TRUE,
+  highlight_class = NULL,
+  ...
+)
 
 \method{plot_flowstyle}{Seurat}(object, markernames, classif_col = "ident", ...)
 }
@@ -21,6 +28,10 @@ plot_flowstyle(object, markernames, classif_col = "ident", ...)
 the grouping, defaults to "ident"}
 
 \item{...}{additional argumetns to be passed to GGally::ggpairs}
+
+\item{warn}{logical indicating if warninf should be shown, defaults to TRUE}
+
+\item{highlight_class}{a character indicating a class if it wants to be highlighted. ie "1"}
 }
 \value{
 a ggplot grid with the plots

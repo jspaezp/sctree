@@ -30,3 +30,6 @@ get_genesymbols(c("SUPERFAKEGENE", "ERK"))
 # $ERK
 # [1] "EPHB2" "MAPK1"
 }
+\seealso{
+get_aliases
+}

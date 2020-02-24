@@ -3,6 +3,7 @@
 # TODO: add argument to whitelist, blacklist or filter the genes to use
 # TODO: restructure the function to get method dispatchment (optional)
 
+
 #' @title ranger_importances
 #'
 #' @description
@@ -29,13 +30,18 @@
 #'     but this behavior can be modified by the
 #' @export
 #'
-
 #' @evalRd include_roxygen_example("
-#'     head(ranger_importances.Seurat(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
+#'     head(ranger_importances(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
 #'     ")
 #'
 #' @importFrom ranger ranger importance_pvalues
-ranger_importances.df <- function(object, cluster = NULL,
+ranger_importances <- function(x, ...){
+    UseMethod("ranger_importances")
+}
+
+#' @export
+#' @method ranger_importances data.frame
+ranger_importances.data.frame <- function(object, cluster = NULL,
                                   pval_cutoff = 0.05,
                                   imp_method = c("janitza", "altmann"),
                                   num.trees = 500,
@@ -56,10 +62,12 @@ ranger_importances.df <- function(object, cluster = NULL,
 
         new_warning <- paste0(
             "Only few negative importance values found, ",
-            "inaccurate p-values. Consider the 'altmann' approach.\n",
+            "inaccurate p-values. Consider the 'altmann' approach.\n\n",
             "This can be done by setting the argument 'imp_method' to ",
             "'altmann', note that this method is extremely computationally ",
-            "intensive.\n",
+            "intensive.\n\n",
+            "This warning can be disabled by setting the argument",
+            " `warn.imp.method` to `FALSE`\n\n",
             "For more information please refer to ?ranger::ranger")
 
         if (grepl(paste(warn_message1, warn_message2, sep = "|"), w$message)) {
@@ -165,8 +173,8 @@ ranger_importances.df <- function(object, cluster = NULL,
 }
 
 
-#' @describeIn ranger_importances.df Calculate variable importances to calssify a Seurat object
 #' @export
+#' @method ranger_importances Seurat
 #' @importFrom Seurat VariableFeatures
 ranger_importances.Seurat <- function(object, cluster = NULL,
                                       pval_cutoff = 0.05,
@@ -178,18 +186,19 @@ ranger_importances.Seurat <- function(object, cluster = NULL,
 
     tmp <- as.data.frame.Seurat(object, genes = genes_use, fix_names = FALSE)
 
-    return(ranger_importances.df(tmp,
-                                 cluster = cluster,
-                                 pval_cutoff = pval_cutoff,
-                                 imp_method = imp_method,
-                                 num.trees = num.trees,
-                                 warn.imp.method = warn.imp.method,
-                                 ...))
+    return(ranger_importances.data.frame(
+        tmp,
+        cluster = cluster,
+        pval_cutoff = pval_cutoff,
+        imp_method = imp_method,
+        num.trees = num.trees,
+        warn.imp.method = warn.imp.method,
+        ...))
 }
 
 
 # TODO, make functions have the same interface as Seurat ...
-#' @describeIn ranger_importances.df Calculate variable importances to each cluster in a Seurat object
+#' @describeIn ranger_importances Calculate variable importances to each cluster in a Seurat object
 #' @export
 FindAllMarkers_ranger.Seurat <- function(object,
                                          genes_use = Seurat::VariableFeatures(object),
@@ -198,7 +207,7 @@ FindAllMarkers_ranger.Seurat <- function(object,
     tmp <- as.data.frame.Seurat(object, genes = genes_use, fix_names = FALSE)
 
     object_ranger_importances.Seurat <- function(cluster, ...) {
-        ranger_importances.df(
+        ranger_importances.data.frame(
             tmp, cluster = cluster,
             return_what = "signif_importances_ranger", ...)
     }
@@ -236,11 +245,11 @@ FindAllMarkers_ranger.Seurat <- function(object,
 #'     ident.1 = 0, test.use = 'RangerDE', warn.imp.method = FALSE))"
 #'     })
 #' @importFrom Matrix t
-#' @export
+#' @keywords internal
 RangerDE <- function(data.use, cells.1, cells.2, verbose, ...) {
     df <- as.data.frame(Matrix::t(data.use))
     df$ident <- as.character(rownames(df) %in% cells.1)
-    ret <- ranger_importances.df(
+    ret <- ranger_importances.data.frame(
         df, cluster = "TRUE", verbose = verbose,
         return_what = "importances_ranger", ...)
     names(ret) <- gsub("pvalue", "p_val", names(ret))
