@@ -19,8 +19,7 @@ Suggests:
     pkgdown,
     devtools,
     usethis,
-    covr,
-    DESeq2
+    covr
 VignetteBuilder: knitr
 Imports: 
     AnnotationDbi,
