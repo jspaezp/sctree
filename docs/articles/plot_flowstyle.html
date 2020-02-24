@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.6.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.7.0</span>
       </span>
     </div>
 
@@ -93,15 +93,22 @@
 <h1 class="hasAnchor">
 <a href="#this-is-done-to-emulate-the-plots-from-flow-cytometry-" class="anchor"></a>This is done to emulate the plots from flow cytometry.</h1>
 <p>but using data from single cell rna-seq (seurat object …)</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(Seurat)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span>(sctree)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(Seurat)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(sctree)</a></code></pre></div>
 </div>
 <div id="relies-on-having-done-the-standard-seurat-workflow-before-findallmarkers" class="section level1">
 <h1 class="hasAnchor">
 <a href="#relies-on-having-done-the-standard-seurat-workflow-before-findallmarkers" class="anchor"></a>Relies on having done the standard seurat workflow before <code>FindAllMarkers</code>
 </h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="../reference/plot_flowstyle.html">plot_flowstyle</a></span>(Seurat<span class="op">::</span>pbmc_small, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"LTB"</span>, <span class="st">"PIK3IP1"</span>, <span class="st">"CA2"</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="../reference/plot_flowstyle.html">plot_flowstyle</a></span>(Seurat<span class="op">::</span>pbmc_small, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"HLA-DPB1"</span>, <span class="st">"LYZ"</span>, <span class="st">"TYMP"</span>))</a></code></pre></div>
 <p><img src="plot_flowstyle_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="../reference/plot_flowstyle.html">plot_flowstyle</a></span>(Seurat<span class="op">::</span>pbmc_small, <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"HLA-DPB1"</span>, <span class="st">"LYZ"</span>, <span class="st">"TYMP"</span>), <span class="dt">highlight_class =</span> <span class="st">"1"</span>)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; Warning: Using alpha for a discrete variable is not advised.</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; Warning: Using alpha for a discrete variable is not advised.</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; Warning: Using alpha for a discrete variable is not advised.</span></a></code></pre></div>
+<p><img src="plot_flowstyle_files/figure-html/unnamed-chunk-2-2.png" width="700"></p>
 </div>
   </div>
 
