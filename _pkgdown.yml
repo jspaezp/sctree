@@ -1,1 +1,54 @@
 destination: docs
+reference:
+  - title: "Plotting Functions"
+    desc: >
+      Functions used to plot the results of the data analysis
+    contents:
+      - plot_gates
+      - plot_flowstyle
+  - title: "Functions to handle tree models"
+    desc: >
+      Different functions that fit, visualize, output and print
+      tree based models
+    contents:
+      - get_concensus_rules
+      - print.concensus.rules
+      - get_cluster_mapping
+      - fit_ctree
+      - as.garnett
+      - cross_validate
+  - title: "Marker Finding functions"
+    desc: >
+      Functions with output consistent with Seurat equivalents, but allow using
+      other classifiers (such as RangerDE).
+    contents:
+      - FindAllMarkers
+      - FindConservedMarkers
+      - FindMarkers
+  - title: "Handle Gene names"
+    desc: >
+      Utility functions to find gene names and their common aliases (ie. ITGAX <> CD11c)
+    contents:
+      - get_genesymbols
+      - get_aliases
+      - is_gene_membrane
+  - title: "Antibodies"
+    desc: >
+      Query antibody vendors for products that match your gene of interest.
+    contents:
+      - antibodies
+  - title: "Datasets"
+    desc: >
+      Small versions of sample datasets, they are commonly used to test the
+      package functionality and have reproducible examples.
+    contents:
+      - small_5050_mix
+      - small_9901_mix
+  - title: "Rest"
+    desc: >
+
+    contents:
+      - as.data.frame.Seurat
+      - as.frequency.matrix
+      - autoplot.table
+      - ranger_importances

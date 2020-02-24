@@ -19,9 +19,12 @@ Features suggesting pseudo-gating strategies to purify found populations
 via flow-cytometry, antibody querying and cross validations between
 datasets.
 
-Number of lines in roxygen comments: 1024
+Please check our companion documentation website hosted at
+[jspaezp.github.io/sctree](https://jspaezp.github.io/sctree/).
 
-Number of lines in R code: 1946
+Number of lines in roxygen comments: 1039
+
+Number of lines in R code: 1968
 
 # Installation
 
@@ -60,8 +63,7 @@ Original data can be found here:
 <!-- end list -->
 
 ``` r
-require(sctree)
-#> Loading required package: sctree
+library(sctree)
 #> Loading required package: Seurat
 #> Registered S3 method overwritten by 'GGally':
 #>   method from   
@@ -71,7 +73,7 @@ require(sctree)
 #> The following objects are masked from 'package:Seurat':
 #> 
 #>     FindAllMarkers, FindConservedMarkers, FindMarkers
-require(Seurat)
+library(Seurat)
 
 set.seed(6)
 
@@ -102,7 +104,7 @@ when addressing this issue and for more details.
 
 ``` r
 library(sctree)
-rang_importances <- ranger_importances.Seurat(
+rang_importances <- ranger_importances(
     small_5050_mix,
     cluster = "ALL",
     warn.imp.method = FALSE)
@@ -125,21 +127,24 @@ head(rang_importances)
 # Seurat Interface
 
 As an analogous function to Seurat’s `FindAllMarkers`, we offer
-`FindAllMarkers_ranger.Seurat`
+`ranger_importances` or the `RangerDE` option for `FindAllMarkers`
 
 ``` r
-markers <- FindAllMarkers_ranger.Seurat(
+markers <- FindAllMarkers(
   small_5050_mix,
-  warn.imp.method = FALSE)
+  warn.imp.method = FALSE, 
+  test.use = "RangerDE")
+#> Calculating cluster 0
+#> Calculating cluster 1
 
 head(markers)
-#>         importance pvalue    gene cluster
-#> ASNS      5.685892      0    ASNS       0
-#> TMSB4X    5.403575      0  TMSB4X       0
-#> ARHGDIB   5.114462      0 ARHGDIB       0
-#> ADA       3.853724      0     ADA       0
-#> CD3D      3.558077      0    CD3D       0
-#> MZB1      3.310409      0    MZB1       0
+#>         importance p_val    gene avg_logFC pct.1 pct.2 p_val_adj cluster
+#> MZB1     0.9641974     0    MZB1  2.004299 0.828 0.227         0       0
+#> CD3G     1.2004702     0    CD3G  1.849551 0.744 0.107         0       0
+#> CD3D     3.2936540     0    CD3D  1.842246 0.872 0.373         0       0
+#> ARHGDIB  2.3889365     0 ARHGDIB  1.787994 0.856 0.320         0       0
+#> AIF1     0.4203789     0    AIF1  1.759311 0.756 0.173         0       0
+#> FYB      0.8291528     0     FYB  1.750418 0.739 0.107         0       0
 
 plot.markers <- do.call(rbind, lapply(split(markers, markers$cluster), head, 3))
 
@@ -389,7 +394,7 @@ Here is a simple example for a gene widely know to have an antibody
 available
 
 ``` r
-require(sctree)
+library(sctree)
 head(query_biocompare_antibodies("CD11b"))
 #>                                                                   title
 #> 1 Anti-CD11b (integrin alpha-M) Rabbit Monoclonal Antibody, Clone#RM290
@@ -435,51 +440,51 @@ sessionInfo()
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] sctree_0.0.5.0003 Seurat_3.1.1     
+#> [1] sctree_0.0.7.0000 Seurat_3.1.1     
 #> 
 #> loaded via a namespace (and not attached):
 #>   [1] Rtsne_0.15           colorspace_1.4-1     selectr_0.4-2       
 #>   [4] ggridges_0.5.1       farver_2.0.1         leiden_0.3.1        
 #>   [7] listenv_0.8.0        npsurv_0.4-0         ggrepel_0.8.1       
 #>  [10] bit64_0.9-7          mvtnorm_1.0-11       AnnotationDbi_1.46.1
-#>  [13] xml2_1.2.2           ranger_0.11.2        codetools_0.2-16    
+#>  [13] xml2_1.2.2           ranger_0.12.1        codetools_0.2-16    
 #>  [16] splines_3.6.2        R.methodsS3_1.7.1    lsei_1.2-0          
-#>  [19] libcoin_1.0-5        knitr_1.26           zeallot_0.1.0       
-#>  [22] Formula_1.2-3        jsonlite_1.6         ica_1.0-2           
-#>  [25] cluster_2.1.0        png_0.1-7            R.oo_1.23.0         
-#>  [28] uwot_0.1.5           sctransform_0.2.0    compiler_3.6.2      
-#>  [31] httr_1.4.1           backports_1.1.5      assertthat_0.2.1    
-#>  [34] Matrix_1.2-18        lazyeval_0.2.2       htmltools_0.4.0     
-#>  [37] tools_3.6.2          rsvd_1.0.2           igraph_1.2.4.2      
-#>  [40] partykit_1.2-5       gtable_0.3.0         glue_1.3.1          
-#>  [43] RANN_2.6.1           reshape2_1.4.3       dplyr_0.8.3         
-#>  [46] Rcpp_1.0.3           Biobase_2.44.0       vctrs_0.2.0         
-#>  [49] gdata_2.18.0         ape_5.3              nlme_3.1-142        
-#>  [52] gbRd_0.4-11          lmtest_0.9-37        inum_1.0-1          
-#>  [55] xfun_0.11            stringr_1.4.0        globals_0.12.4      
-#>  [58] rvest_0.3.5          lifecycle_0.1.0      irlba_2.3.3         
-#>  [61] gtools_3.8.1         future_1.15.1        MASS_7.3-51.4       
-#>  [64] zoo_1.8-6            scales_1.1.0         parallel_3.6.2      
-#>  [67] RColorBrewer_1.1-2   yaml_2.2.0           memoise_1.1.0       
-#>  [70] reticulate_1.13      pbapply_1.4-2        gridExtra_2.3       
-#>  [73] ggplot2_3.2.1        rpart_4.1-15         reshape_0.8.8       
-#>  [76] stringi_1.4.3        RSQLite_2.1.4        S4Vectors_0.22.1    
-#>  [79] caTools_1.17.1.3     BiocGenerics_0.30.0  bibtex_0.4.2        
-#>  [82] Rdpack_0.11-0        SDMTools_1.1-221.2   rlang_0.4.2         
-#>  [85] pkgconfig_2.0.3      bitops_1.0-6         evaluate_0.14       
-#>  [88] lattice_0.20-38      ROCR_1.0-7           purrr_0.3.3         
-#>  [91] labeling_0.3         htmlwidgets_1.5.1    cowplot_1.0.0       
-#>  [94] bit_1.1-14           tidyselect_0.2.5     GGally_1.4.0        
-#>  [97] RcppAnnoy_0.0.14     wrapr_1.9.3          plyr_1.8.4          
-#> [100] magrittr_1.5         R6_2.4.1             IRanges_2.18.3      
-#> [103] gplots_3.0.1.1       DBI_1.0.0            pillar_1.4.2        
-#> [106] fitdistrplus_1.0-14  survival_3.1-8       tibble_2.1.3        
-#> [109] future.apply_1.3.0   tsne_0.1-3           crayon_1.3.4        
-#> [112] KernSmooth_2.23-16   plotly_4.9.1         rmarkdown_1.18      
-#> [115] viridis_0.5.1        grid_3.6.2           data.table_1.12.6   
-#> [118] blob_1.2.0           metap_1.1            digest_0.6.23       
-#> [121] tidyr_1.0.0          R.utils_2.9.1        RcppParallel_4.4.4  
-#> [124] stats4_3.6.2         munsell_0.5.0        viridisLite_0.3.0
+#>  [19] libcoin_1.0-5        knitr_1.26           Formula_1.2-3       
+#>  [22] jsonlite_1.6         ica_1.0-2            cluster_2.1.0       
+#>  [25] png_0.1-7            R.oo_1.23.0          uwot_0.1.5          
+#>  [28] sctransform_0.2.0    compiler_3.6.2       httr_1.4.1          
+#>  [31] assertthat_0.2.1     Matrix_1.2-18        lazyeval_0.2.2      
+#>  [34] htmltools_0.4.0      tools_3.6.2          rsvd_1.0.2          
+#>  [37] igraph_1.2.4.2       partykit_1.2-5       gtable_0.3.0        
+#>  [40] glue_1.3.1           RANN_2.6.1           reshape2_1.4.3      
+#>  [43] dplyr_0.8.3          Rcpp_1.0.3           Biobase_2.44.0      
+#>  [46] vctrs_0.2.2          gdata_2.18.0         ape_5.3             
+#>  [49] nlme_3.1-142         gbRd_0.4-11          lmtest_0.9-37       
+#>  [52] inum_1.0-1           xfun_0.11            stringr_1.4.0       
+#>  [55] globals_0.12.5       rvest_0.3.5          lifecycle_0.1.0     
+#>  [58] irlba_2.3.3          gtools_3.8.1         future_1.16.0       
+#>  [61] MASS_7.3-51.4        zoo_1.8-6            scales_1.1.0        
+#>  [64] parallel_3.6.2       RColorBrewer_1.1-2   yaml_2.2.0          
+#>  [67] memoise_1.1.0        reticulate_1.13      pbapply_1.4-2       
+#>  [70] gridExtra_2.3        ggplot2_3.2.1        rpart_4.1-15        
+#>  [73] reshape_0.8.8        stringi_1.4.6        RSQLite_2.1.4       
+#>  [76] S4Vectors_0.22.1     caTools_1.17.1.3     BiocGenerics_0.30.0 
+#>  [79] bibtex_0.4.2         Rdpack_0.11-0        SDMTools_1.1-221.2  
+#>  [82] rlang_0.4.4          pkgconfig_2.0.3      bitops_1.0-6        
+#>  [85] evaluate_0.14        lattice_0.20-38      ROCR_1.0-7          
+#>  [88] purrr_0.3.3          labeling_0.3         htmlwidgets_1.5.1   
+#>  [91] cowplot_1.0.0        bit_1.1-14           tidyselect_0.2.5    
+#>  [94] GGally_1.4.0         RcppAnnoy_0.0.14     wrapr_1.9.3         
+#>  [97] plyr_1.8.5           magrittr_1.5         R6_2.4.1            
+#> [100] IRanges_2.18.3       gplots_3.0.1.1       DBI_1.0.0           
+#> [103] pillar_1.4.3         fitdistrplus_1.0-14  survival_3.1-8      
+#> [106] tibble_2.1.3         future.apply_1.3.0   tsne_0.1-3          
+#> [109] crayon_1.3.4         KernSmooth_2.23-16   plotly_4.9.1        
+#> [112] rmarkdown_1.18       viridis_0.5.1        grid_3.6.2          
+#> [115] data.table_1.12.6    blob_1.2.0           metap_1.1           
+#> [118] digest_0.6.24        tidyr_1.0.0          R.utils_2.9.1       
+#> [121] RcppParallel_4.4.4   stats4_3.6.2         munsell_0.5.0       
+#> [124] viridisLite_0.3.0
 ```
 
 # Steps down the road

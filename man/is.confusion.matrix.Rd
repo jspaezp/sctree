@@ -20,3 +20,4 @@ is a table and whose elements are exclusively integers
 is.confusion.matrix(table(1:3, 3:1, 1:3)) # FALSE
 is.confusion.matrix(table(1:3, 3:1)) # TRUE
 }
+\keyword{internal}

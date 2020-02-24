@@ -21,14 +21,15 @@ but using data from single cell rna-seq (seurat object ...)
 
 
 ```{r message=FALSE}
-require(Seurat)
-require(sctree)
+library(Seurat)
+library(sctree)
 ```
 
 # Relies on having done the standard seurat workflow before `FindAllMarkers`
 
 ```{r}
-plot_flowstyle(Seurat::pbmc_small, c("LTB", "PIK3IP1", "CA2"))
+plot_flowstyle(Seurat::pbmc_small, c("HLA-DPB1", "LYZ", "TYMP"))
+plot_flowstyle(Seurat::pbmc_small, c("HLA-DPB1", "LYZ", "TYMP"), highlight_class = "1")
 ```
 
  

@@ -16,3 +16,4 @@ autoplot(object, ...)
 autoplot
 wrapper arround ggplot2 autoplot generic
 }
+\keyword{internal}

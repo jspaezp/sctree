@@ -22,3 +22,4 @@ formatted as a roxygen exmaple, including tags and output commented out.
 It is meant to be used with the evalRd tag as
 `#' @evalRd include_roxygen_example("print('a')")`
 }
+\keyword{internal}

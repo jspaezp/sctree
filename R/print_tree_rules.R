@@ -10,11 +10,11 @@
 #' @export
 #'
 #' @examples
-#' iris_tree <- partykit::ctree(Species ~ ., data = iris)
-#' get_cluster_mapping(iris_tree)
+#' my_tree <- fit_ctree(small_5050_mix, c('CKB', 'ADA', 'ASNS', 'PRDX6', 'MZB1'))
+#' get_cluster_mapping(my_tree)
 #'
 #' @evalRd paste("# ", capture.output(
-#'     get_cluster_mapping(partykit::ctree(Species ~ ., data = iris))
+#'     get_cluster_mapping(fit_ctree(small_5050_mix, c("CKB", "ADA", "ASNS", "PRDX6", "MZB1")))
 #'     ))
 get_cluster_mapping <- function(tree) {
     # list of factor vectors, each element is a node and each elem in the
@@ -302,12 +302,14 @@ get_concensus_rules <-  function(tree) {
 #' @param x a concensus.rules object output from `sctree::get_concensus_rules`
 #'
 #' @return returns silently the same object but prints the rules to the console.
+#' @method print concensus.rules
+#' @seealso get_concensus_rules
 #' @export
 #'
 #' @evalRd include_roxygen_example("
-#'     iris_tree <- partykit::ctree(Species ~ ., data = iris)
-#'     my_rules <- get_concensus_rules(iris_tree)
-#'     print(iris_tree)
+#'     my_tree <- fit_ctree(small_5050_mix, c('CKB', 'ADA', 'ASNS', 'PRDX6', 'MZB1'))
+#'     my_rules <- get_concensus_rules(my_tree)
+#'     print(my_rules)
 #'     ")
 #'
 print.concensus.rules <- function(x) {

@@ -16,25 +16,22 @@ returns silently the same object but prints the rules to the console.
 Prints in a human readable format a concensus.rules object, usually an output
 of `sctree::get_concensus_rules`
 }
+\seealso{
+get_concensus_rules
+}
 \examples{
 
-    iris_tree <- partykit::ctree(Species ~ ., data = iris)
-    my_rules <- get_concensus_rules(iris_tree)
-    print(iris_tree)
+    my_tree <- fit_ctree(small_5050_mix, c('CKB', 'ADA', 'ASNS', 'PRDX6', 'MZB1'))
+    my_rules <- get_concensus_rules(my_tree)
+    print(my_rules)
     
-# 
-# Model formula:
-# Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
-# 
-# Fitted party:
-# [1] root
-# |   [2] Petal.Length <= 1.9: setosa (n = 50, err = 0.0%)
-# |   [3] Petal.Length > 1.9
-# |   |   [4] Petal.Width <= 1.7
-# |   |   |   [5] Petal.Length <= 4.8: versicolor (n = 46, err = 2.2%)
-# |   |   |   [6] Petal.Length > 4.8: versicolor (n = 8, err = 50.0%)
-# |   |   [7] Petal.Width > 1.7: virginica (n = 46, err = 2.2%)
-# 
-# Number of inner nodes:    3
-# Number of terminal nodes: 4
+# Cluster-0: 
+# 	all elements:
+# 		ADA +
+# 		ASNS -
+# Cluster-1: 
+# 	all elements:
+# 		ADA -
+# 		ASNS +
+# 		CKB +
 }

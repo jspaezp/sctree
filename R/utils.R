@@ -14,6 +14,7 @@
 #'
 #' @return a string that can be interpreted literally as a roxygen comment
 #' @importFrom utils capture.output
+#' @keywords internal
 include_roxygen_example <- function(example_string) {
 
     run_output <- capture.output(eval(parse(text = example_string)))
@@ -136,6 +137,7 @@ is_gene_membrane <- function(gene_symbols,
 #' @return a named list whose names are the provided symbols and the elements are
 #'     the character vectors with the aliases
 #' @export
+#' @seealso get_genesymbols
 #'
 #' @examples
 #' get_aliases(c("MAPK1", "CD4"))
@@ -180,6 +182,7 @@ get_aliases <- function(gene_symbols,
 #' @return a named list whose names are the provided aliases and the elements
 #'     are the character vectors with the gene names
 #' @export
+#' @seealso get_aliases
 #'
 #' @examples
 #' get_genesymbols("ERK")
@@ -223,6 +226,7 @@ get_genesymbols <- function(gene_aliases,
 #'
 #' @return logical indicating wether the element matches the description
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #' is.confusion.matrix(table(1:3, 3:1, 1:3)) # FALSE
@@ -289,7 +293,7 @@ as.frequency.matrix <- function(confusion_matrix) {
 #'     in the plot.
 #'
 #' @return a ggplot object
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' my_df <- data.frame(x = 1:2, y = 1:2, z = 1:2)
@@ -329,6 +333,7 @@ ggheatmap_base <- function(df,
 #' @param ... additional arguments passed to the correct method
 #'
 #' @export
+#' @keywords internal
 #' @importFrom ggplot2 autoplot
 autoplot <- function(object, ...) {
     ggplot2::autoplot(object, ...)
@@ -347,6 +352,7 @@ autoplot <- function(object, ...) {
 #'
 #'
 #' @return ggpplot object
+#' @method autoplot table
 #' @export
 #'
 #' @examples
@@ -404,6 +410,7 @@ autoplot.table <- function(object,
 
 
 #' @describeIn autoplot.table plot a matrix object as a heatmap using ggplot2
+#' @method autoplot matrix
 #' @export
 autoplot.matrix <- function(object, ...) {
     autoplot.table(as.table(object), ...)

@@ -20,6 +20,7 @@ RangerDE(data.use, cells.1, cells.2, verbose, ...)
 \description{
 A Helper function that interfaces with Seurat::FindMarkers
 }
+\keyword{internal}
 \examples{
 library(Seurat)
     library(sctree)

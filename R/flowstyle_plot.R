@@ -60,24 +60,26 @@ plot_flowstyle.data.frame <- function(object,
         aes <- ggplot2::aes_string(colour = "ident", alpha = "highlight")
     }
 
+    suppressWarnings({
+        g <- GGally::ggpairs(
+            as.data.frame(object),
+            columns = columns_plot,
+            aes,
+            progress = FALSE,
+            lower = list(
+                continuous = GGally::wrap(
+                    "dot_no_facet")),
+            diag = list(
+                continuous = GGally::wrap(
+                    'densityDiag',
+                    alpha = 0.3)),
+            upper = list(
+                continuous =  GGally::wrap(
+                    "density",
+                    alpha = 0.4)), ...) +
+            ggplot2::theme_bw()
+    })
 
-    g <- GGally::ggpairs(
-        as.data.frame(object),
-        columns = columns_plot,
-        aes,
-        progress = FALSE,
-        lower = list(
-            continuous = GGally::wrap(
-                "dot_no_facet")),
-        diag = list(
-            continuous = GGally::wrap(
-                'densityDiag',
-                alpha = 0.3)),
-        upper = list(
-            continuous =  GGally::wrap(
-                "density",
-                alpha = 0.4)), ...) +
-        ggplot2::theme_bw()
     return(g)
 }
 

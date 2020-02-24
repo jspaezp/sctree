@@ -29,3 +29,6 @@ get_aliases(c("MAPK1", "CD4"))
 # $CD4
 # [1] "CD4mut" "CD4"
 }
+\seealso{
+get_genesymbols
+}

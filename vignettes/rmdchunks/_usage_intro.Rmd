@@ -17,8 +17,8 @@ Original data can be found here:
 
 
 ```{r}
-require(sctree)
-require(Seurat)
+library(sctree)
+library(Seurat)
 
 set.seed(6)
 
