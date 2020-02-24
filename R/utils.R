@@ -294,6 +294,7 @@ as.frequency.matrix <- function(confusion_matrix) {
 #'
 #' @return a ggplot object
 #' @keywords internal
+#' @export
 #'
 #' @examples
 #' my_df <- data.frame(x = 1:2, y = 1:2, z = 1:2)

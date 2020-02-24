@@ -20,9 +20,7 @@ Suggests:
     devtools,
     usethis,
     covr,
-    DESeq2,
-    MAST,
-    SummarizedExperiment
+    DESeq2
 VignetteBuilder: knitr
 Imports: 
     AnnotationDbi,
