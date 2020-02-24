@@ -35,13 +35,6 @@ using the following function in R
 remotes::install_github("jspaezp/sctree")
 ```
 
-Alternatively, one can clone the git repository to test changes.
-
-    git clone https://github.com/jspaezp/sctree sctree
-    cd sctree
-    
-    R -e "devtools::install('.')"
-
 # Usage
 
 I am assuming you have already done your clustering and dimensional
