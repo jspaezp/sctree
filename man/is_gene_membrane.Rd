@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{is_gene_membrane}
 \alias{is_gene_membrane}
-\title{is_gene_membrane}
+\title{Queries gene symbols and returns if they are annotated as membrane-localized}
 \usage{
 is_gene_membrane(
   gene_symbols,

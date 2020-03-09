@@ -4,7 +4,7 @@
 \alias{plot_flowstyle}
 \alias{plot_flowstyle.data.frame}
 \alias{plot_flowstyle.Seurat}
-\title{plot_flowstyle}
+\title{Plots data as faceted scatterplot emulating the ouput of flow cytometry}
 \usage{
 plot_flowstyle(object, markernames, classif_col = "ident", ...)
 

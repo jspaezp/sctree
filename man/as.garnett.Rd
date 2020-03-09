@@ -3,7 +3,7 @@
 \name{as.garnett}
 \alias{as.garnett}
 \alias{print.garnett.list}
-\title{as.garnett}
+\title{Converts a classification tree to a garnett output}
 \usage{
 as.garnett(tree, digits = 3, rules_keep = ".*")
 

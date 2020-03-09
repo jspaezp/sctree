@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{get_aliases}
 \alias{get_aliases}
-\title{get_aliases}
+\title{Gets the aliases for a gene names}
 \usage{
 get_aliases(gene_symbols, db = org.Hs.eg.db::org.Hs.eg.db)
 }

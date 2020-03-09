@@ -1,5 +1,5 @@
 
-#' get_cluster_mapping
+#' Gets the corresponding cluster for each terminl node in a classification tree
 #'
 #' returns a named vector, the names being the terminal node id in the tree
 #' and the values being the classification it corresponds to
@@ -33,7 +33,7 @@ get_cluster_mapping <- function(tree) {
 }
 
 
-#' as.garnett
+#' Converts a classification tree to a garnett output
 #'
 #' Converts a fitted ctree object to the classifier format supported by garnett
 #' for more information on the specification please visit:
@@ -188,11 +188,11 @@ print.garnett.list <- function(x) {
 }
 
 
-# TODO, there is a known issue where suboptimas classification trees return
+# TODO, there is a known issue where suboptimal classification trees return
 # 3: In max(elems_per_rule) :
 # no non-missing arguments to max; returning -Inf
 
-#' get_concensus_rules
+#' Consolidates the rules in a decision tree per cluster
 #'
 #' Returns a nested list of the concensus rules to define a cluster, given a
 #' partykit decision tree.

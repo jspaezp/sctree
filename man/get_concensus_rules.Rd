@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_tree_rules.R
 \name{get_concensus_rules}
 \alias{get_concensus_rules}
-\title{get_concensus_rules}
+\title{Consolidates the rules in a decision tree per cluster}
 \usage{
 get_concensus_rules(tree)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{get_genesymbols}
 \alias{get_genesymbols}
-\title{get_genesymbols}
+\title{Gets the official gene symbol for protein or gene aliases}
 \usage{
 get_genesymbols(gene_aliases, db = org.Hs.eg.db::org.Hs.eg.db)
 }

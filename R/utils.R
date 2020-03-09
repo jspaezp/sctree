@@ -65,7 +65,7 @@ as.data.frame.Seurat <- function(x, genes = Seurat::VariableFeatures(x), fix_nam
 }
 
 
-#' is_gene_membrane
+#' Queries gene symbols and returns if they are annotated as membrane-localized
 #'
 #' returns a logical vector indicating wether there is a GO annotation
 #' corresponding to *integral component of membrane*. the species to be queried
@@ -126,7 +126,7 @@ is_gene_membrane <- function(gene_symbols,
 # Undefined global functions or variables:
 # ALIAS SYMBOL plot.flowstyle
 
-#' get_aliases
+#' Gets the aliases for a gene names
 #'
 #' gets the aliases for a series of gene names
 #'
@@ -171,7 +171,7 @@ get_aliases <- function(gene_symbols,
 }
 
 
-#' get_genesymbols
+#' Gets the official gene symbol for protein or gene aliases
 #'
 #' gets the aliases for a series of common gene names
 #'

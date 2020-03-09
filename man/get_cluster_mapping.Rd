@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_tree_rules.R
 \name{get_cluster_mapping}
 \alias{get_cluster_mapping}
-\title{get_cluster_mapping}
+\title{Gets the corresponding cluster for each terminl node in a classification tree}
 \usage{
 get_cluster_mapping(tree)
 }

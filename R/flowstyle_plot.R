@@ -1,7 +1,7 @@
 
 
 
-#' plot_flowstyle
+#' Plots data as faceted scatterplot emulating the ouput of flow cytometry
 #'
 #' Simulates flow cytometry plots for single cell rna seq data
 #'
