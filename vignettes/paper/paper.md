@@ -28,7 +28,7 @@ bibliography: bibliography.bib
 
 # Summary
 
-Single-cell RNA sequencing (scRNA-seq) is now a commonly used technique to measure the transcriptome of populations of cells. Clustering heterogeneous cells based on these transcriptomes enables identification of cell populations [@Trapnell2014;@Butler2018]. There are multiple methods available to identify "marker" genes that differ between these populations [@Butler2018;@Love2014;@Robinson2009].  However, there are usually too many genes in these lists to directly suggest an experimental follow-up strategy for selecting them from a bulk population (e.g. via FACS (ref)). Here we present scTree, a tool that aims to provide biologists using the R programming language and scRNA-seq analysis programs a minimal set of genes that can be used in downstream experiments.  The package is free, open source and available though github at [github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
+Single-cell RNA sequencing (scRNA-seq) is now a commonly used technique to measure the transcriptome of populations of cells. Clustering heterogeneous cells based on these transcriptomes enables identification of cell populations [@Trapnell2014;@Butler2018]. There are multiple methods available to identify "marker" genes that differ between these populations [@Butler2018;@Love2014;@Robinson2009].  However, there are usually too many genes in these lists to directly suggest an experimental follow-up strategy for selecting them from a bulk population (e.g. via FACS [@RN1]). Here we present scTree, a tool that aims to provide biologists using the R programming language and scRNA-seq analysis programs a minimal set of genes that can be used in downstream experiments.  The package is free, open source and available though github at [github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
 
 # Implementation and results
 
@@ -49,9 +49,9 @@ strategies and is able to output this classifiers in a format easily interpretab
 in a wet-lab setting.
 
 The method to calculate variable importances based on random forests
-ha been previously described, and has been implemented
+has been previously described, and has been implemented
 in R by the `ranger` package [@Altmann2010;@Janitza2018;@Wright2017].
-The suggestion of gating strategies is achieved by fitting a clasification tree using the implementation
+The suggestion of gating strategies is achieved by fitting a classification tree using the implementation
 provided by the `partykit` R package [@Zeileis2015].
 
 In order to benchmark the quality of markers, we utilized a recall-based
