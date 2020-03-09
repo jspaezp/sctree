@@ -55,82 +55,7 @@ year = {2017}
   pages = {3905-3909},
   url = {http://jmlr.org/papers/v16/hothorn15a.html},
 }
-@article{Srivastava2018,
-abstract = {We introduce alevin, an efficient pipeline for gene quantification from dscRNA-seq (droplet-based single-cell RNA-seq) data. Alevin is an end-to-end quantification pipeline that starts from sample-demultiplexed FASTQ files and generates gene-level counts for two popular droplet-based sequencing protocols (drop-seq [1], and 10x-chromium [2]). Importantly, alevin handles all processing internally, avoiding reliance on external pipeline programs, and the need to write large intermediate files to disk. Alevin adopts efficient algorithms for cellular-barcode whitelist generation, cellular-barcode correction, lightweight per-cell UMI deduplication and quantification. This integrated solution allows alevin to process data much faster (typically {\~{}} 10 times faster) than other approaches, while also working within a reasonable memory budget. This enables full, end-to-end analysis for single-cell human experiment consisting of {\~{}} 4500 cells with 335 Million reads with 13G of RAM and 8 threads (of an Intel Xeon E5-2699 v4 CPU) in 27 minutes.},
-author = {Srivastava, Avi and Smith, Tom Sean and Sudbery, Ian and Patro, Rob},
-doi = {10.1101/335000},
-journal = {bioRxiv},
-keywords = {cellular barcode,dscrna-seq,quantification,umi},
-mendeley-groups = {Sequencing},
-pages = {335000},
-title = {{Alevin: An integrated method for dscRNA-seq quantification}},
-url = {https://www.biorxiv.org/content/early/2018/06/01/335000},
-year = {2018}
-}
-@article{Patro2017,
-abstract = {We introduce Salmon, a method for quantifying transcript abundance from RNA-seq reads that is accurate and fast. Salmon is the first transcriptome-wide quantifier to correct for fragment GC content bias, which we demonstrate substantially improves the accuracy of abundance estimates and the reliability of subsequent differential expression analysis. Salmon combines a new dual-phase parallel inference algorithm and feature-rich bias models with an ultra-fast read mapping procedure. },
-author = {Patro, Rob and Duggal, Geet and Love, Michael I and Irizarry, Rafael A and Kingsford, Carl},
-doi = {10.1038/nmeth.4197},
-journal = {Nature Methods},
-mendeley-groups = {Sequencing},
-number = {4},
-pages = {417--419},
-title = {{Salmon: fast and bias-aware quantification of transcript expression using dual-phase inference}},
-volume = {14},
-year = {2017}
-}
-@article{Li2018,
-abstract = {The emerging single-cell RNA sequencing (scRNA-seq) technologies enable the investigation of transcriptomic landscapes at the single-cell resolution. ScRNA-seq data analysis is complicated by excess zero counts, the so-called dropouts due to low amounts of mRNA sequenced within individual cells. We introduce scImpute, a statistical method to accurately and robustly impute the dropouts in scRNA-seq data. scImpute automatically identifies likely dropouts, and only perform imputation on these values without introducing new biases to the rest data. scImpute also detects outlier cells and excludes them from imputation. Evaluation based on both simulated and real human and mouse scRNA-seq data suggests that scImpute is an effective tool to recover transcriptome dynamics masked by dropouts. scImpute is shown to identify likely dropouts, enhance the clustering of cell subpopulations, improve the accuracy of differential expression analysis, and aid the study of gene expression dynamics.},
-author = {Li, Wei Vivian and Li, Jingyi Jessica},
-doi = {10.1038/s41467-018-03405-7},
-issn = {20411723},
-journal = {Nature Communications},
-mendeley-groups = {Sequencing},
-number = {1},
-pages = {1--9},
-title = {{An accurate and robust imputation method scImpute for single-cell RNA-seq data}},
-volume = {9},
-year = {2018}
-}
-@article{VanDijk2018,
-abstract = {Single-cell RNA sequencing technologies suffer from many sources of technical noise, including under-sampling of mRNA molecules, often termed “dropout,” which can severely obscure important gene-gene relationships. To address this, we developed MAGIC (Markov affinity-based graph imputation of cells), a method that shares information across similar cells, via data diffusion, to denoise the cell count matrix and fill in missing transcripts. We validate MAGIC on several biological systems and find it effective at recovering gene-gene relationships and additional structures. Applied to the epithilial to mesenchymal transition, MAGIC reveals a phenotypic continuum, with the majority of cells residing in intermediate states that display stem-like signatures, and infers known and previously uncharacterized regulatory interactions, demonstrating that our approach can successfully uncover regulatory relations without perturbations. A new algorithm overcomes limitations of data loss in single-cell sequencing experiments.},
-author = {van Dijk, David and Sharma, Roshan and Nainys, Juozas and Yim, Kristina and Kathail, Pooja and Carr, Ambrose J. and Burdziak, Cassandra and Moon, Kevin R. and Chaffer, Christine L. and Pattabiraman, Diwakar and Bierie, Brian and Mazutis, Linas and Wolf, Guy and Krishnaswamy, Smita and Pe'er, Dana},
-doi = {10.1016/j.cell.2018.05.061},
-issn = {10974172},
-journal = {Cell},
-keywords = {EMT,imputation,manifold learning,regulatory networks,single-cell RNA sequencing},
-mendeley-groups = {Sequencing},
-number = {3},
-pages = {716--729.e27},
-publisher = {Elsevier Inc.},
-title = {{Recovering Gene Interactions from Single-Cell Data Using Data Diffusion}},
-url = {https://doi.org/10.1016/j.cell.2018.05.061},
-volume = {174},
-year = {2018}
-}
-@article{Bray2016,
-abstract = {We present kallisto, an RNA-seq quantification program that is two orders of magnitude faster than previous approaches and achieves similar accuracy. Kallisto pseudoaligns reads to a reference, producing a list of transcripts that are compatible with each read while avoiding alignment of individual bases. We use kallisto to analyze 30 million unaligned paired-end RNA-seq reads in {\textless}10 min on a standard laptop computer. This removes a major computational bottleneck in RNA-seq analysis.},
-author = {Bray, Nicolas L and Pimentel, Harold and Melsted, P{\'{a}}ll and Pachter, Lior},
-doi = {10.1038/nbt.3519},
-issn = {1546-1696},
-journal = {Nature biotechnology},
-mendeley-groups = {Sequencing},
-number = {5},
-pages = {525--7},
-pmid = {27043002},
-title = {{Near-optimal probabilistic RNA-seq quantification.}},
-url = {http://www.ncbi.nlm.nih.gov/pubmed/27043002},
-volume = {34},
-year = {2016}
-}
-@article{Smith2019,
-author = {Smith, Tom and Heger, Andreas and Sudbery, Ian},
-doi = {10.1101/gr.209601.116},
-journal = {Cold Spring Harbor Laboratory Press},
-mendeley-groups = {Sequencing},
-title = {{UMI-tools: Modelling sequencing errors in Unique Molecular Identifiers to improve quantification accuracy}},
-year = {2019}
-}
+
 @article{Love2014,
 abstract = {In comparative high-throughput sequencing assays, a fundamental task is the analysis of count data, such as read counts per gene in RNA-seq, for evidence of systematic changes across experimental conditions. Small replicate numbers, discreteness, large dynamic range and the presence of outliers require a suitable statistical approach. We present DESeq2, a method for differential analysis of count data, using shrinkage estimation for dispersions and fold changes to improve stability and interpretability of estimates. This enables a more quantitative analysis focused on the strength rather than the mere presence of differential expression. The DESeq2 package is available at http://www.bioconductor.org/packages/release/bioc/html/DESeq2.html webcite.},
 author = {Love, Michael I and Huber, Wolfgang and Anders, Simon},
@@ -203,19 +128,6 @@ title = {{Massively parallel digital transcriptional profiling of single cells}}
 url = {http://dx.doi.org/10.1038/ncomms14049},
 volume = {8},
 year = {2017}
-}
-@article{Dobin2013,
-abstract = {MOTIVATION: Accurate alignment of high-throughput RNA-seq data is a challenging and yet unsolved problem because of the non-contiguous transcript structure, relatively short read lengths and constantly increasing throughput of the sequencing technologies. Currently available RNA-seq aligners suffer from high mapping error rates, low mapping speed, read length limitation and mapping biases.$\backslash$n$\backslash$nRESULTS: To align our large ({\textgreater}80 billon reads) ENCODE Transcriptome RNA-seq dataset, we developed the Spliced Transcripts Alignment to a Reference (STAR) software based on a previously undescribed RNA-seq alignment algorithm that uses sequential maximum mappable seed search in uncompressed suffix arrays followed by seed clustering and stitching procedure. STAR outperforms other aligners by a factor of {\textgreater}50 in mapping speed, aligning to the human genome 550 million 2 × 76 bp paired-end reads per hour on a modest 12-core server, while at the same time improving alignment sensitivity and precision. In addition to unbiased de novo detection of canonical junctions, STAR can discover non-canonical splices and chimeric (fusion) transcripts, and is also capable of mapping full-length RNA sequences. Using Roche 454 sequencing of reverse transcription polymerase chain reaction amplicons, we experimentally validated 1960 novel intergenic splice junctions with an 80-90{\%} success rate, corroborating the high precision of the STAR mapping strategy.$\backslash$n$\backslash$nAVAILABILITY AND IMPLEMENTATION: STAR is implemented as a standalone C++ code. STAR is free open source software distributed under GPLv3 license and can be downloaded from http://code.google.com/p/rna-star/.},
-author = {Dobin, Alexander and Davis, Carrie A. and Schlesinger, Felix and Drenkow, Jorg and Zaleski, Chris and Jha, Sonali and Batut, Philippe and Chaisson, Mark and Gingeras, Thomas R.},
-doi = {10.1093/bioinformatics/bts635},
-issn = {13674803},
-journal = {Bioinformatics},
-mendeley-groups = {Sequencing},
-number = {1},
-pages = {15--21},
-title = {{STAR: Ultrafast universal RNA-seq aligner}},
-volume = {29},
-year = {2013}
 }
 
 @article{Coquery2012,
