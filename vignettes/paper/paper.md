@@ -28,48 +28,7 @@ bibliography: bibliography.bib
 
 # Summary
 
-Due to the advancements in droplet-based library preparation, combined with
-the steady decrease in the cost of sequencing, the access to single-cell mRNA
-sequencing (scRNA-seq) methods has expanded. Now, research labs focused on ataining
-insights into the biology of heterogeneous cell populations have access to this powerful
-technology.
-Nonetheless, translating hypotheses acquired by this sequencing technology
-usually requires follow-up and validation by using wet-lab methods with
-single-cell resolution such as immunohistochemistry (IHC), flow cytometry (FC)
-and fluorescence *in situ* hybridization (FISH).
-This transition remains challenging, in part because wet-lab methodologies
-often rely on antibody-based technologies, which have a limited extent of
-dimensionality.
-
-Many bioinformatic tools have been developed for the scRNA-seq worflow addressing
-important questions; such as short sequence read alignment
-[@Patro2017;@Dobin2013;@Srivastava2018;@Bray2016], barcode calling, unique molecular
-identifier (UMI) assignment [@Smith2019], pre-processing of the data
-[@VanDijk2018;@Li2018], clustering of cell subpopulations [@Trapnell2014;@Butler2018],
-and differential expression analysis [@Love2014;@Robinson2009].
-Unfortunately, most of these tools fail to directly connect findings with the
-requirements of the techniques that need to be used downstream to find additional
-meaning in these populations.
-
-The identification of "markers" is usually accomplished in
-two distinct manners; some methods suggest markers based on one-dimensional
-regression approaches and others treat the elucidation of markers as a
-classification problem.  The regression methods often lead to a multitude of
-differentially expressed genes identified by clusters, which though useful,
-are often not ideal for separating clusters from one another due to a continuum
-of gene expression in cells beyond the cluster of interest. Classification methods
-usually rely on high dimensional methods that despite showing high classification
-accuracy, make it difficult to extract from the model any information which could be used
-to separate cells and test subpopulations in an experimental setting.
-
-We present scTree, a tool in which addresses the unfulfilled need for identifying markers
-that would extrapolate to methodologies applicable in a wet-lab setting, where the
-identification of markers is considered as a classification problem modeled with
-shallow decision trees. This former approach produces classification models for cell
-clusters that are immediately applicable to experimental settings, without
-sacrificing the classification accuracy.
-The package is free, open source and available though github at
-[github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
+Single-cell RNA sequencing (scRNA-seq) is now a commonly used technique to measure the transcriptome of populations of cells. Clustering heterogeneous cells based on these transcriptomes enables identification of cell populations [@Trapnell2014;@Butler2018]. There are multiple methods available to identify "marker" genes that differ between these populations [@Butler2018;@Love2014;@Robinson2009].  However, there are usually too many genes in these lists to directly suggest an experimental follow-up strategy for selecting them from a bulk population (e.g. via FACS [@RN1]). Here we present scTree, a tool that aims to provide biologists using the R programming language and scRNA-seq analysis programs a minimal set of genes that can be used in downstream experiments.  The package is free, open source and available though github at [github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
 
 # Implementation and results
 
@@ -90,17 +49,16 @@ strategies and is able to output this classifiers in a format easily interpretab
 in a wet-lab setting.
 
 The method to calculate variable importances based on random forests
-ha been previously described, and has been implemented
+has been previously described, and has been implemented
 in R by the `ranger` package [@Altmann2010;@Janitza2018;@Wright2017].
-The suggestion of gating strategies is achieved by fitting a clasification tree using the implementation
+The suggestion of gating strategies is achieved by fitting a classification tree using the implementation
 provided by the `partykit` R package [@Zeileis2015].
 
 In order to benchmark the quality of markers, we utilized a recall-based
 strategy. Briefly, each dataset was split randomly into two sections,
 a training set with 80% of the cells and a testing set consisting of the 20% remaining.
 A classifier was trained by selecting the top 5 markers suggested for each
-cluster by either scTree (Altman method), t-tests or wilcoxon-tests
-(as implemented by Seurat v3.0.1).
+cluster by either scTree (Altman method) or by two of the most commonly used marker gene detection methods for scRNA-seq data: t-tests or wilcoxon-tests (as implemented by [Seurat v3.0.1](https://web.archive.org/save/https://satijalab.org/seurat/)).
 
 These classifiers were then used to predict the identity of the testing
 set and the quality was assesed by comparing the recall, accuracy and precision
@@ -111,8 +69,10 @@ As shown in **Figures 1 and 2**, bias was not observed, and regardless of the fi
 classification model, the features selected by using scTree provide a comparable accuracy, precision and recall to those acquired using traditional differential expression methods.
 
 ![Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset](./paper_figures/benchmarks_5050_boxplot.png "Figure 1")
+**Figure 1. Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset.**  A number of machine learning algorithms were tested to ensure that scTree performed as well as traditional marker identification approaches, regardless of the classifier used.
 
 ![Depiction of the predicted identities in the PBMC 3k dataset dataset.](./paper_figures/pbmc_3k_prediction_UMAP.png "Figure 2")
+**Figure 2. Depiction of the predicted identities in the PBMC 3k dataset dataset.** Real identities are the identities as identified through unsupervised clustering performed using Seurat [@Butler2018].  The scTree package was then used to then classify cells based on the top 5 markers for each cluster chosen by scTree and accurately recapitulates the original classification determined by Seurat. 
 
 ## Example Output from the package
 
@@ -186,7 +146,7 @@ in the github repository ([github.com/jspaezp/sctree](https://github.com/jspaezp
 The filtered raw counts for each dataset were downloaded from the 10x website
 [single cell expression datasets](https://support.10xgenomics.com/single-cell-gene-expression/datasets)
 [@tenxgenomics] and were processed by the standard Seurat workflow, as described in the
-[package website](https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html) [@satijalab].
+[package tutorial](https://web.archive.org/save/https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html) [@satijalab].
 This process was carried out for the following datasets:
 
 1. 3k PBMC, Peripheral Blood Mononuclear Cells (PBMC)
