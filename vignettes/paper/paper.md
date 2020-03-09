@@ -73,7 +73,7 @@ classification model, the features selected by using scTree provide a comparable
 **Figure 1. Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset.**  A number of machine learning algorithms were tested to ensure that scTree performed as well as traditional marker identification approaches, regardless of the classifier used.
 
 ![Depiction of the predicted identities in the PBMC 3k dataset dataset.](./paper_figures/pbmc_3k_prediction_UMAP.png "Figure 2")
-**Figure 2. Depiction of the predicted identities in the PBMC 3k dataset dataset.**
+**Figure 2. Depiction of the predicted identities in the PBMC 3k dataset dataset.** Real identities are the identities as identified through unsupervised clustering performed using Seurat [@Butler2018].  The scTree package was then used to then classify cells based on the top 5 markers for each cluster chosen by scTree and accurately recapitulates the original classification determined by Seurat. 
 
 ## Example Output from the package
 
