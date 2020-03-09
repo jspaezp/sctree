@@ -58,8 +58,7 @@ In order to benchmark the quality of markers, we utilized a recall-based
 strategy. Briefly, each dataset was split randomly into two sections,
 a training set with 80% of the cells and a testing set consisting of the 20% remaining.
 A classifier was trained by selecting the top 5 markers suggested for each
-cluster by either scTree (Altman method), t-tests or wilcoxon-tests
-(as implemented by [Seurat v3.0.1](https://web.archive.org/save/https://satijalab.org/seurat/).
+cluster by either scTree (Altman method) or by two of the most commonly used marker gene detection methods for scRNA-seq data: t-tests or wilcoxon-tests (as implemented by [Seurat v3.0.1](https://web.archive.org/save/https://satijalab.org/seurat/)).
 
 These classifiers were then used to predict the identity of the testing
 set and the quality was assesed by comparing the recall, accuracy and precision
