@@ -70,8 +70,10 @@ As shown in **Figures 1 and 2**, bias was not observed, and regardless of the fi
 classification model, the features selected by using scTree provide a comparable accuracy, precision and recall to those acquired using traditional differential expression methods.
 
 ![Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset](./paper_figures/benchmarks_5050_boxplot.png "Figure 1")
+**Figure 1. Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset.**  A number of machine learning algorithms were tested to ensure that scTree performed as well as traditional marker identification approaches, regardless of the classifier used.
 
 ![Depiction of the predicted identities in the PBMC 3k dataset dataset.](./paper_figures/pbmc_3k_prediction_UMAP.png "Figure 2")
+**Figure 2. Depiction of the predicted identities in the PBMC 3k dataset dataset.**
 
 ## Example Output from the package
 
