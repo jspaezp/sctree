@@ -22,7 +22,8 @@ test_that("converting seurat to data frame works", {
     expect_equal({
         colnames(as.data.frame(
             small_5050_mix,
-            genes = Seurat::VariableFeatures(small_5050_mix)))
+            genes = Seurat::VariableFeatures(small_5050_mix),
+            fix_names = FALSE))
     }, c(Seurat::VariableFeatures(small_5050_mix), "ident"))
 
     expect_equal({

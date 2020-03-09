@@ -49,7 +49,7 @@ include_roxygen_example <- function(example_string) {
 #'     Seurat::VariableFeatures(Seurat::pbmc_small))[1:3,1:3]"
 #'     })
 #' @importFrom Seurat FetchData Idents VariableFeatures
-as.data.frame.Seurat <- function(x, genes, fix_names = FALSE, ...) {
+as.data.frame.Seurat <- function(x, genes = Seurat::VariableFeatures(x), fix_names = TRUE, ...) {
     # TODO possibly also a warning if it is not a variable gene and an error
     # if it does not exist also an argument to force though the error ...
     tmp <- Seurat::FetchData(x, vars = genes, ...)

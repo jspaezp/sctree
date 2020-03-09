@@ -3,6 +3,7 @@ pkgdown: 1.4.1
 pkgdown_sha: ~
 articles:
   antibody_query: antibody_query.html
+  evaluating_tree_quality: evaluating_tree_quality.html
   plot_flowstyle: plot_flowstyle.html
   _antibodies: rmdchunks/_antibodies.html
   _finding_markers: rmdchunks/_finding_markers.html
@@ -13,5 +14,5 @@ articles:
   _tree_plots: rmdchunks/_tree_plots.html
   _usage_intro: rmdchunks/_usage_intro.html
   _visualizing_markers: rmdchunks/_visualizing_markers.html
-  sctree: sctree.html
+  sctree: sctree/sctree.html
 

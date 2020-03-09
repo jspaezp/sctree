@@ -57,10 +57,10 @@ Seurat objects
     head(ranger_importances(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
     
 #          importance pvalue     gene
-# HLA-DPB1  7.5686423      0 HLA-DPB1
-# S100A8    6.7607942      0   S100A8
-# S100A9    6.0215339      0   S100A9
-# HLA-DQA1  3.0409558      0 HLA-DQA1
-# GNLY      1.5636274      0     GNLY
-# SDPR      0.4391232      0     SDPR
+# HLA-DPB1  7.4731067      0 HLA-DPB1
+# S100A8    7.1889368      0   S100A8
+# S100A9    5.9627401      0   S100A9
+# HLA-DQA1  3.1198601      0 HLA-DQA1
+# GNLY      1.7252752      0     GNLY
+# IGLL5     0.4638471      0    IGLL5
 }

@@ -87,7 +87,7 @@ plot_flowstyle.data.frame <- function(object,
 #' @describeIn plot_flowstyle Draw a flowstyle plot from a Seurat object
 #' @export
 plot_flowstyle.Seurat <- function(object, markernames, classif_col = "ident", ...) {
-    tmp <- as.data.frame.Seurat(object, markernames)
+    tmp <- as.data.frame.Seurat(object, markernames, FALSE)
     plot_flowstyle.data.frame(
         tmp, markernames = markernames,
         classif_col = classif_col, ...)

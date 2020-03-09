@@ -1,4 +1,8 @@
 destination: docs
+navbar:
+  structure:
+    left:  [home, reference, articles, news]
+    right: [github]
 reference:
   - title: "Plotting Functions"
     desc: >
@@ -44,9 +48,8 @@ reference:
     contents:
       - small_5050_mix
       - small_9901_mix
-  - title: "Rest"
+  - title: "Utilities"
     desc: >
-
     contents:
       - as.data.frame.Seurat
       - as.frequency.matrix

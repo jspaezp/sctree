@@ -1,0 +1,208 @@
+---
+title: "Evaluating Tree Quality"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{evaluating_tree_quality}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 4,
+  fig.height = 3
+)
+```
+
+```{r setup}
+library(sctree)
+```
+
+Testing the quality of the generated classifiers has three main parts.
+
+1. Splitting the data that wants to be classified in two.
+2. Use one of the splits to train the classifier.
+3. Use the model on the rest of the data and check the accuracy.
+
+To illustrate the process, we will use this tiny dataset that comes bundled
+with our package. Additional information can be obtained by using
+`?small_5050_mix`
+
+
+```{r}
+DimPlot(small_5050_mix)
+```
+
+## Splitting the dataset
+
+There are several ways in which this can be done, here we will sample 80% of the
+cells for the training, this will be don using Seurat's `subset` interface.
+
+```{r}
+# Here we get the names of all cells
+all_cells <- Cells(small_5050_mix)
+
+# Here we get what number of cells would be 80%
+num_cells_train <- round(0.8*length(all_cells))
+num_cells_train
+```
+
+Sample will select `r num_cells_train` cell names and store those names in
+`cells_train`, we will also store all other names in `cells_test`.
+
+```{r}
+
+cells_train <- sample(all_cells, num_cells_train)
+cells_test <- all_cells[!all_cells %in% cells_train]
+```
+
+Now using the subset operation, we get two Seurat objects containing each of the
+correspoinding cells.
+
+```{r}
+training_mix <- subset(small_5050_mix, cells = cells_train)
+testing_mix <- subset(small_5050_mix, cells = cells_test)
+
+training_mix
+testing_mix
+```
+
+## Trainning the classifier
+
+Once the training subset has been defined, we can proceed to generate our
+classification tree using `fit_ctree`
+
+```{r}
+tree_model <- fit_ctree(training_mix)
+print(as.garnett(tree_model))
+```
+
+
+## Checking the consistency of the classifier
+
+This model can now be used to generate a prediction on the testing data.
+For this we will use the `predict` generic, which requires the new data to be
+passed as a `data.frame`.
+
+We can store these predictions in the Seurat object itself for future usage.
+
+```{r}
+predicted_cluster <- predict(
+    tree_model, 
+    newdata = as.data.frame(testing_mix))
+
+testing_mix[["predicted_cluster"]] <- predicted_cluster
+testing_mix[["correctly_classified"]] <- predicted_cluster == Idents(testing_mix)
+```
+
+Furthermore, we can generate a confusion matrix based on the classifications by
+passing the data onto `table`.
+
+```{r}
+confusion_tbl <- table(
+    Predicted = predicted_cluster, 
+    Actual = Idents(testing_mix))
+
+confusion_tbl
+
+# We can convert these absolute numbers to percentages
+as.frequency.matrix(confusion_tbl)
+```
+
+We can also display graphically this information using `autoplot`
+
+```{r fig.height=3, fig.width=3}
+autoplot(as.frequency.matrix(confusion_tbl), show_number = TRUE)
+```
+
+```{r}
+DimPlot(testing_mix, group.by = "correctly_classified")
+```
+
+## Tuning the model
+
+I is posible to modify how the model is generated, in this case, we might want
+to define the markers based on some previous information or some quality metric.
+Here we will use the top 6 genes according to a random-forest based importance
+metric.
+
+```{r}
+markers <- FindAllMarkers(
+    training_mix, test.use = "RangerDE",
+    only.pos = TRUE, 
+    warn.imp.method = FALSE)
+
+head(markers)
+
+importance_cutoff <- sort(markers$importance, decreasing = TRUE)[6]
+top_markers <- markers[markers$importance > importance_cutoff,]
+top_markers
+```
+
+```{r fig.height=5, fig.width=5, message=FALSE, warning=FALSE}
+plot_flowstyle(
+    object = training_mix, 
+    markernames = top_markers$gene, 
+    highlight_class = 0)
+
+plot_flowstyle(
+    object = testing_mix, 
+    markernames = top_markers$gene, 
+    highlight_class = 0)
+```
+
+
+We can pass to `fit_ctree` any parameter accepted by `?partykit::ctree_control`.
+Some of the parameters that might affect the most the final tree would be:
+
+- `alpha`, which would modify the splitting criteria, values close to 1 indicate that more splits could be considered.
+- `maxdepth`, which specifies how deep can the tree be.
+- `minbucket`, which specifies how many cells can each terminal node have.
+- `minsplit`, specifies how small can a node be to be considered for further splitting.
+
+Please note that more complicated classifiers will usually have better 
+classification performance, but less interpretability. Nontheless, there will be
+point in which the classifier gets better within the training data but will not 
+improve in the testing data (phenomenom called over-fitting the model).
+
+
+```{r}
+tree_model_topn <- fit_ctree(
+    training_mix,
+    genes_use = top_markers$gene,
+    alpha = 0.99, minbucket = 2, minsplit = 1)
+
+print(as.garnett(tree_model_topn))
+```
+
+(note how much more complicate the model ends up being ...)
+
+```{r}
+topn_predicted_cluster <- predict(
+    tree_model_topn, newdata = as.data.frame(testing_mix, genes = top_markers$gene))
+
+testing_mix[["topn_predicted_cluster"]] <- topn_predicted_cluster
+testing_mix[["topn_correctly_classified"]] <- topn_predicted_cluster ==
+    Idents(testing_mix)
+```
+
+
+
+```{r fig.height=3, fig.width=3}
+confusion_tbl <- table(
+    Predicted = topn_predicted_cluster, 
+    Actual = Idents(testing_mix))
+
+autoplot(as.frequency.matrix(confusion_tbl), show_number = TRUE)
+```
+
+
+```{r}
+DimPlot(testing_mix, group.by = "correctly_classified")
+```
+
+
+
+
