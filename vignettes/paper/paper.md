@@ -59,7 +59,7 @@ strategy. Briefly, each dataset was split randomly into two sections,
 a training set with 80% of the cells and a testing set consisting of the 20% remaining.
 A classifier was trained by selecting the top 5 markers suggested for each
 cluster by either scTree (Altman method), t-tests or wilcoxon-tests
-(as implemented by Seurat v3.0.1).
+(as implemented by [Seurat v3.0.1](https://web.archive.org/save/https://satijalab.org/seurat/).
 
 These classifiers were then used to predict the identity of the testing
 set and the quality was assesed by comparing the recall, accuracy and precision
@@ -145,7 +145,7 @@ in the github repository ([github.com/jspaezp/sctree](https://github.com/jspaezp
 The filtered raw counts for each dataset were downloaded from the 10x website
 [single cell expression datasets](https://support.10xgenomics.com/single-cell-gene-expression/datasets)
 [@tenxgenomics] and were processed by the standard Seurat workflow, as described in the
-[package website](https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html) [@satijalab].
+[package tutorial](https://web.archive.org/save/https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html) [@satijalab].
 This process was carried out for the following datasets:
 
 1. 3k PBMC, Peripheral Blood Mononuclear Cells (PBMC)
