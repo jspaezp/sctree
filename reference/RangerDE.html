@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.0</span>
       </span>
     </div>
 
@@ -80,9 +80,6 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/sctree.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -98,7 +95,13 @@
       <a href="../articles/antibody_query.html">Query Antibody vendors from inside R</a>
     </li>
     <li>
+      <a href="../articles/evaluating_tree_quality.html">Evaluating Tree Quality</a>
+    </li>
+    <li>
       <a href="../articles/plot_flowstyle.html">Flow style plotting</a>
+    </li>
+    <li>
+      <a href="../articles/sctree/sctree.html">sctree</a>
     </li>
   </ul>
 </li>
@@ -158,14 +161,14 @@
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>Seurat</span>)
     <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>sctree</span>)
-    <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/Seurat/man/FindMarkers.html'>FindMarkers</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/Seurat/man/pbmc_small.html'>pbmc_small</a></span>,
-    <span class='kw'>ident.1</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>test.use</span> <span class='kw'>=</span> <span class='st'>'RangerDE'</span>, <span class='kw'>warn.imp.method</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;        importance p_val   gene avg_logFC pct.1 pct.2 p_val_adj
-#&gt; GNLY   0.42979254     0   GNLY  4.784185 0.444 0.068         0
-#&gt; PGRMC1 0.09705335     0 PGRMC1  3.264396 0.222 0.000         0
-#&gt; GZMB   0.10398463     0   GZMB  2.994887 0.333 0.091         0
-#&gt; LAMP1  0.17364336     0  LAMP1  2.658571 0.444 0.068         0
-#&gt; CD7    0.36348563     0    CD7  2.555973 0.528 0.091         0
-#&gt; NCOA4  0.10846263     0  NCOA4  2.304732 0.306 0.159         0</div><div class='input'>#        importance p_val   gene  avg_logFC pct.1 pct.2 p_val_adj
+    <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fu'><a href='FindMarkers.html'>FindMarkers</a></span>(<span class='kw'>object</span> <span class='kw'>=</span> <span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='no'><a href='https://rdrr.io/pkg/Seurat/man/pbmc_small.html'>pbmc_small</a></span>,
+    <span class='kw'>ident.1</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>test.use</span> <span class='kw'>=</span> <span class='st'>'RangerDE'</span>, <span class='kw'>warn.imp.method</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>))</div><div class='output co'>#&gt;        importance p_val   gene  avg_logFC pct.1 pct.2 p_val_adj
+#&gt; GNLY    0.4337917     0   GNLY  4.7841852 0.444 0.068         0
+#&gt; CD7     0.3529089     0    CD7  2.5559735 0.528 0.091         0
+#&gt; IL7R    0.1816056     0   IL7R  2.0708996 0.389 0.295         0
+#&gt; NOSIP   0.2407237     0  NOSIP  2.0604084 0.444 0.250         0
+#&gt; CCL5    0.5225574     0   CCL5  1.4914821 0.667 0.273         0
+#&gt; LGALS1  0.3361842     0 LGALS1 -0.9457555 0.500 0.727         0</div><div class='input'>#        importance p_val   gene  avg_logFC pct.1 pct.2 p_val_adj
 # GNLY    0.4337917     0   GNLY  4.7841852 0.444 0.068         0
 # CD7     0.3529089     0    CD7  2.5559735 0.528 0.091         0
 # IL7R    0.1816056     0   IL7R  2.0708996 0.389 0.295         0

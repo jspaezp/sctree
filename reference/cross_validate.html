@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.0</span>
       </span>
     </div>
 
@@ -80,9 +80,6 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/sctree.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -98,7 +95,13 @@
       <a href="../articles/antibody_query.html">Query Antibody vendors from inside R</a>
     </li>
     <li>
+      <a href="../articles/evaluating_tree_quality.html">Evaluating Tree Quality</a>
+    </li>
+    <li>
       <a href="../articles/plot_flowstyle.html">Flow style plotting</a>
+    </li>
+    <li>
+      <a href="../articles/sctree/sctree.html">sctree</a>
     </li>
   </ul>
 </li>
@@ -179,15 +182,18 @@ defults to TRUE</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>cross_validate</span>(<span class='no'>small_5050_mix</span>, <span class='no'>small_9901_mix</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='st'>"0"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Only few negative importance values found, inaccurate p-values. Consider the 'altmann' approach.</span>
+#&gt; <span class='warning'></span>
 #&gt; <span class='warning'>This can be done by setting the argument 'imp_method' to 'altmann', note that this method is extremely computationally intensive.</span>
+#&gt; <span class='warning'></span>
+#&gt; <span class='warning'>This warning can be disabled by setting the argument `warn.imp.method` to `FALSE`</span>
+#&gt; <span class='warning'></span>
 #&gt; <span class='warning'>For more information please refer to ?ranger::ranger</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Some important genes were removed because they are not present in the test dataset. </span>
-#&gt; <span class='warning'>Removed genes: ASNS, CD3D, HEY1, ADA, RPL26, XIST, CA2, TSC22D3, CDKN2A, AIF1, GAL, MDK, MAP1A, PSMB8, PSMB9, FAM127B, DMKN, TSTD1, PYGL, IFI16, KRT18, CSRP2, SPRED2, ZNF503, ZFAT, PRKAG2-AS1, CDC42EP1, CTC1, LBX1-AS1, HSPA1B, GTF2IRD1, HOXA9</span></div><div class='output co'>#&gt; $party_fit
+#&gt; <span class='warning'>Removed genes: ASNS, CD3D, HEY1, ADA, XIST, CDKN2A, RPL26, TSC22D3, CA2, AIF1, GAL, MDK, MAP1A, PSMB9, TSTD1, FAM127B, ID2, DMKN, PSMB8, KRT18, HOXA9, ZNF503, MAP1B, PYGL, HSPA1B, CSRP2</span></div><div class='output co'>#&gt; $party_fit
 #&gt; 
 #&gt; Model formula:
-#&gt; ident ~ ARHGDIB + TMSB4X + MZB1 + SOX4 + FYB + UBE2C + CD1E + 
-#&gt;     HIST1H1E + ITGA4 + HIST1H4C + CXCR4 + CDK1 + CHI3L2 + ITM2A + 
-#&gt;     ID3 + MALAT1 + JUN + C12orf57 + HIST1H1C + MYC + DDIT4 + 
-#&gt;     HIST1H2BK + SH3TC1
+#&gt; ident ~ ARHGDIB + TMSB4X + MZB1 + SOX4 + FYB + CD1E + UBE2C + 
+#&gt;     HIST1H1E + ITGA4 + CDK1 + ITM2A + CHI3L2 + HIST1H4C + MALAT1 + 
+#&gt;     JUN + CXCR4 + DDIT4 + HIST1H2BK
 #&gt; 
 #&gt; Fitted party:
 #&gt; [1] root
@@ -219,74 +225,67 @@ defults to TRUE</p></td>
 #&gt; 		SOX4 -
 #&gt; 
 #&gt; $ranger_significance_table
-#&gt;            importance     pvalue       gene
-#&gt; ASNS        6.0094119 0.00000000       ASNS
-#&gt; ARHGDIB     5.1676992 0.00000000    ARHGDIB
-#&gt; CD3D        4.8032257 0.00000000       CD3D
-#&gt; TMSB4X      4.3671933 0.00000000     TMSB4X
-#&gt; HEY1        3.4772237 0.00000000       HEY1
-#&gt; ADA         3.1096150 0.00000000        ADA
-#&gt; MZB1        2.3375299 0.00000000       MZB1
-#&gt; RPL26       2.3216236 0.00000000      RPL26
-#&gt; XIST        2.0958065 0.00000000       XIST
-#&gt; CA2         1.9730605 0.00000000        CA2
-#&gt; SOX4        1.9680173 0.00000000       SOX4
-#&gt; TSC22D3     1.8654082 0.00000000    TSC22D3
-#&gt; CDKN2A      1.7728410 0.00000000     CDKN2A
-#&gt; AIF1        1.6844896 0.00000000       AIF1
-#&gt; FYB         1.6233718 0.00000000        FYB
-#&gt; GAL         1.1649316 0.00000000        GAL
-#&gt; MDK         1.0080020 0.00000000        MDK
-#&gt; UBE2C       0.9583872 0.00000000      UBE2C
-#&gt; MAP1A       0.8532897 0.00000000      MAP1A
-#&gt; CD1E        0.7916297 0.00000000       CD1E
-#&gt; HIST1H1E    0.7725623 0.00000000   HIST1H1E
-#&gt; PSMB8       0.7516684 0.00000000      PSMB8
-#&gt; PSMB9       0.6452038 0.00000000      PSMB9
-#&gt; FAM127B     0.6252417 0.00000000    FAM127B
-#&gt; DMKN        0.6163686 0.00000000       DMKN
-#&gt; TSTD1       0.5738816 0.00000000      TSTD1
-#&gt; ITGA4       0.5449013 0.00000000      ITGA4
-#&gt; HIST1H4C    0.5237232 0.00000000   HIST1H4C
-#&gt; CXCR4       0.4811929 0.00000000      CXCR4
-#&gt; CDK1        0.4179864 0.00000000       CDK1
-#&gt; CHI3L2      0.3775718 0.00000000     CHI3L2
-#&gt; PYGL        0.3621761 0.00000000       PYGL
-#&gt; IFI16       0.2980396 0.00000000      IFI16
-#&gt; ITM2A       0.2636847 0.00000000      ITM2A
-#&gt; KRT18       0.2550561 0.00000000      KRT18
-#&gt; CSRP2       0.2460805 0.00000000      CSRP2
-#&gt; ID3         0.2459439 0.00000000        ID3
-#&gt; MALAT1      0.2277814 0.01219512     MALAT1
-#&gt; JUN         0.2170782 0.02439024        JUN
-#&gt; SPRED2      0.2093111 0.02439024     SPRED2
-#&gt; ZNF503      0.1942172 0.02439024     ZNF503
-#&gt; ZFAT        0.1916341 0.02439024       ZFAT
-#&gt; PRKAG2-AS1  0.1863027 0.02439024 PRKAG2-AS1
-#&gt; CDC42EP1    0.1731541 0.02439024   CDC42EP1
-#&gt; CTC1        0.1710720 0.02439024       CTC1
-#&gt; C12orf57    0.1683163 0.02439024   C12orf57
-#&gt; LBX1-AS1    0.1675656 0.02439024   LBX1-AS1
-#&gt; HIST1H1C    0.1628978 0.02439024   HIST1H1C
-#&gt; HSPA1B      0.1553756 0.02439024     HSPA1B
-#&gt; MYC         0.1537134 0.03658537        MYC
-#&gt; GTF2IRD1    0.1483967 0.04878049   GTF2IRD1
-#&gt; HOXA9       0.1471439 0.04878049      HOXA9
-#&gt; DDIT4       0.1449510 0.04878049      DDIT4
-#&gt; HIST1H2BK   0.1363704 0.04878049  HIST1H2BK
-#&gt; SH3TC1      0.1304120 0.04878049     SH3TC1
+#&gt;           importance      pvalue      gene
+#&gt; ASNS       6.1981030 0.000000000      ASNS
+#&gt; ARHGDIB    4.6568825 0.000000000   ARHGDIB
+#&gt; CD3D       4.5486561 0.000000000      CD3D
+#&gt; TMSB4X     3.8594044 0.000000000    TMSB4X
+#&gt; HEY1       3.4640647 0.000000000      HEY1
+#&gt; ADA        2.7639487 0.000000000       ADA
+#&gt; MZB1       2.5351154 0.000000000      MZB1
+#&gt; XIST       2.1050942 0.000000000      XIST
+#&gt; CDKN2A     2.0906554 0.000000000    CDKN2A
+#&gt; RPL26      2.0897659 0.000000000     RPL26
+#&gt; SOX4       2.0034795 0.000000000      SOX4
+#&gt; TSC22D3    1.9670025 0.000000000   TSC22D3
+#&gt; CA2        1.9547972 0.000000000       CA2
+#&gt; FYB        1.6685485 0.000000000       FYB
+#&gt; AIF1       1.5561841 0.000000000      AIF1
+#&gt; GAL        1.1628424 0.000000000       GAL
+#&gt; MDK        1.0391597 0.000000000       MDK
+#&gt; CD1E       0.9016758 0.000000000      CD1E
+#&gt; UBE2C      0.7935225 0.009433962     UBE2C
+#&gt; MAP1A      0.7925588 0.009433962     MAP1A
+#&gt; PSMB9      0.6315636 0.009433962     PSMB9
+#&gt; TSTD1      0.5575521 0.009433962     TSTD1
+#&gt; HIST1H1E   0.5060435 0.009433962  HIST1H1E
+#&gt; FAM127B    0.5018757 0.009433962   FAM127B
+#&gt; ID2        0.4493514 0.009433962       ID2
+#&gt; DMKN       0.4488922 0.009433962      DMKN
+#&gt; PSMB8      0.4441328 0.009433962     PSMB8
+#&gt; ITGA4      0.4201880 0.009433962     ITGA4
+#&gt; CDK1       0.4042143 0.009433962      CDK1
+#&gt; ITM2A      0.3883246 0.009433962     ITM2A
+#&gt; KRT18      0.3738098 0.009433962     KRT18
+#&gt; CHI3L2     0.3534820 0.009433962    CHI3L2
+#&gt; HIST1H4C   0.3438604 0.009433962  HIST1H4C
+#&gt; HOXA9      0.3198131 0.009433962     HOXA9
+#&gt; ZNF503     0.3125776 0.009433962    ZNF503
+#&gt; MALAT1     0.3075915 0.009433962    MALAT1
+#&gt; JUN        0.3029134 0.009433962       JUN
+#&gt; MAP1B      0.3000326 0.009433962     MAP1B
+#&gt; PYGL       0.2815934 0.018867925      PYGL
+#&gt; CXCR4      0.2759808 0.018867925     CXCR4
+#&gt; DDIT4      0.2183946 0.028301887     DDIT4
+#&gt; HSPA1B     0.2162486 0.028301887    HSPA1B
+#&gt; HIST1H2BK  0.2082975 0.037735849 HIST1H2BK
+#&gt; CSRP2      0.2003424 0.037735849     CSRP2
 #&gt; 
 #&gt; $gating_genes
 #&gt; [1] "ARHGDIB" "SOX4"    "DDIT4"  
 #&gt; </div><div class='input'><span class='fu'>cross_validate</span>(<span class='no'>small_5050_mix</span>, <span class='no'>small_9901_mix</span>, <span class='kw'>cluster</span> <span class='kw'>=</span> <span class='st'>"ALL"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: Only few negative importance values found, inaccurate p-values. Consider the 'altmann' approach.</span>
+#&gt; <span class='warning'></span>
 #&gt; <span class='warning'>This can be done by setting the argument 'imp_method' to 'altmann', note that this method is extremely computationally intensive.</span>
+#&gt; <span class='warning'></span>
+#&gt; <span class='warning'>This warning can be disabled by setting the argument `warn.imp.method` to `FALSE`</span>
+#&gt; <span class='warning'></span>
 #&gt; <span class='warning'>For more information please refer to ?ranger::ranger</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Some important genes were removed because they are not present in the test dataset. </span>
-#&gt; <span class='warning'>Removed genes: ASNS, CD3D, ADA, HEY1, TSC22D3, RPL26, XIST, AIF1, MAP1A, CDKN2A, CA2, PSMB8, FAM127B, TSTD1, GAL, MDK, DMKN, CSRP2, ID2, KRT18, PSMB9, HSPA1B</span></div><div class='output co'>#&gt; $party_fit
+#&gt; <span class='warning'>Removed genes: ASNS, CD3D, ADA, HEY1, TSC22D3, XIST, MAP1A, RPL26, CA2, AIF1, CDKN2A, FAM127B, GAL, CSRP2, PSMB8, TSTD1, MDK, HOXA9, ZNF503, DMKN, ID2, CTC1, IFI16, KRT18, PYGL, PSMB9, MAP1B, SPRED2, RNF138, LNP1</span></div><div class='output co'>#&gt; $party_fit
 #&gt; 
 #&gt; Model formula:
-#&gt; ident ~ TMSB4X + ARHGDIB + MZB1 + SOX4 + FYB + CD1E + UBE2C + 
-#&gt;     HIST1H1E + HIST1H4C + ITM2A + IGLL1 + CXCR4 + CHI3L2 + HIST1H2BK + 
-#&gt;     ITGA4 + DDIT4 + C12orf57 + HIST1H1C
+#&gt; ident ~ TMSB4X + ARHGDIB + MZB1 + SOX4 + FYB + UBE2C + CD1E + 
+#&gt;     ITM2A + HIST1H1E + HIST1H4C + DDIT4 + CHI3L2 + JUN + CDK1 + 
+#&gt;     ITGA4 + CXCR4 + HIST1H1C + MYC
 #&gt; 
 #&gt; Fitted party:
 #&gt; [1] root
@@ -318,47 +317,55 @@ defults to TRUE</p></td>
 #&gt; 		SOX4 -
 #&gt; 
 #&gt; $ranger_significance_table
-#&gt;           importance     pvalue      gene
-#&gt; ASNS       5.6354842 0.00000000      ASNS
-#&gt; CD3D       4.8789549 0.00000000      CD3D
-#&gt; TMSB4X     4.3761890 0.00000000    TMSB4X
-#&gt; ARHGDIB    4.2833060 0.00000000   ARHGDIB
-#&gt; MZB1       3.4198224 0.00000000      MZB1
-#&gt; ADA        3.1530134 0.00000000       ADA
-#&gt; HEY1       2.8489714 0.00000000      HEY1
-#&gt; TSC22D3    2.1903904 0.00000000   TSC22D3
-#&gt; RPL26      2.1838063 0.00000000     RPL26
-#&gt; XIST       2.1728741 0.00000000      XIST
-#&gt; AIF1       2.0274626 0.00000000      AIF1
-#&gt; SOX4       1.7082333 0.00000000      SOX4
-#&gt; MAP1A      1.6491278 0.00000000     MAP1A
-#&gt; FYB        1.4254269 0.00000000       FYB
-#&gt; CDKN2A     1.3816793 0.00000000    CDKN2A
-#&gt; CA2        1.3786192 0.00000000       CA2
-#&gt; CD1E       0.9548178 0.00000000      CD1E
-#&gt; UBE2C      0.9294106 0.00000000     UBE2C
-#&gt; PSMB8      0.8618613 0.00000000     PSMB8
-#&gt; FAM127B    0.7963698 0.00000000   FAM127B
-#&gt; HIST1H1E   0.7267816 0.00000000  HIST1H1E
-#&gt; TSTD1      0.7098676 0.00000000     TSTD1
-#&gt; GAL        0.6304936 0.00000000       GAL
-#&gt; HIST1H4C   0.6114589 0.00000000  HIST1H4C
-#&gt; MDK        0.5016790 0.00000000       MDK
-#&gt; ITM2A      0.4967601 0.00000000     ITM2A
-#&gt; DMKN       0.4876830 0.00000000      DMKN
-#&gt; CSRP2      0.4863419 0.00000000     CSRP2
-#&gt; IGLL1      0.4115364 0.00000000     IGLL1
-#&gt; ID2        0.3743618 0.01041667       ID2
-#&gt; CXCR4      0.3713671 0.01041667     CXCR4
-#&gt; KRT18      0.3702754 0.01041667     KRT18
-#&gt; PSMB9      0.3702514 0.01041667     PSMB9
-#&gt; CHI3L2     0.3552276 0.01041667    CHI3L2
-#&gt; HIST1H2BK  0.3164331 0.02083333 HIST1H2BK
-#&gt; ITGA4      0.3039233 0.02083333     ITGA4
-#&gt; DDIT4      0.2642464 0.04166667     DDIT4
-#&gt; HSPA1B     0.2380191 0.04166667    HSPA1B
-#&gt; C12orf57   0.2359516 0.04166667  C12orf57
-#&gt; HIST1H1C   0.2312922 0.04166667  HIST1H1C
+#&gt;          importance     pvalue     gene
+#&gt; ASNS      5.0523069 0.00000000     ASNS
+#&gt; CD3D      4.5759691 0.00000000     CD3D
+#&gt; TMSB4X    4.3567501 0.00000000   TMSB4X
+#&gt; ARHGDIB   4.3289627 0.00000000  ARHGDIB
+#&gt; MZB1      3.5292376 0.00000000     MZB1
+#&gt; ADA       3.0016297 0.00000000      ADA
+#&gt; HEY1      2.7798605 0.00000000     HEY1
+#&gt; TSC22D3   2.3415148 0.00000000  TSC22D3
+#&gt; XIST      2.0798456 0.00000000     XIST
+#&gt; SOX4      1.8714852 0.00000000     SOX4
+#&gt; MAP1A     1.6867208 0.00000000    MAP1A
+#&gt; RPL26     1.6366171 0.00000000    RPL26
+#&gt; CA2       1.4931733 0.00000000      CA2
+#&gt; AIF1      1.4917225 0.00000000     AIF1
+#&gt; FYB       1.4892930 0.00000000      FYB
+#&gt; CDKN2A    1.4302791 0.00000000   CDKN2A
+#&gt; UBE2C     1.1031831 0.00000000    UBE2C
+#&gt; CD1E      0.9464429 0.00000000     CD1E
+#&gt; FAM127B   0.9218146 0.00000000  FAM127B
+#&gt; GAL       0.7591950 0.00000000      GAL
+#&gt; ITM2A     0.6595954 0.00000000    ITM2A
+#&gt; HIST1H1E  0.6520071 0.00000000 HIST1H1E
+#&gt; CSRP2     0.5320566 0.00000000    CSRP2
+#&gt; HIST1H4C  0.4876504 0.01020408 HIST1H4C
+#&gt; PSMB8     0.4840830 0.01020408    PSMB8
+#&gt; DDIT4     0.3981723 0.01020408    DDIT4
+#&gt; TSTD1     0.3894432 0.01020408    TSTD1
+#&gt; MDK       0.3768194 0.01020408      MDK
+#&gt; HOXA9     0.3689784 0.01020408    HOXA9
+#&gt; ZNF503    0.3525577 0.01020408   ZNF503
+#&gt; CHI3L2    0.3054693 0.01020408   CHI3L2
+#&gt; DMKN      0.2965305 0.01020408     DMKN
+#&gt; JUN       0.2865324 0.01020408      JUN
+#&gt; CDK1      0.2831493 0.01020408     CDK1
+#&gt; ID2       0.2830716 0.01020408      ID2
+#&gt; CTC1      0.2813576 0.01020408     CTC1
+#&gt; IFI16     0.2710781 0.01020408    IFI16
+#&gt; KRT18     0.2704436 0.01020408    KRT18
+#&gt; ITGA4     0.2689324 0.01020408    ITGA4
+#&gt; PYGL      0.2584941 0.01020408     PYGL
+#&gt; PSMB9     0.2523764 0.01020408    PSMB9
+#&gt; MAP1B     0.2228242 0.04081633    MAP1B
+#&gt; CXCR4     0.2227893 0.04081633    CXCR4
+#&gt; HIST1H1C  0.2195790 0.04081633 HIST1H1C
+#&gt; MYC       0.2099993 0.04081633      MYC
+#&gt; SPRED2    0.1998300 0.04081633   SPRED2
+#&gt; RNF138    0.1982636 0.04081633   RNF138
+#&gt; LNP1      0.1882561 0.04081633     LNP1
 #&gt; 
 #&gt; $gating_genes
 #&gt; [1] "ARHGDIB" "SOX4"    "DDIT4"  

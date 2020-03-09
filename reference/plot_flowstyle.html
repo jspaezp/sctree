@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>plot_flowstyle — plot_flowstyle • sctree</title>
+<title>Plots data as faceted scatterplot emulating the ouput of flow cytometry — plot_flowstyle • sctree</title>
 
 
 <!-- jquery -->
@@ -35,7 +35,7 @@
 
 
 
-<meta property="og:title" content="plot_flowstyle — plot_flowstyle" />
+<meta property="og:title" content="Plots data as faceted scatterplot emulating the ouput of flow cytometry — plot_flowstyle" />
 <meta property="og:description" content="Simulates flow cytometry plots for single cell rna seq data" />
 <meta name="twitter:card" content="summary" />
 
@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.0</span>
       </span>
     </div>
 
@@ -80,9 +80,6 @@
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/sctree.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -98,7 +95,13 @@
       <a href="../articles/antibody_query.html">Query Antibody vendors from inside R</a>
     </li>
     <li>
+      <a href="../articles/evaluating_tree_quality.html">Evaluating Tree Quality</a>
+    </li>
+    <li>
       <a href="../articles/plot_flowstyle.html">Flow style plotting</a>
+    </li>
+    <li>
+      <a href="../articles/sctree/sctree.html">sctree</a>
     </li>
   </ul>
 </li>
@@ -118,7 +121,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>plot_flowstyle</h1>
+    <h1>Plots data as faceted scatterplot emulating the ouput of flow cytometry</h1>
     
     <div class="hidden name"><code>plot_flowstyle.Rd</code></div>
     </div>
@@ -130,7 +133,14 @@
     <pre class="usage"><span class='fu'>plot_flowstyle</span>(<span class='no'>object</span>, <span class='no'>markernames</span>, <span class='kw'>classif_col</span> <span class='kw'>=</span> <span class='st'>"ident"</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>plot_flowstyle</span>(<span class='no'>object</span>, <span class='no'>markernames</span>, <span class='kw'>classif_col</span> <span class='kw'>=</span> <span class='st'>"ident"</span>, <span class='no'>...</span>)
+<span class='fu'>plot_flowstyle</span>(
+  <span class='no'>object</span>,
+  <span class='no'>markernames</span>,
+  <span class='kw'>classif_col</span> <span class='kw'>=</span> <span class='st'>"ident"</span>,
+  <span class='kw'>warn</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>highlight_class</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='no'>...</span>
+)
 
 <span class='co'># S3 method for Seurat</span>
 <span class='fu'>plot_flowstyle</span>(<span class='no'>object</span>, <span class='no'>markernames</span>, <span class='kw'>classif_col</span> <span class='kw'>=</span> <span class='st'>"ident"</span>, <span class='no'>...</span>)</pre>
@@ -154,6 +164,14 @@ the grouping, defaults to "ident"</p></td>
     <tr>
       <th>...</th>
       <td><p>additional argumetns to be passed to GGally::ggpairs</p></td>
+    </tr>
+    <tr>
+      <th>warn</th>
+      <td><p>logical indicating if warninf should be shown, defaults to TRUE</p></td>
+    </tr>
+    <tr>
+      <th>highlight_class</th>
+      <td><p>a character indicating a class if it wants to be highlighted. ie "1"</p></td>
     </tr>
     </table>
 

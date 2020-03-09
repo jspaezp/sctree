@@ -70,7 +70,7 @@ the columns each 'gene' and the rows each UMI/cell." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">sctree</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.5.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.8.0</span>
       </span>
     </div>
 
@@ -81,9 +81,6 @@ the columns each 'gene' and the rows each UMI/cell." />
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
-</li>
-<li>
-  <a href="../articles/sctree.html">Get started</a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
@@ -99,7 +96,13 @@ the columns each 'gene' and the rows each UMI/cell." />
       <a href="../articles/antibody_query.html">Query Antibody vendors from inside R</a>
     </li>
     <li>
+      <a href="../articles/evaluating_tree_quality.html">Evaluating Tree Quality</a>
+    </li>
+    <li>
       <a href="../articles/plot_flowstyle.html">Flow style plotting</a>
+    </li>
+    <li>
+      <a href="../articles/sctree/sctree.html">sctree</a>
     </li>
   </ul>
 </li>
@@ -130,7 +133,7 @@ the columns each 'gene' and the rows each UMI/cell.</p>
     </div>
 
     <pre class="usage"><span class='co'># S3 method for Seurat</span>
-<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>x</span>, <span class='no'>genes</span>, <span class='kw'>fix_names</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)</pre>
+<span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>x</span>, <span class='kw'>genes</span> <span class='kw'>=</span> <span class='kw pkg'>Seurat</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/Seurat/man/VariableFeatures.html'>VariableFeatures</a></span>(<span class='no'>x</span>), <span class='kw'>fix_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

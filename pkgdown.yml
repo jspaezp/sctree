@@ -1,5 +1,18 @@
-pandoc: '2.2'
+pandoc: '2.5'
 pkgdown: 1.4.1
 pkgdown_sha: ~
-articles: []
+articles:
+  antibody_query: antibody_query.html
+  evaluating_tree_quality: evaluating_tree_quality.html
+  plot_flowstyle: plot_flowstyle.html
+  _antibodies: rmdchunks/_antibodies.html
+  _finding_markers: rmdchunks/_finding_markers.html
+  _garnett: rmdchunks/_garnett.html
+  _installation: rmdchunks/_installation.html
+  _news: rmdchunks/_news.html
+  _suggesting_strategies: rmdchunks/_suggesting_strategies.html
+  _tree_plots: rmdchunks/_tree_plots.html
+  _usage_intro: rmdchunks/_usage_intro.html
+  _visualizing_markers: rmdchunks/_visualizing_markers.html
+  sctree: sctree/sctree.html
 
