@@ -28,41 +28,7 @@ bibliography: bibliography.bib
 
 # Summary
 
-Due to the advancements in droplet-based library preparation, combined with
-the steady decrease in the cost of sequencing, the access to single-cell mRNA
-sequencing (scRNA-seq) methods has expanded. Now, research labs focused on ataining
-insights into the biology of heterogeneous cell populations have access to this powerful
-technology.
-Nonetheless, translating hypotheses acquired by this sequencing technology
-usually requires follow-up and validation by using wet-lab methods with
-single-cell resolution such as immunohistochemistry (IHC), flow cytometry (FC)
-and fluorescence *in situ* hybridization (FISH).
-This transition remains challenging, in part because wet-lab methodologies
-often rely on antibody-based technologies, which have a limited extent of
-dimensionality.
-
-Many bioinformatic tools have been developed for the scRNA-seq worflow addressing
-important questions; such as short sequence read alignment
-[@Patro2017;@Dobin2013;@Srivastava2018;@Bray2016], barcode calling, unique molecular
-identifier (UMI) assignment [@Smith2019], pre-processing of the data
-[@VanDijk2018;@Li2018], clustering of cell subpopulations [@Trapnell2014;@Butler2018],
-and differential expression analysis [@Love2014;@Robinson2009].
-Unfortunately, most of these tools fail to directly connect findings with the
-requirements of the techniques that need to be used downstream to find additional
-meaning in these populations.
-
-The identification of "markers" is usually accomplished in
-two distinct manners; some methods suggest markers based on one-dimensional
-regression approaches and others treat the elucidation of markers as a
-classification problem.  The regression methods often lead to a multitude of
-differentially expressed genes identified by clusters, which though useful,
-are often not ideal for separating clusters from one another due to a continuum
-of gene expression in cells beyond the cluster of interest. Classification methods
-usually rely on high dimensional methods that despite showing high classification
-accuracy, make it difficult to extract from the model any information which could be used
-to separate cells and test subpopulations in an experimental setting.
-
-We present scTree, a tool addressing the unfulfilled need for identification of markers that extrapolate to wet-lab methodologies, where the identification of markers is considered as a classification problem modeled with shallow decision trees. This approach will provide classification models for cell clusters to biologists using the R programming language and scRNA-seq analysis programs such as Seurat. The package is free, open source and available though github at [github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
+Single-cell RNA sequencing (scRNA-seq) is now a commonly used technique to measure the transcriptome of populations of cells. Clustering heterogeneous cells based on these transcriptomes enables identification of cell populations [@Trapnell2014;@Butler2018]. There are multiple methods available to identify "marker" genes that differ between these populations [@Butler2018;@Love2014;@Robinson2009].  However, there are usually too many genes in these lists to directly suggest an experimental follow-up strategy for selecting them from a bulk population (e.g. via FACS (ref)). Here we present scTree, a tool that aims to provide biologists using the R programming language and scRNA-seq analysis programs a minimal set of genes that can be used in downstream experiments.  The package is free, open source and available though github at [github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
 
 # Implementation and results
 
