@@ -62,14 +62,7 @@ usually rely on high dimensional methods that despite showing high classificatio
 accuracy, make it difficult to extract from the model any information which could be used
 to separate cells and test subpopulations in an experimental setting.
 
-We present scTree, a tool in which addresses the unfulfilled need for identifying markers
-that would extrapolate to methodologies applicable in a wet-lab setting, where the
-identification of markers is considered as a classification problem modeled with
-shallow decision trees. This former approach produces classification models for cell
-clusters that are immediately applicable to experimental settings, without
-sacrificing the classification accuracy.
-The package is free, open source and available though github at
-[github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
+We present scTree, a tool addressing the unfulfilled need for identification of markers that extrapolate to wet-lab methodologies, where the identification of markers is considered as a classification problem modeled with shallow decision trees. This approach will provide classification models for cell clusters to biologists using the R programming language and scRNA-seq analysis programs such as Seurat. The package is free, open source and available though github at [github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
 
 # Implementation and results
 
