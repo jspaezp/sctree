@@ -11,9 +11,7 @@ status](https://codecov.io/gh/jspaezp/sctree/branch/master/graph/badge.svg)](htt
 
 # sctree
 
-The goal of sctree is to create a tool to accelerate the transition from
-single cell rna-sequencing to calidation and new sub-population
-discovery.
+The goal of scTree is to provide allow biologists to identify a minimal set of genes from single-cell RNA-seq (scRNA-seq) data that can be used in downstream experiments. While there are already methods available to identify differentially expressed genes and markers that differ between subpopulations in scRNA-seqdata, there are generally too many genes in these lists to use in follow-up experiments.
 
 Features suggesting pseudo-gating strategies to purify found populations
 via flow-cytometry, antibody querying and cross validations between
