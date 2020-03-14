@@ -101,6 +101,7 @@ probes for the genes found to be usefull for classification.
 *nonetheless a minority can also be classified as GZMB Low/FGFBP2 High.*
 
 !["Scatterplot showing the progressive gating that would be used to classify node 11 in the 3K PBMC dataset. Filtering in each pane is donde on the gene presented on the X-axis of the plot and cells kept during that filtering step are highlighted."](./paper_figures/gating_clus_6.png "Figure 3")
+**Figure 3. Scatterplot showing the progressive gating that would be used to classify node 11 in the 3K PBMC dataset. Filtering in each pane is donde on the gene presented on the X-axis of the plot and cells kept during that filtering step are highlighted.** 
 
 Despite scTree being originally developed for single
 cell sequencing, we recognize it could also be used for other high content single-cell
