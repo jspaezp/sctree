@@ -22,7 +22,7 @@ affiliations:
     index: 2
   - name: Purdue University, Department of Comparative Pathobiology
     index: 3
-date: 14 January 2020 
+date: 14 January 2020
 bibliography: bibliography.bib
 ---
 
@@ -68,11 +68,9 @@ either scTree, t-tests or wilcoxon-tests.
 As shown in **Figures 1 and 2**, bias was not observed, and regardless of the final
 classification model, the features selected by using scTree provide a comparable accuracy, precision and recall to those acquired using traditional differential expression methods. It is to note that many of the wrongly assigned labels happen between cell populations that are hard to define in-vivo and are not resolved clusters in the UMAP dimensional reduction, such as macrophage subtypes and between NK an Tc cells.
 
-![Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset](./paper_figures/benchmarks_5050_boxplot.png "Figure 1")
-**Figure 1. Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset.**  A number of machine learning algorithms were tested to ensure that scTree performed as well as traditional marker identification approaches, regardless of the classifier used.
+![**Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset.**  A number of machine learning algorithms were tested to ensure that scTree performed as well as traditional marker identification approaches, regardless of the classifier used.](./paper_figures/benchmarks_5050_boxplot.png "Figure 1")
 
-![Depiction of the predicted identities in the PBMC 3k dataset dataset.](./paper_figures/pbmc_prediction_sctree.png "Figure 2")
-**Figure 2. Depiction of the predicted identities in the PBMC 3k dataset dataset.** Real identities are the identities as identified through unsupervised clustering performed using Seurat and annotated based on prior knowledge [@Butler2018].  The scTree package was then used to then classify cells based on the top 5 markers for each cluster chosen by scTree and accurately recapitulates the original classification determined by Seurat.
+![**Depiction of the predicted identities in the PBMC 3k dataset dataset.** Real identities are the identities as identified through unsupervised clustering performed using Seurat and annotated based on prior knowledge [@Butler2018]. The scTree package was then used to then classify cells based on the top 5 markers for each cluster chosen by scTree and accurately recapitulates the original classification determined by Seurat.](./paper_figures/pbmc_prediction_sctree.png "Figure 2")
 
 ## Example Output from the package
 
@@ -95,8 +93,7 @@ as.garnett(tree_model, rules_keep = "^NK")
 **Code Section 1.** *Suggested classification scheme for NK cell cluster of the PBMC dataset.*
 *The data depicts how the cluster corresponding to NK cells can be predominantly identified as GNLY High/GZMB High.*
 
-!["Scatterplot showing the progressive gating that would be used to classify the node corresponding to NK cells in the 3K PBMC dataset. Filtering in each pane is donde on the gene presented on the X-axis of the plot and cells kept during that filtering step are highlighted."](./paper_figures/gates_plot_nkcells.png "Figure 3")
-**Figure 3. Scatterplot showing the progressive gating that would be used to classify node 11 in the 3K PBMC dataset. Filtering in each pane is donde on the gene presented on the X-axis of the plot and cells kept during that filtering step are highlighted.**
+!["Scatterplot showing the progressive gating that would be used to classify node 11 in the 3K PBMC dataset. Filtering in each pane is done on the gene presented on the X-axis of the plot and cells kept during that filtering step are highlighted.**"](./paper_figures/gates_plot_nkcells.png "Figure 3")
 
 Despite scTree being originally developed for single
 cell sequencing, we recognize it could also be used for other high content single-cell
