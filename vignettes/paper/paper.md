@@ -45,7 +45,7 @@ use only relative levels of marker expression, using terms such as "High" and "L
 In a similar manner, scTree produces accurate, biologically relevant, and easily
 interpretable results, which can be used for subsequent subpopulation sorting and
 biological validation by fitting shallow decision trees analogous to FACS sorting
-strategies and is able to output this classifiers in a format easily interpretable
+strategies and is able to output these classifiers in a format easily interpretable
 in a wet-lab setting.
 
 The method to calculate variable importances based on random forests
@@ -66,11 +66,11 @@ of the prediction. We were concerned that the forest-based markers would artific
 favor scTree, therefore we utilized several classifiers for the markers derived from
 either scTree, t-tests or wilcoxon-tests.
 As shown in **Figures 1 and 2**, bias was not observed, and regardless of the final
-classification model, the features selected by using scTree provide a comparable accuracy, precision and recall to those acquired using traditional differential expression methods. It is to note that many of the wrongly assigned labels happen between cell populations that are hard to define in-vivo and are not resolved clusters in the UMAP dimensional reduction, such as macrophage subtypes and between NK an Tc cells.
+classification model, the features selected by using scTree provide a comparable accuracy, precision and recall to those acquired using traditional differential expression methods. It is important to note that many of the wrongly assigned labels happen between cell populations that are hard to define in-vivo and are not resolved clusters in the UMAP dimensional reduction, such as macrophage subtypes and between NK and Tc cells.
 
 ![**Depiction of the classification performance achieved in the Jurkat:293 50:50 dataset.**  A number of machine learning algorithms were tested to ensure that scTree performed as well as traditional marker identification approaches, regardless of the classifier used.](./paper_figures/benchmarks_5050_boxplot.png "Figure 1")
 
-![**Depiction of the predicted identities in the PBMC 3k dataset dataset.** **A.** Real identities are the identities as identified through unsupervised clustering performed using Seurat and annotated based on prior knowledge [@Butler2018]. **B.** The scTree package was then used to then classify cells based on the top 5 markers for each cluster chosen by scTree and accurately recapitulates the original classification determined by Seurat. **C.** Confusion matrix showing the assigned classification to each cluster.](./paper_figures/pbmc_prediction_sctree.png "Figure 2")
+![**Depiction of the predicted identities in the PBMC 3k dataset dataset.** **A.** Real identities are the identities as identified through unsupervised clustering performed using Seurat and annotated based on prior knowledge [@Butler2018]. **B.** The scTree package was then used to classify cells based on the top 5 markers for each cluster chosen by scTree and accurately recapitulates the original classification determined by Seurat. **C.** Confusion matrix showing the assigned classification to each cluster.](./paper_figures/pbmc_prediction_sctree.png "Figure 2")
 
 ## Example Output from the package
 
@@ -103,7 +103,7 @@ workflows, such as CyTOF or data driven multiple-channel flow cytometry.
 
 The provided interface with antibody databases, further enhances the utility of scTree by
 fulfilling the need to interface *in silico* models and data with *in vitro*
-followup. Therefore, the package interface with common antibody vendors
+followup. Therefore, a package interface with common antibody vendors
 and search engines are provided. This interface is exemplified in *Code section 2*.
 
 ``` r
