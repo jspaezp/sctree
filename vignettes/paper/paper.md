@@ -116,13 +116,13 @@ head(query_biocompare_antibodies("CD11b"))
 #> 4 Anti-CD11b Rabbit Monoclonal Antibody         BosterBio
 #> 5  Monoclonal Antibody to CD11b (human)   MyBioSource.com
 #> 6                Anti-CD11b (Mouse) mAb MBL International
-#>                                                                                                            specification
-#> 1 Applications: WB, IHC-p; Reactivity: Hu, Ms, Rt, Pg, RhMk; Conjugate/Tag: Unconjugated; Quantity: 10 µl, 40 µl, 100 µl
-#> 2             Applications: Western Blot (WB); Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
-#> 3   Applications: WB, FCM, ICC, IHC-fr, IHC-p; Reactivity: Hu, Ms, Rt; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
-#> 4                       Applications: WB, IF, IHC; Reactivity: Hu, Ms; Conjugate/Tag: Unconjugated; Quantity: 100ug/vial
-#> 5              Applications: Flow Cytometry (FCM); Reactivity: Human (Hu); Conjugate/Tag: Unconjugated; Quantity: 0.1 mg
-#> 6              Applications: Flow Cytometry (FCM); Reactivity: Mouse (Ms); Conjugate/Tag: Unconjugated; Quantity: 100 ug
+#>                                                         specification
+#> 1 Applications: WB, IHC-p; Reactivity: Hu, Ms, Rt, Pg, RhMk; Conjugat
+#> 2             Applications: Western Blot (WB); Reactivity: Hu, Ms, Rt
+#> 3   Applications: WB, FCM, ICC, IHC-fr, IHC-p; Reactivity: Hu, Ms, Rt
+#> 4                       Applications: WB, IF, IHC; Reactivity: Hu, Ms
+#> 5              Applications: Flow Cytometry (FCM); Reactivity: Human 
+#> 6              Applications: Flow Cytometry (FCM); Reactivity: Mouse 
 ```
 
 **Code Section 2** *Example of the automated antibody query interface*
