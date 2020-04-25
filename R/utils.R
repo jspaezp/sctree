@@ -163,7 +163,7 @@ get_aliases <- function(gene_symbols,
 
         alias_df <- tidyr::nest(alias_df, data = "ALIAS")
         alias_vector <- wrapr::named_map_builder(
-            names = alias_df[["SYMBOL"]],
+            targets = alias_df[["SYMBOL"]],
             values = lapply(alias_df[["data"]], function(x) x[["ALIAS"]]))
     })
 
@@ -209,7 +209,7 @@ get_genesymbols <- function(gene_aliases,
 
         alias_df <- tidyr::nest(alias_df, "SYMBOL")
         alias_vector <- wrapr::named_map_builder(
-            names = alias_df[["ALIAS"]],
+            targets = alias_df[["ALIAS"]],
             values = lapply(alias_df[["data"]], function(x) x[["SYMBOL"]]))
     })
 
