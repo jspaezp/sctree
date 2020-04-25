@@ -28,7 +28,7 @@ bibliography: bibliography.bib
 
 # Summary
 
-Single-cell RNA sequencing (scRNA-seq) is now a commonly used technique to measure the transcriptome of populations of cells. Clustering heterogeneous cells based on these transcriptomes enables identification of cell populations [@Trapnell2014;@Butler2018]. There are multiple methods available to identify "marker" genes that differ between these populations [@Butler2018;@Love2014;@Robinson2009].  However, there are usually too many genes in these lists to directly suggest an experimental follow-up strategy for selecting them from a bulk population (e.g. via FACS [@RN1]). Here we present scTree, a tool that aims to provide biologists using the R programming language and scRNA-seq analysis programs a minimal set of genes that can be used in downstream experiments.  The package is free, open source and available though github at [github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
+Single-cell RNA sequencing (scRNA-seq) is now a commonly used technique to measure the transcriptome of populations of cells. Clustering heterogeneous cells based on these transcriptomes enables identification of cell populations [@Trapnell2014;@Butler2018]. There are multiple methods available to identify "marker" genes that differ between these populations [@Butler2018;@Love2014;@Robinson2009].  However, there are usually too many genes in these lists to directly suggest an experimental follow-up strategy for selecting them from a bulk population (e.g. via FACS [@RN1]). Here we present scTree, a tool that aims to provide biologists using the R programming language and scRNA-seq analysis programs a minimal set of genes that can be used in downstream experiments.  The package is free, open source and available though GitHub at [github.com/jspaezp/sctree](https://github.com/jspaezp/sctree)
 
 # Implementation and results
 
@@ -104,7 +104,7 @@ workflows, such as CyTOF or data driven multiple-channel flow cytometry.
 The provided interface with antibody databases, further enhances the utility of scTree by
 fulfilling the need to interface *in silico* models and data with *in vitro*
 followup. Therefore, a package interface with common antibody vendors
-and search engines are provided. This interface is exemplified in *Code section 2*.
+and search engines are provided. This interface is exemplified in **Code section 2**.
 
 ``` r
 require(sctree)
@@ -125,7 +125,7 @@ head(query_biocompare_antibodies("CD11b"))
 #> 6              Applications: Flow Cytometry (FCM); Reactivity: Mouse 
 ```
 
-**Code Section 2** *Example of the automated antibody query interface*
+**Code Section 2.** *Example of the automated antibody query interface*
 
 Additional usage cases and up-to-date code snippets of the common functions can be found
 in the package documentation website
