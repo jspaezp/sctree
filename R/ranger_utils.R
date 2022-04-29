@@ -31,7 +31,7 @@
 #' @export
 #'
 #' @evalRd include_roxygen_example("
-#'     head(ranger_importances(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
+#'     head(ranger_importances(sctree::small_5050_mix, cluster = 'ALL', warn.imp.method = FALSE))
 #'     ")
 #'
 #' @importFrom ranger ranger importance_pvalues
@@ -241,7 +241,7 @@ FindAllMarkers_ranger.Seurat <- function(object,
 #' @evalRd include_roxygen_example({
 #'     "library(Seurat)
 #'     library(sctree)
-#'     head(FindMarkers(object = Seurat::pbmc_small,
+#'     head(FindMarkers(object = sctree::small_5050_mix,
 #'     ident.1 = 0, test.use = 'RangerDE', warn.imp.method = FALSE))"
 #'     })
 #' @importFrom Matrix t

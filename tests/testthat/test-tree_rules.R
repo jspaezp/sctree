@@ -8,47 +8,53 @@ test_that("Tree rules are handled correctly on generic trees", {
     })
 })
 
+
+expected_garnett_text <- c(
+    "> 0_node_3 \t(n = 40)",
+    "expressed below: ADA 2.84, ASNS 1.43",
+    "",
+    "> 0_node_6 \t(n = 8)",
+    "expressed above: ASNS 1.43, ITGA4 0",
+    "expressed below: ADA 2.84",
+    "",
+    "> 0_node_8 \t(n = 135)",
+    "expressed above: ADA 2.84",
+    "expressed below: TSC22D3 2.12",
+    "",
+    "> 0_node_9 \t(n = 18)",
+    "expressed above: ADA 2.84, TSC22D3 2.12",
+    "",
+    "> 1 \t(n = 54)",
+    "expressed above: ASNS 1.43",
+    "expressed below: ADA 2.84, ITGA4 0"
+)
+
+
+
+
 test_that("Tree rules are handled correctly on generic trees", {
-    expected_out <- c("> 0_node_2 \t(n = 52)",
-                      "expressed below: S100A8 2.523156531922",
-                      "",
-                      "> 0_node_4 \t(n = 7)",
-                      "expressed above: S100A8 2.523156531922",
-                      "expressed below: S100A9 0",
-                      "",
-                      "> 1 \t(n = 21)",
-                      "expressed above: S100A8 2.523156531922, S100A9 0")
+
     actual_out <- capture.output(
-        as.garnett(fit_ctree(Seurat::pbmc_small), digits = Inf))
-    expect_equal(actual_out, expected_out)
+        as.garnett(fit_ctree(sctree::small_5050_mix), digits = 2))
+    expect_equal(actual_out, expected_garnett_text)
 })
 
 test_that("Tree rules are handled correctly on generic trees", {
-    expected_out <- c("> 0_node_2 \t(n = 52)",
-                      "expressed below: S100A8 2.52",
-                      "",
-                      "> 0_node_4 \t(n = 7)",
-                      "expressed above: S100A8 2.52",
-                      "expressed below: S100A9 0",
-                      "",
-                      "> 1 \t(n = 21)",
-                      "expressed above: S100A8 2.52, S100A9 0")
     actual_out <- capture.output(
-        as.garnett(fit_ctree(Seurat::pbmc_small),
+        as.garnett(fit_ctree(sctree::small_5050_mix),
                    digits = 2))
-    expect_equal(actual_out, expected_out)
+    expect_equal(actual_out, expected_garnett_text)
 })
 
 test_that("Tree rules filters correctly based on regexes", {
-    expected_out <- c("> 0_node_2 \t(n = 52)",
-                      "expressed below: S100A8 2.52",
-                      "",
-                      "> 0_node_4 \t(n = 7)",
-                      "expressed above: S100A8 2.52",
-                      "expressed below: S100A9 0")
+    expected_out <- c(
+        "> 1 \t(n = 54)",
+        "expressed above: ASNS 1.43",
+        "expressed below: ADA 2.84, ITGA4 0")
     actual_out <- capture.output(
-        as.garnett(fit_ctree(Seurat::pbmc_small),
+        as.garnett(fit_ctree(sctree::small_5050_mix),
                    digits = 2,
-                   rules_keep = "^0"))
+                   rules_keep = "^1"))
     expect_equal(actual_out, expected_out)
 })
+

@@ -54,12 +54,13 @@ Seurat objects
 
 \examples{
 
-    head(ranger_importances(Seurat::pbmc_small, cluster = 'ALL', warn.imp.method = FALSE))
+    head(ranger_importances(sctree::small_5050_mix, cluster = 'ALL', warn.imp.method = FALSE))
     
-#          importance pvalue     gene
-# HLA-DPB1   8.226410      0 HLA-DPB1
-# S100A9     6.648748      0   S100A9
-# S100A8     6.537872      0   S100A8
-# HLA-DQA1   3.103721      0 HLA-DQA1
-# GNLY       1.779237      0     GNLY
+#         importance pvalue    gene
+# ASNS      7.122052      0    ASNS
+# TMSB4X    5.148624      0  TMSB4X
+# CD3D      5.006597      0    CD3D
+# ARHGDIB   4.212656      0 ARHGDIB
+# ADA       3.801069      0     ADA
+# MZB1      3.446901      0    MZB1
 }

@@ -31,14 +31,22 @@ https://cole-trapnell-lab.github.io/garnett/docs/#submitting-a-classifier
 }}
 
 \examples{
-as.garnett(fit_ctree(Seurat::pbmc_small))
-# > 0_node_2 	(n = 52)
-# expressed below: S100A8 2.523
+as.garnett(fit_ctree(sctree::small_5050_mix))
+# > 0_node_3 	(n = 40)
+# expressed below: ADA 2.837, ASNS 1.432
 # 
-# > 0_node_4 	(n = 7)
-# expressed above: S100A8 2.523
-# expressed below: S100A9 0
+# > 0_node_6 	(n = 8)
+# expressed above: ASNS 1.432, ITGA4 0
+# expressed below: ADA 2.837
 # 
-# > 1 	(n = 21)
-# expressed above: S100A8 2.523, S100A9 0
+# > 0_node_8 	(n = 135)
+# expressed above: ADA 2.837
+# expressed below: TSC22D3 2.121
+# 
+# > 0_node_9 	(n = 18)
+# expressed above: ADA 2.837, TSC22D3 2.121
+# 
+# > 1 	(n = 54)
+# expressed above: ASNS 1.432
+# expressed below: ADA 2.837, ITGA4 0
 }

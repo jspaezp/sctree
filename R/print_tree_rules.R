@@ -48,7 +48,7 @@ get_cluster_mapping <- function(tree) {
 #' @export
 #'
 #' @evalRd include_roxygen_example({
-#'     "as.garnett(fit_ctree(Seurat::pbmc_small))"
+#'     "as.garnett(fit_ctree(sctree::small_5050_mix))"
 #'     })
 as.garnett <- function(tree, digits = 3, rules_keep = ".*") {
   cluster_mappings <- get_cluster_mapping(tree)
@@ -394,9 +394,9 @@ fit_ctree <- function(object,
 #' @export
 #'
 #' @examples
-#' plot_gates(Seurat::pbmc_small, fit_ctree(Seurat::pbmc_small), '5')
+#' plot_gates(sctree::small_5050_mix, fit_ctree(sctree::small_5050_mix), '5')
 #'
-#' @importFrom ggplot2 geom_point ggplot aes_string
+#' @importFrom ggplot2 geom_point ggplot aes_string guides guide_legend
 #' @importFrom partykit varimp
 #' @importFrom cowplot plot_grid
 #' @importFrom grDevices colorRampPalette
@@ -419,25 +419,38 @@ plot_gates <- function(object, tree, terminal_node) {
       )
     )
 
+    # Adds transparent large points
     g <- g + ggplot2::geom_point(
       data = data_subset[data_subset$in_next,],
       alpha = 0.3,
       size = 4)
+
+    # Adds a dark center to the former points
     g <- g + ggplot2::geom_point(
       data = data_subset[data_subset$in_next,],
       alpha = 1)
+
+    # Adds transparent small points for the data not in the gate
     g <- g + ggplot2::geom_point(
       data = data_subset[!data_subset$in_next,],
       alpha = 0.2)
+
     g <- g + ggplot2::theme_bw()
     return(g)
   }
 
-  foo <- partykit:::.list.rules.party(tree)
+  rule_list <- partykit:::.list.rules.party(tree)
   variable_names <- names(partykit::varimp(tree))
 
+  if (!as.character(terminal_node) %in% names(rule_list)) {
+    stop(
+      as.character(terminal_node),
+      " is not a terminal node in the provided tree fit, try one of: \n",
+      paste(unique(names(rule_list)), collapse = ", "))
+  }
+
   split_rules <-
-    unlist(strsplit(foo[[as.character(terminal_node)]], " & "))
+    unlist(strsplit(rule_list[[as.character(terminal_node)]], " & "))
 
   intermediates <- Reduce(function(x, y) {
     paste(x, y, sep = " & ")
@@ -455,12 +468,22 @@ plot_gates <- function(object, tree, terminal_node) {
                          last_var,
                          perl = TRUE)
 
-  whole_data <- as.data.frame(object, genes = variable_names)
+  last_var_names <- make.names(last_var_names, unique = FALSE)
 
-  intermediate_data <-
-    lapply(intermediates, function(x, whole_data) {
-      whole_data[with(whole_data, eval(parse(text = x))),]
-    }, whole_data)
+  whole_data <- as.data.frame(object, genes = variable_names, fix_names = FALSE)
+
+  for (colname in colnames(whole_data)) {
+      intermediates <- gsub(colname, make.names(colname), intermediates)
+  }
+  colnames(whole_data) <- make.names(colnames(whole_data))
+
+  get_intermediate_data <- function(x, whole_data) {
+      # Here X is an expression such as "CD3D <= 1.34 & LDHB <= 2.42"
+      out <- whole_data[with(whole_data, eval(parse(text = x))),]
+      return(out)
+  }
+
+  intermediate_data <- lapply(intermediates, get_intermediate_data, whole_data)
 
   g <- mapply(
     plot_gate_subset,
@@ -476,7 +499,12 @@ plot_gates <- function(object, tree, terminal_node) {
 
   # This creates a function that will generate a character vector of colours
   # given a number of colour to generate
-  getPalette <- colorRampPalette(RColorBrewer::brewer.pal(8, "Set2"))
+  getPalette <- function(n) {
+      hues = seq(15, 375, length = n + 1)
+      out <- hcl(h = hues, l = 65, c = 100)[1:n]
+      names(out) <- seq_len(n)
+      return(out)
+  }
 
   Palette <- getPalette(colourCount)
 
@@ -485,9 +513,20 @@ plot_gates <- function(object, tree, terminal_node) {
   names(Palette) <- unique_idents
 
 
-  g <- lapply(g, function(g) {
-    g + ggplot2::scale_colour_manual(values = Palette)} )
+  apply_legends <- function(g) {
+      g <- g + ggplot2::scale_colour_manual(values = Palette)
+      g <- g + ggplot2::guides(
+          size="none",
+          fill="none",
+          colour = ggplot2::guide_legend(
+              override.aes = list(alpha = 1), ncol=2))
+      return(g)
+    }
 
+
+  g <- lapply(g, apply_legends)
+
+  # TODO change this to patchwork
   g <- cowplot::plot_grid(
     plotlist = g,
     labels = paste0(seq_along(intermediates), ". ", intermediates),
