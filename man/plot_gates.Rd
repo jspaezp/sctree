@@ -20,6 +20,6 @@ a ggplot object.
 Plot Decision trees as gates
 }
 \examples{
-plot_gates(Seurat::pbmc_small, fit_ctree(Seurat::pbmc_small), '5')
+plot_gates(sctree::small_5050_mix, fit_ctree(sctree::small_5050_mix), '5')
 
 }

@@ -305,7 +305,7 @@ query_biolegend_antibodies <- function(search_term, sleep = 1) {
     url <- url(url, "rb")
     antibody_list <- rvest::html_nodes(
         xml2::read_html(url),
-        xpath='/html/body/div[1]/section/div/div/div/div/section/div/article/div[3]/ul[2]/li[*]/ul/li/h2/a')
+        xpath='//*[@id="productsHolder"]/li[*]/ul/li/h2/a')
     close(url)
 
     antibody_list <- rvest::html_text(antibody_list, trim = TRUE)

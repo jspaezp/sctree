@@ -24,13 +24,13 @@ A Helper function that interfaces with Seurat::FindMarkers
 \examples{
 library(Seurat)
     library(sctree)
-    head(FindMarkers(object = Seurat::pbmc_small,
+    head(FindMarkers(object = sctree::small_5050_mix,
     ident.1 = 0, test.use = 'RangerDE', warn.imp.method = FALSE))
-#        importance p_val   gene  avg_logFC pct.1 pct.2 p_val_adj
-# GNLY    0.4337917     0   GNLY  4.7841852 0.444 0.068         0
-# CD7     0.3529089     0    CD7  2.5559735 0.528 0.091         0
-# IL7R    0.1816056     0   IL7R  2.0708996 0.389 0.295         0
-# NOSIP   0.2407237     0  NOSIP  2.0604084 0.444 0.250         0
-# CCL5    0.5225574     0   CCL5  1.4914821 0.667 0.273         0
-# LGALS1  0.3361842     0 LGALS1 -0.9457555 0.500 0.727         0
+#         importance p_val    gene avg_logFC pct.1 pct.2 p_val_adj
+# MZB1     1.0278989     0    MZB1  2.004299 0.828 0.227         0
+# CD3G     0.9608472     0    CD3G  1.849551 0.744 0.107         0
+# CD3D     4.2636666     0    CD3D  1.842246 0.872 0.373         0
+# ARHGDIB  2.8168178     0 ARHGDIB  1.787994 0.856 0.320         0
+# AIF1     0.2818278     0    AIF1  1.759311 0.756 0.173         0
+# FYB      0.7509669     0     FYB  1.750418 0.739 0.107         0
 }

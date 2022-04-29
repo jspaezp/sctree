@@ -20,7 +20,7 @@
 #' @export
 #'
 #' @examples
-#' plot_flowstyle(Seurat::pbmc_small, c("ACRBP", "TSC22D1", "VDAC3"))
+#' plot_flowstyle(sctree::small_5050_mix, c("ACRBP", "TSC22D1", "VDAC3"))
 plot_flowstyle <- function(object, markernames, classif_col = "ident", ...) {
     # TODO add argument to change to natural scale ...
     UseMethod("plot_flowstyle", object)

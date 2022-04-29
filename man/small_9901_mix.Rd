@@ -4,12 +4,14 @@
 \name{small_9901_mix}
 \alias{small_9901_mix}
 \title{A random subset of genes and cells from a 99:1 mixture of 293T:Jurkat cells}
-\format{A Seurat object with 840 genes and 384 cells:
+\format{
+A Seurat object with 840 genes and 384 cells:
 \describe{
   \item{840 genes}{}
   \item{384 cells}{}
   ...
-}}
+}
+}
 \usage{
 small_9901_mix
 }

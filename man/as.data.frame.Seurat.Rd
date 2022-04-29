@@ -27,10 +27,10 @@ the columns each 'gene' and the rows each UMI/cell.
 It returns only the genes annotated as variable and the identity column.
 }
 \examples{
-as.data.frame(Seurat::pbmc_small,
-    Seurat::VariableFeatures(Seurat::pbmc_small))[1:3,1:3]
-#                    PPBP IGLL5 VDAC3
-# ATGCCAGAACGACT 0.000000     0     0
-# CATGGCCTGTGCAT 0.000000     0     0
-# GAACCTGATGAACC 4.753095     0     0
+as.data.frame(sctree::small_5050_mix,
+    Seurat::VariableFeatures(sctree::small_5050_mix))[1:3,1:3]
+#                TNFRSF4 RP3.395M20.12      ID3
+# ATCTGACTTGCAGT       0             0 3.424120
+# GACCAAACTACTCT       0             0 3.802467
+# TGACTTACTTGCAG       0             0 2.204367
 }

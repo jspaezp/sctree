@@ -45,8 +45,8 @@ include_roxygen_example <- function(example_string) {
 #' @export
 #'
 #' @evalRd include_roxygen_example({
-#'     "as.data.frame(Seurat::pbmc_small,
-#'     Seurat::VariableFeatures(Seurat::pbmc_small))[1:3,1:3]"
+#'     "as.data.frame(sctree::small_5050_mix,
+#'     Seurat::VariableFeatures(sctree::small_5050_mix))[1:3,1:3]"
 #'     })
 #' @importFrom Seurat FetchData Idents VariableFeatures
 as.data.frame.Seurat <- function(x, genes = Seurat::VariableFeatures(x), fix_names = TRUE, ...) {

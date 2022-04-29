@@ -48,7 +48,7 @@ get_cluster_mapping <- function(tree) {
 #' @export
 #'
 #' @evalRd include_roxygen_example({
-#'     "as.garnett(fit_ctree(Seurat::pbmc_small))"
+#'     "as.garnett(fit_ctree(sctree::small_5050_mix))"
 #'     })
 as.garnett <- function(tree, digits = 3, rules_keep = ".*") {
   cluster_mappings <- get_cluster_mapping(tree)
@@ -394,7 +394,7 @@ fit_ctree <- function(object,
 #' @export
 #'
 #' @examples
-#' plot_gates(Seurat::pbmc_small, fit_ctree(Seurat::pbmc_small), '5')
+#' plot_gates(sctree::small_5050_mix, fit_ctree(sctree::small_5050_mix), '5')
 #'
 #' @importFrom ggplot2 geom_point ggplot aes_string guides guide_legend
 #' @importFrom partykit varimp
@@ -442,7 +442,7 @@ plot_gates <- function(object, tree, terminal_node) {
   rule_list <- partykit:::.list.rules.party(tree)
   variable_names <- names(partykit::varimp(tree))
 
-  if (as.character(terminal_node) %in% names(rule_list)) {
+  if (!as.character(terminal_node) %in% names(rule_list)) {
     stop(
       as.character(terminal_node),
       " is not a terminal node in the provided tree fit, try one of: \n",
